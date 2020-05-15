@@ -1,0 +1,5 @@
+I"�<h2 id="1-samba-설치">1. samba 설치</h2>
+<p>우선 samba를 설치하자.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nb">install </span>samba
+</code></pre></div></div>
+:ET

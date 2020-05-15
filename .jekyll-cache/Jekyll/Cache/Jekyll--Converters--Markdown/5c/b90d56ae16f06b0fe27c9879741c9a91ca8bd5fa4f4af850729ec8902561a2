@@ -1,0 +1,16 @@
+I"<ul class="toc__menu">
+  <li><a href="#1-samba-설치">1. samba 설치</a>
+    <ul>
+      <li><a href="#2-사용자-추가">2. 사용자 추가</a></li>
+      <li><a href="#3-samba-환경-설정">3. samba 환경 설정</a></li>
+      <li><a href="#4-selinux-설정">4. selinux 설정</a></li>
+      <li><a href="#5-방화벽-설정">5. 방화벽 설정</a></li>
+      <li><a href="#6-samba-시작">6. samba 시작</a></li>
+      <li><a href="#7-윈도우즈에서-접속-테스트">7. 윈도우즈에서 접속 테스트</a></li>
+      <li><a href="#8-한글-디스플레이-설정">8. 한글 디스플레이 설정</a></li>
+      <li><a href="#9-socket-option-최적화">9. socket option 최적화</a></li>
+      <li><a href="#10-기타">10. 기타</a></li>
+    </ul>
+  </li>
+</ul>
+:ET

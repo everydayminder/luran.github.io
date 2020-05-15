@@ -1,0 +1,71 @@
+I"P<p>Sun의 JCE에서도 AES를 지원하지만, Password Based Encryption방식으로 보다 많은 종류의 암호화 알고리즘을 지원하는 BouncyCastle 라이브러리를
+설치하고, jasypt에서도 BouncyCastle을 사용한 AES 암/복호화를 사용하도록 설정해 보았다.</p>
+
+<p>친근한 이름(어린 아이들이 좋아할)과는 다르게, 보안라이브러리이다.</p>
+
+<ol>
+  <li>BouncyCastle 다운로드
+BouncyCastle의 공식 사이트는 www.bouncycastle.org이다.
+본인이 사용하는 jvm 버전에 맞는 것으로 다운로드한다.
+내 경우, jdk 1.6을 사용하고 있어 bcprov-jdk16-146.jar를 받았다.
+maven을 사용하고 있다면, pom.xml에 아래와 같이 추가하여 다운로드 할 수도 있다.</li>
+</ol>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;dependency&gt;</span>
+ <span class="nt">&lt;groupId&gt;</span>org.bouncycastle<span class="nt">&lt;/groupId&gt;</span>
+ <span class="nt">&lt;artifactId&gt;</span>bcprov-jdk16<span class="nt">&lt;/artifactId&gt;</span>
+ <span class="nt">&lt;version&gt;</span>1.46<span class="nt">&lt;/version&gt;</span>
+ <span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>BouncyCastle 설치
+jar 파일이므로 임의의 디렉토리에 복사 후, classpath에 추가하거나,
+$JAVA_HOME/jre/lib/ext에 복사하여 자동으로 classpath가 인식하도록 한다.
+maven을 사용한다면, 위의 dependency 설정으로도 충분할 것이다.
+라이브러리 설치 자체는 이것으로 끝났으나, 추가 환경설정이 필요하다.</p>
+  </li>
+  <li>
+    <p>BouncyCastle을 사용하기 위한 환경설정
+BouncyCastle을 JCE Provider로 인식시키기 위해 추가 설정이 필요하다.
+$JAVA_HOME/jre/lib/security/java.security 파일에 BouncyCastle을 등록하자.</p>
+  </li>
+  <li>
+    <p>jasypt에 BouncyCastle AES 사용설정
+(1) application-context.xml에 hibernate.cfg.xml 설정
+```xml</p>
+  </li>
+</ol>
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+ <property name="dataSource" ref="dataSource" />
+ <property name="packagesToScan" value="com.luran" />
+ <property name="configLocation" value="classpath:hibernate.cfg.xml" />
+ </bean>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+(2) hibernate.cfg.xml에 mapping.hbm.xml 지정 (type 선언 내용 포함)
+```xml
+ &lt;hibernate-configuration&gt;
+ &lt;session-factory&gt;
+ ...
+ &lt;mapping resource="META-INF/mapping.hbm.xml"/&gt;
+ ...
+ &lt;/session-factory&gt;
+ &lt;/hibernate-configuration&gt;
+
+</code></pre></div></div>
+
+<p>(3) mapping.hbm.xml내 타입 선언부 중, 알고리즘 변경 (PBEWITHSHA256AND128BITAES-CBC-BC)</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;hibernate-mapping</span> <span class="na">package=</span><span class="s">"com.luran.jasypt_test"</span><span class="nt">&gt;</span>
+ <span class="nt">&lt;typedef</span> <span class="na">name=</span><span class="s">"encryptedString"</span> <span class="na">class=</span><span class="s">"org.jasypt.hibernate3.type.EncryptedStringType"</span><span class="nt">&gt;</span>
+ <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"algorithm"</span><span class="nt">&gt;</span>PBEWITHSHA256AND128BITAES-CBC-BC<span class="nt">&lt;/param&gt;</span>
+
+ <span class="c">&lt;!-- &lt;param name="providerName"&gt;BC&lt;/param&gt; --&gt;</span>
+ <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"password"</span><span class="nt">&gt;</span>jasypt<span class="nt">&lt;/param&gt;</span>
+ <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">"keyObtentionIterations"</span><span class="nt">&gt;</span>1000<span class="nt">&lt;/param&gt;</span>
+
+ <span class="c">&lt;!-- &lt;param name="stringOutputType"&gt;hexadecimal&lt;/param&gt; --&gt;</span>
+ <span class="nt">&lt;/typedef&gt;</span>
+ <span class="nt">&lt;/hibernate-mapping&gt;</span>
+</code></pre></div></div>
+:ET

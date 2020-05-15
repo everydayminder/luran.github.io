@@ -1,0 +1,22 @@
+I"�<ol>
+  <li>먼저, java를 설치한다.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo apt-get install sun-java6-jdk
+</code></pre></div>    </div>
+  </li>
+  <li>시스템에서 기본적으로 동작할 java 를 선택해준다.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo update-alternatives --config java
+</code></pre></div>    </div>
+    <p>원하는 java를 선택한다.</p>
+  </li>
+  <li>eclipse를 설치한다.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo apt-get install eclipse
+</code></pre></div>    </div>
+  </li>
+  <li>원하는 패키지를 추가로 설치한다.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo synaptic
+</code></pre></div>    </div>
+    <p>예) PyDev : Python 개발 플러그인</p>
+  </li>
+</ol>
+
+:ET

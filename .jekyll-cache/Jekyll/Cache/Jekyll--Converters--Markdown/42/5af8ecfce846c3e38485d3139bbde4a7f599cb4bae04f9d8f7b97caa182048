@@ -1,0 +1,46 @@
+I"<p>ElementTree와 같은 패키지를 사용하여 XML를 파싱하는 경우,
+XML 엘리먼트의 짝이 안맞는 등, 유효하지 않은 XML 구성이 탐지되면
+ExpatError가 뜨는데,</p>
+
+<div class="txc-textbox" style="border-right:#fe8943 1px dashed;border-top:#fe8943 1px dashed;border-left:#fe8943 1px dashed;border-bottom:#fe8943 1px dashed;background-color:#fedec7;padding:10px;"><font color="#612a03">try:
+
+&nbsp; # XML 연산
+
+catch ExpatError, e:
+
+&nbsp; # do something</font>
+</div>
+
+<p>하면,</p>
+
+<p>NameError: global name ‘ExpatError’ is not defined라는 에러가 뜬다.</p>
+
+<p>이를 해결하려면,</p>
+
+<p>ExpatError를 catch하는 py 파일의 앞에, scope을 맞춰서</p>
+
+<div class="txc-textbox" style="border-right:#fe8943 1px dashed;border-top:#fe8943 1px dashed;border-left:#fe8943 1px dashed;border-bottom:#fe8943 1px dashed;background-color:#fedec7;padding:10px;"><font color="#8c3c04">from xml.parsers.expat&nbsp; import ExpatError
+
+</font></div>
+
+<p>라고 넣어주자. 그러면, 문제 해결!!</p>
+
+<p>’’</p>
+
+<p>While you are using XML packages such as ElementTree, you might want to handle</p>
+
+<p>ExpatError which might be caused by invalid-format or missing tags and so on.</p>
+
+<p>However, you will see another error message saying “NameError: global name ‘ExpatError’</p>
+
+<p>is not defined”.  What you only have to solve this problem is just add a line on the top of</p>
+
+<p>your code.</p>
+
+<p>That is,</p>
+
+<p>from xml.parsers.expat import ExpatError</p>
+
+<p>It’ll work, then.</p>
+
+:ET

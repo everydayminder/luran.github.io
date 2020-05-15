@@ -1,0 +1,33 @@
+---
+layout: single 
+title: javadoc과 package.html
+date: 2009-08-05 11:23:55.000000000 +09:00
+categories:
+- development
+tags: [javadoc]
+author:
+  login: everydayminder
+  email: 2jhyun@gmail.com
+  display_name: everydayminder
+  first_name: ''
+  last_name: ''
+---
+작성한 자바코드를 표준 doclet의 javadoc으로 돌리면,
+package의 설명이 휑허니 빈칸으로 나온다.
+어떻게 주석을 달면, package에 대한 설명을 넣을 수 있을까?
+package의 entry에 package.html을 작성해 주면 이 문제가 해결된다.
+만약 package ab.cd.ef.* 가 존재한다면,
+디렉토리가 ab/cd/ef가 존재할 것이다.
+따라서, ab/cd/ef/pacakge.html을 작성해주면 javadoc 실행시
+package의 description을 채워준다.
+이 때, 작성 형식은 매우 간단하다. 다음과 같이 기록하기만 하면
+body 부분의 설명이 그대로 반영된다.
+```
+<html>
+	<head>
+	</head>
+	<body>
+		넣고 싶은 설명
+	</body>
+</html>
+```

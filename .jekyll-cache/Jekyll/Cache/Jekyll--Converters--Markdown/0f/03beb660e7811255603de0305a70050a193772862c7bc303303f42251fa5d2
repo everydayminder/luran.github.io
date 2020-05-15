@@ -1,0 +1,14 @@
+I"�<p>테스트를 위해 간단하게 써보고자 할 때, 굳이 번거롭게 설치하지 말고 docker를 써보자.
+다음의 명령어만으로도, docker 기반으로 postgres를 쓸 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=postgres -d postgres
+</code></pre></div></div>
+
+<p>그런데, 띄우고 나서도 직접 container에 들어가서 psql도 직접 접속해보고, \dt 도 해보고 싶을 수도 있잖아?</p>
+
+<p>그럴 때는, 직접 container에 다음과 같이 접속하자.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker exec -it postgres bash
+</code></pre></div></div>
+
+:ET

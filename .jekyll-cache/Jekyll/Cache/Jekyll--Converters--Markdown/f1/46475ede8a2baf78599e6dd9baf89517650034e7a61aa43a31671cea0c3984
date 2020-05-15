@@ -1,0 +1,54 @@
+I"�<p>HBase에서 HQL 사용하기
+   (wiki.apache.org내용을 근거로)</p>
+
+<p>설치된 HBase를 바탕으로, HQL을 수행하였다. (bin/hbase shell)
+해당 정보의 참고 링크는 아래와 같다.
+<a href="http://wiki.apache.org/hadoop/Hbase/HbaseShell?action=print">http://wiki.apache.org/hadoop/Hbase/HbaseShell?action=print</a></p>
+
+<ol>
+  <li>Create Table
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hql&gt; create table movielog_table (
+-&gt; year, length, inColor, studioName, vote, producer, actor);
+</code></pre></div>    </div>
+  </li>
+  <li>Insert Data
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hql&gt; insert into movielog_table (year:, length:, inColor:, studioName:,
+'vote:user name', producer:, 'actor:hero')
+-&gt; valules ('1977', '124', 'true', 'Fox', '5', 'George Lucas', 'Mark Hamill')
+-&gt; where row = 'Star Wars';
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<ul>
+  <li>내가 해 본 시도)</li>
+  <li>column 명을 주지 않고, 곧바로 values들만 넣어봄 : 에러</li>
+  <li>
+    <p>where 부분에서 row key 를 지정하지 않음 : 당연히 에러!</p>
+  </li>
+  <li>row key가 따로 명시되지만, 사실 일반 PK 필드와 동일함.</li>
+  <li>사용시 where 이후에 기록을 꼭해줘야 함. (활용폭이 적음, 맵 구조인지라
+ 키를 중심으로 데이터를 처리함)</li>
+  <li>관계형 DB에 비해 where 조건에 넣을 수 있는 실질적인 비교구문이 없음</li>
+</ul>
+
+<ol>
+  <li>Select Data
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hql&gt; select count(studioName:FOX) from movielog_table;
+</code></pre></div>    </div>
+  </li>
+  <li>Truncate
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hql&gt; truncate table 테이블명
+</code></pre></div>    </div>
+  </li>
+  <li>Drop Table
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hql&gt; drop table 테이블명
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<ul>
+  <li>truncate나 drop table을 실행하기 전에 반드시 disable 테이블명을 해줘야 실행된다.</li>
+</ul>
+
+:ET

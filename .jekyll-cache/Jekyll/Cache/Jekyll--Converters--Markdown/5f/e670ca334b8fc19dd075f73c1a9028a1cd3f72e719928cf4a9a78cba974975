@@ -1,0 +1,11 @@
+I"Y<h2 id="requirements">Requirements</h2>
+<ul>
+  <li>Java 1.5.x, preferably from Sun.</li>
+  <li>Hadoop 0.16.x. This version of HBase will only run on Hadoop 0.16.x..</li>
+  <li>ssh must be installed and sshd must be running to use Hadoop’s scripts 
+   to manage remote Hadoop daemons.</li>
+  <li>HBase currently is a file handle hog. The usual default of 1024 on *nix systems 
+   is insufficient if you are loading any significant amount of data into regionservers. 
+  See the FAQ: Why do I see “java.io.IOException…(Too many open files)” in my logs?  for how to up the limit.</li>
+</ul>
+:ET

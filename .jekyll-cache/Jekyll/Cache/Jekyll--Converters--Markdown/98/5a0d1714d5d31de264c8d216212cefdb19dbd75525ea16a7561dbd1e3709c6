@@ -1,0 +1,131 @@
+I"�<p>python3가 출시된지 오래되었으나, 아직 python2는 많이 사용되고 있다.
+결국, python2와 python3의 버전 변경은 아직도 자주 겪는 일이 될 수 밖에 없을 것이다.</p>
+
+<p>앞서, virtualenvwrapper를 통해 python2와 python3 switch를 하는 방법을 포스팅했으나,
+다른 방법으로 여러 버전의 python을 컨트롤 하는 방법에 대해 기록으로 남긴다.</p>
+
+<p>pyenv라는 툴을 사용해 보자.</p>
+
+<h2 id="pyenv-설치">pyenv 설치</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew update
+brew install pyenv
+</code></pre></div></div>
+
+<p>설치 후,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo $PATH
+</code></pre></div></div>
+
+<p>를 해보면, 기존과 변화가 보일 것이다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/Users/사용자계정/.pyenv/shims:
+</code></pre></div></div>
+
+<p>가 자동으로 추가되어있을 것이다. pyenv가 동작하면서, shims를 일종의 proxy 하기 때문에 자동으로 추가되는데,</p>
+
+<p>항상 동작하도록 하기 위해, 본인의 shell profile(.bash_profile, .zshrc, .zshenv) 등에 다음과 같이 추가한다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if which pyenv &gt; /dev/null; then eval "$(pyenv init -)"; fi
+</code></pre></div></div>
+
+<h2 id="필요한-버전-python-설치">필요한 버전 python 설치</h2>
+
+<p>다음과 같이, 설치 가능한 버전의 python을 조회할 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv install -list
+</code></pre></div></div>
+
+<p>다음과 같이 여러 버전의 python을 설치해 보자.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv install 2.7.14
+pyenv install 3.6.4
+pyenv install 3.7-dev
+</code></pre></div></div>
+
+<h2 id="python-version-확인">python version 확인</h2>
+
+<p>이제 시스템에 설치된 python들의 버전을 확인하자.
+현재 python의 버전을 확인한다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv version
+</code></pre></div></div>
+
+<p>현재 python 및 설치되어 있는 (변경 가능한) 버전을 모두 확인한다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv versions
+</code></pre></div></div>
+
+<p>아래와 같이 출력된다.</p>
+
+<ul>
+  <li>system (set by /Users/사용자계정/.pyenv/version)
+2.7.14
+3.6.4
+3.7-dev</li>
+</ul>
+
+<h2 id="불필요한-버전-삭제">불필요한 버전 삭제</h2>
+
+<p>불필요한 버전은</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv uninstall 3.7-dev
+</code></pre></div></div>
+
+<p>와 같이 버전을 직접 명시하면 삭제 가능하다. (지우는 건 순식간에 됨)</p>
+
+<h2 id="python-version-변경">python version 변경</h2>
+
+<p>현재, 내 시스템의 python 버전은 2.7.10이다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python version
+</code></pre></div></div>
+<p>을 실행하면,</p>
+
+<p>Python 2.7.10
+이 출력된다.</p>
+
+<p>다음과 같이 python version을 변경해 보자.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv global 3.6.4
+
+</code></pre></div></div>
+
+<p>pyenv versions를 실행해보면, * 마크가 표시된 곳이 변경된다.</p>
+
+<p>system
+  2.7.14</p>
+<ul>
+  <li>3.6.4 (set by /Users/사용자계정/.pyenv/version)</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python --version
+</code></pre></div></div>
+
+<p>하면, 변경된 버전을 확인할 수 있다.
+이와 같이, 버전을 변경하는 모드에는 세 가지가 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv global 버전
+pyenv local 버전
+pyenv shell 버전
+</code></pre></div></div>
+
+<p>global은 전체 버전을 변경하는 command이고, local은 해당 디렉토리내 .python-version 파일을 기록하여 해당 디렉토리 한정 특정 버전으로 변경 유지한다. shell은 해당 shell의 세션내 버전 변경을 유지해준다. 필요한 것으로 사용하자.</p>
+
+<p>local로 설정한 옵션은 또 local 커맨드로 overwrite 하거나, –unset 파라미터를 주거나, 직접 .python-version 파일을 지워주면 원복할 수 있다.</p>
+
+<p>아래는, global은 3.6.4로 test 디렉토리에서는 2.7.14로 설정한 경우의 버전 출력 예이다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ $ pyenv version
+3.6.4 (set by /Users/사용자계정/.pyenv/version)
+
+
+~/test $ pyenv version
+2.7.14 (set by /Users/사용자계정/test/.python-version)
+
+
+~/test $ cat .python-version
+2.7.14
+</code></pre></div></div>
+
+:ET

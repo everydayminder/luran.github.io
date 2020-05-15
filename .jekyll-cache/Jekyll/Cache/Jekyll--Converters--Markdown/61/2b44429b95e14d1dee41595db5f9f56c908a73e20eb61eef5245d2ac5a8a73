@@ -1,0 +1,6 @@
+I"�<p>터미널에서,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>defaults write com.apple.screencapture location 변경경로
+killall SystemUIServer
+</code></pre></div></div>
+:ET

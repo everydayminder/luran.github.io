@@ -1,0 +1,9 @@
+I"�<p>이 현상을 겪는 사람들이 꽤 있나보다.
+아웃룩을 안전모드로 실행시키면 되긴 하는데 (Outlook /safe),
+매번 그렇게 쓸 수는 없고,
+http://triplescomputers.com/blog/casestudies/solution-microsoft-outlook-2013-hangs-at-loading-profile-after-office-update/
+를 참고하여, 레지스트리에 엔트리를 하나 추가해줬더니,</p>
+
+<p>그 이후로는 잘 동작한다.</p>
+
+:ET

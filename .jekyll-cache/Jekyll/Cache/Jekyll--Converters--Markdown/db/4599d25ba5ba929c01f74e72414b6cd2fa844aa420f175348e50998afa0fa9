@@ -1,0 +1,21 @@
+I"�<p>Syntax Highlighter로 괄호를 인용할 때,</p>
+
+<p>예를 들어</p>
+<pre class="brush:xml">&lt;property name="abc" value="123"/&gt;
+</pre>
+
+<p>와 같이 인용하고자 한다면, 막상 인용해보면 위와 같이 표시되는 대신</p>
+<pre class="brush:xml">
+</pre>
+
+<p>과 같이 표시되고 만다.</p>
+
+<p>게다가 nested expression이라면, 본인의 의도와는 다른 문서 구조로 표현되어
+원치 않는 output을 만나게 될 것이다.</p>
+
+<p>이럴 경우, 다음의 사이트를 사용하여 손쉽게 escape 시키자.
+Syntax Highlight 시킬 부분에 변환 코드를 복사해 넣으면 될 것이다.</p>
+
+<p><a title="[http://accessify.com/tools-and-wizards/developer-tools/quick-escape/default.php]로 이동합니다." target="_blank" href="http://accessify.com/tools-and-wizards/developer-tools/quick-escape/default.php">http://accessify.com/tools-and-wizards/developer-tools/quick-escape/default.php</a></p>
+
+:ET

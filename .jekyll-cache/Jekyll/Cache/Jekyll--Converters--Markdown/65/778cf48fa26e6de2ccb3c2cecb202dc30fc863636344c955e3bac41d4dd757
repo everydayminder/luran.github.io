@@ -1,0 +1,55 @@
+I"$<p>Eclipse/STS에 사용중인 maven project로부터</p>
+
+<ol>
+  <li>프로젝트를 새로 import할 때</li>
+  <li>Disable Maven Nature + Configure &gt; Convert to Maven Project를 할 때</li>
+</ol>
+
+<p>인코딩이 MS949로 자꾸 바뀌어서 수동으로 UTF-8로 바꿔줘야 했다면?
+또 JDK 버전이 자꾸 1.5로 바뀌어서 수동으로 JDK 버전을 상위 버전으로 바꿔줘야 했다면?
+다음의 옵션을 pom.xml에 추가해 보자.</p>
+
+<p>pom.xml 파일 윗쪽에</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;properties&gt;</span>
+	<span class="nt">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+</code></pre></div></div>
+
+<p>와 같이 이 프로젝트는 UTF-8 인코딩이라고 선언해 주자.
+pom.xml의 build 부분에 (없다면 추가로 써주면 된다)
+아래와 같이 maven-compiler-plugin 선언을 하고, 사용하고자 하는 JDK 버전을 명시한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;build&gt;</span>
+	<span class="nt">&lt;plugins&gt;</span>
+		<span class="nt">&lt;plugin&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;configuration&gt;</span>
+				<span class="nt">&lt;source&gt;</span>1.7<span class="nt">&lt;/source&gt;</span>
+				<span class="nt">&lt;target&gt;</span>1.7<span class="nt">&lt;/target&gt;</span>
+			<span class="nt">&lt;/configuration&gt;</span>
+			<span class="nt">&lt;version&gt;</span>2.3.2<span class="nt">&lt;/version&gt;</span>
+			<span class="nt">&lt;executions&gt;</span>
+				<span class="nt">&lt;execution&gt;</span>
+					<span class="nt">&lt;id&gt;</span>default-testCompile<span class="nt">&lt;/id&gt;</span>
+					<span class="nt">&lt;phase&gt;</span>test-compile<span class="nt">&lt;/phase&gt;</span>
+					<span class="nt">&lt;goals&gt;</span>
+						<span class="nt">&lt;goal&gt;</span>testCompile<span class="nt">&lt;/goal&gt;</span>
+					<span class="nt">&lt;/goals&gt;</span>
+				<span class="nt">&lt;/execution&gt;</span>
+				<span class="nt">&lt;execution&gt;</span>
+					<span class="nt">&lt;id&gt;</span>default-compile<span class="nt">&lt;/id&gt;</span>
+					<span class="nt">&lt;phase&gt;</span>compile<span class="nt">&lt;/phase&gt;</span>
+					<span class="nt">&lt;goals&gt;</span>
+						<span class="nt">&lt;goal&gt;</span>compile<span class="nt">&lt;/goal&gt;</span>
+					<span class="nt">&lt;/goals&gt;</span>
+				<span class="nt">&lt;/execution&gt;</span>
+			<span class="nt">&lt;/executions&gt;</span>
+		<span class="nt">&lt;/plugin&gt;</span>
+	<span class="nt">&lt;/plugins&gt;</span>
+<span class="nt">&lt;/build&gt;</span>
+</code></pre></div></div>
+<p>이렇게 해서, SCM에 commit 하면, 새로 프로젝트를 import 할 경우와,
+aven Feature를 껐다 켤 때에도 인코딩과 JDK 버전이 설정한 대로 유지된다.</p>
+
+:ET

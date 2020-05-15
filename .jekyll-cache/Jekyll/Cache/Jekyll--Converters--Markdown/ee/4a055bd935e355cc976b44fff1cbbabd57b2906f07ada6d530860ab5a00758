@@ -1,0 +1,9 @@
+I"�<p>linux에서 vi를 쓰다보면, 어디에 설치되었는지 모르는 웃지 못할 상황이 생기곤 한다.
+type/ which 명령어를 써도 명확히 알기 어렵다.</p>
+
+<p>이럴 때!!
+vi를 실행시킨 상태에서 확인이 가능하다는 사실!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:!echo $VIMRUNTIME
+</code></pre></div></div>
+:ET

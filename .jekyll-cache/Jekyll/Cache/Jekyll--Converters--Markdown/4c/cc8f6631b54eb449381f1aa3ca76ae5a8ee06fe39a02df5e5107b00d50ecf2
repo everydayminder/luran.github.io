@@ -1,0 +1,2 @@
+I"<p>python 개발 환경 설정 중, virtualenv를 쓰다 매번 activate를 하기 위해 설정위치/bin/activate로 활성화하고, deactivate로 비활성화 하는 것이 번거로웠는데, 이를 좀더 쉽게 도와주는 virtualenvwrapper를 알게 되었다.</p>
+:ET

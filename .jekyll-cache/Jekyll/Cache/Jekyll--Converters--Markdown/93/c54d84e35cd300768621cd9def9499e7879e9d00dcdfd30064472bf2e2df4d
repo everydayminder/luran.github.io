@@ -1,0 +1,16 @@
+I"�<p>Hibernate를 사용하여, @Entity annotation을 사용하여 객체를 만들어 사용할 경우,
+유의할 점이 있다.</p>
+
+<p>@Entity를 import할 때,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.hibernate.annotations.Entity
+javax.persistence.Entity
+</code></pre></div></div>
+
+<p>의 두 가지 중에, 선택해야할 것은 javax.persistence.Entity이다.</p>
+
+<p>위의 옵션을 선택한 경우, Unknown Entity Exception이 발생한다. Hibernate 4.1 이후 org.hibernate.annotations.Entity 는 deprecated 된다고 한다.</p>
+
+<p>결론) javax.persistence.Entity를 import 하자.</p>
+
+:ET

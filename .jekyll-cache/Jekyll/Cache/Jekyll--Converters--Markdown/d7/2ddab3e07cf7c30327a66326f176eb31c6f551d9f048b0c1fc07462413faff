@@ -1,0 +1,3 @@
+I"�<p>사용자가 compareTo()를 override 했을 경우, 볼 수 있는 warning이다.
+FindBugs의 code inspection에 따르면,</p>
+:ET

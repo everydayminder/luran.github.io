@@ -1,0 +1,4 @@
+I"w<p>hibernate를 사용하는 도중, DB connection이 끊긴다면?
+DB connection이 계속 유지되도록 하려면, 가장 간단한 방법은 주기적으로 사용해야 할 것이다.
+dummy query를 실행시켜서 connection 자체를 유지시키면 되는데, connection pool library인 c3p0에서는 이를 옵션으로 설정할 수 있도록 가이드한다.</p>
+:ET

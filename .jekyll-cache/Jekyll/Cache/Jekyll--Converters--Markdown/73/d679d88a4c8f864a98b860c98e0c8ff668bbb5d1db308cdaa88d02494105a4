@@ -1,0 +1,122 @@
+I"<h1 id="여러-버전-java">여러 버전 java</h1>
+
+<p>사실 개발하면서 Java의 버전을 계속 바꿀 일은 별로 없는 것 같다.</p>
+
+<p>프로젝트마다 바꿀 일도 없고, 회사 정책이 바뀌지 않는한 기존의 버전을 사용할 가능성이 높다.</p>
+
+<p>또한, 기존에 java 8을 사용한 프로젝트라면 특별한 이유가 없는 한 Java8을 유지보수할 가능성이 높다.</p>
+
+<p>Java의 버전 릴리즈 주기가 6개월로 짧아지면서, 여러 버전을 설치하고 사용하고자 할 때 jenv를 사용하면 좋을 것이다. (Python처럼) 3년 주기의 Java LTS 버전을 감안하면, production에서는 현재로서는 Java11이 유용한 선택지가 될 것이다.</p>
+
+<p><img src="/images/202005/jenv.png" alt="jenv.png" /></p>
+
+<p>https://en.wikipedia.org/wiki/Java_version_history</p>
+
+<h2 id="jenv-java용-pyenv">jenv: Java용 Pyenv</h2>
+
+<p>Python 개발 환경에 익숙한 사람들은 아마 이미 pyenv에 익숙할 것이다.</p>
+
+<p>그리고, java 환경에도 동일한 tool이 있다. 이름도 사용법도 유사하다. pyenv를 써온 사람들이라면 그대로 쓰면 된다. (약간의 명령어 차이와 사용법 차이는 있겠지만)</p>
+
+<h3 id="homebrew-cask-설치">Homebrew, Cask 설치</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew update <span class="o">&amp;&amp;</span> brew upgrade brew-cask <span class="o">&amp;&amp;</span> brew cleanup <span class="o">&amp;&amp;</span> brew cask cleanup
+</code></pre></div></div>
+
+<h3 id="java-설치">Java 설치</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew cask info java
+brew cask install java
+</code></pre></div></div>
+
+<p>2020/5 기준, java14가 설치된다.</p>
+
+<h3 id="jenv-설치-환경-설정">jenv 설치/ 환경 설정</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>jenv
+
+<span class="k">if </span>which jenv <span class="o">&gt;</span> /dev/null<span class="p">;</span> <span class="k">then </span><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>jenv init -<span class="si">)</span><span class="s2">"</span><span class="p">;</span> <span class="k">fi
+
+</span>jenv add /Library/Java/JavaVirtualMachines/openjdk-14.0.1.jdk/Contents/Home
+</code></pre></div></div>
+
+<p>설치/ 설정 후 jenv versions를 실행해 보면,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ jenv versions
+  system
+  1.8
+  1.8.0.192
+* 14.0 (set by /Library/Java/JavaVirtualMachines/openjdk-14.0.1.jdk/Contents/Home/.java-version)
+  14.0.1
+  openjdk64-14.0.1
+  oracle64-1.8.0.192
+</code></pre></div></div>
+
+<p>만약, LTS 버전인 Java 11을 설치하고자 한다면, 다음과 같이 해보자.</p>
+
+<p>AdaptOpenJdk를 사용하기 위해</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk11
+</code></pre></div></div>
+
+<p>설치 후, /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home 를 jenv에 추가해 준다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home 
+
+$ jenv versions
+  system
+* 1.8 (set by /Users/luran/.jenv/version)
+  1.8.0.192
+  11.0
+  11.0.7
+  14.0
+  14.0.1
+  openjdk64-11.0.7
+  openjdk64-14.0.1
+  oracle64-1.8.0.192
+</code></pre></div></div>
+
+<h3 id="jenv-실행">jenv 실행</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jenv 0.5.2
+Usage: jenv &lt;command&gt; [&lt;args&gt;]
+
+Some useful jenv commands are:
+   commands    List all available jenv commands
+   local       Set or show the local application-specific Java version
+   global      Set or show the global Java version
+   shell       Set or show the shell-specific Java version
+   rehash      Rehash jenv shims (run this after installing executables)
+   version     Show the current Java version and its origin
+   versions    List all Java versions available to jenv
+   which       Display the full path to an executable
+   whence      List all Java versions that contain the given executable
+
+See `jenv help &lt;command&gt;' for information on a specific command.
+For full documentation, see: https://github.com/hikage/jenv#readme
+</code></pre></div></div>
+
+<p>jenv만 실행하면, pyenv와 마찬가지로 가능 옵션을 알 수 있다.</p>
+
+<ul>
+  <li>versions: 사용 가능한 옵션들 보기</li>
+  <li>version: 현재 동작하는 옵션 보기</li>
+  <li>local: 특정 디렉토리 이하 버전 적용</li>
+  <li>global: 전체 버전 적용</li>
+  <li>shell: 현재 shell에만 적용</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jenv global 1.8
+jenv local 11.0
+jenv shell 14.0
+</code></pre></div></div>
+
+<p>등과 같이 설정하여 사용하면 된다.</p>
+
+<p>특히 local로 설정하게 되면, .java-version에 버전 정보가 저장된다.</p>
+
+<p>만약, global 설정과 local 설정을 조합하여 버전을 제어하려고 하는데, 너무 상위 디렉토리에서 local로 선언한다면 원하는 제어를 하기 어려워 질 수 있다.</p>
+
+<p>global/ local 제어가 뜻대로 제어가 되지 않는다면, local을 너무 상위 디렉토리에서 선언하지는 않았는지 확인해 볼 필요가 있다. .java-version 파일을 삭제하면, 기존에 선언한 버전 정보가 삭제된다.</p>
+:ET

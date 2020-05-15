@@ -1,0 +1,71 @@
+---
+layout: single
+title: 암호없이 SSH 키로 인증하기
+date: 2008-07-22 04:30:07.000000000 +09:00
+categories:
+- system
+tags: [linux, ssh]
+author:
+  login: everydayminder
+  email: 2jhyun@gmail.com
+  display_name: everydayminder
+  first_name: ''
+  last_name: ''
+---
+<strong><font color="#0000ff"><u><font color="#0000ff">1. Localhost에서 인증하기</font></u>
+</font></strong>
+루트의 권한을 가진 ID로 로그인하여 다양하게 스크립트를 실행할 경우,
+SSH 로그인을 필요로 할 수 있고, 이 때, 매번 password를 입력해야할 경우
+번거로울 수 있다.
+
+SSH는 암호 뿐만 아니라, public key, private key 기반의 인증을 제공하고 
+어렵지 않게 설정할 수 있다.
+
+공개키는 암호화를 위해 사용되고, 공개키에 매핑되는 개인키로 복호화를 할 수 있다.
+암호없이 SSH 로그인을 하려면, 클라이언트 시스템에서 키를 생성해야 한다.
+
+ssh-keygen 명령어를 사용하여, 키를 생성할 수 있고,&nbsp; -t 옵션을 통해 생성되는
+키의 type(RSA/DSA)을 지정할 수 있다.
+
+```
+$ ssh-keygen -t rsa -P ""
+```
+
+와 같이 하면, .ssh 디렉토리에 id_rsa와 id_rsa.pub라는 키가 생성된다.
+ir_rsa는 개인키, id_rsa.pub는 공개키이다.
+
+로컬 머신에서 이 키를 자동으로 사용하기 위해,
+```
+$cat $HOME/.ssh/id_rsa.pub &gt;&gt; $HOME/.ssh/authorized_keys
+```
+로 복사한다.
+
+그 후에,
+
+```
+$ ssh localhost
+```
+를 수행하여 확인해보면, localhost로 암호없이 키만으로 ssh 인증이 되는 것을
+확인할 수 있다.
+
+<font color="#0000ff"><strong><u>2. Remote host에서 인증하기</u></strong>
+</font>
+리모트호스트에서 암호없이 키만으로 SSH 인증하려면, 위와 같이 생성된 내 시스템의
+키 값이 내가 접속할 시스템의 authorized_keys에 포함되어 있으면 된다.
+
+생성된 공개키를 서버에 복사하기 위해, copy &amp; paste를 하거나, FTP 등을 사용하여
+복사하고 append 해도 된다.
+SSH가 설치되어 있으므로, SCP를 통해 복사하려면 다음과 같이 한다.
+
+```
+$ scp .ssh/id_rsa.pub target_system_ip:/tmp/tmp_id_rsa.pub
+```
+
+이후, 리모트 시스템에 접속하여, 조금전에 복사한
+/tmp/tmp_id_rsa.pub의 내용을 ./ssh/authorized_keys에 append 해주자.
+
+* 복사한 tmp_id_rsa.pub가 authorized_keys에 정확히 append 되었다면,
+꼭 지워줄 것.
+
+* 내 시스템에서 remote system으로 ssh target_system_ip 하여 확인해보자.
+성공적으로 설정되었다면, 암호 인증없이 연결되는 것을 확인할 수 있다.

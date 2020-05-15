@@ -1,0 +1,4 @@
+I"<p>Eclipse에 내장된 기능으로도 특정 객체의 hashCode()와 equals()를 작성할 수 있다.
+사용법은,
+마우스 오른쪽 클릭하여 나오는 context 메뉴로부터 Source &gt; Generate hashCode() and equals() … 를 클릭하면 된다.</p>
+:ET

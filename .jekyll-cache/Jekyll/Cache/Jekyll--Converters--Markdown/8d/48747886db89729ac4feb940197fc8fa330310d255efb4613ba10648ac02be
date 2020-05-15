@@ -1,0 +1,24 @@
+I"�<p>본 내용은 해당 링크내의 원본을 읽고, 키워드 등의 관점에서 축약하였음</p>
+
+<p>원본 링크 : 
+<a href="http://hadoop.apache.org/core/docs/current/hdfs_design.html">http://hadoop.apache.org/core/docs/current/hdfs_design.html</a></p>
+
+<p>본 내용은 해당 링크내의 원본을 읽고, 키워드 등의 관점에서 축약하였음</p>
+
+<p>■ Introduction</p>
+<ul>
+  <li>HDFS is highly fault-tolerant and is designed to be deployed on low-cost hardware.</li>
+  <li>HDFS provided high throughtput access to application data and is suitable for applications that have large data sets.</li>
+</ul>
+
+<p>■ Assumptions and Goals</p>
+<ul>
+  <li>Hadrware Failure : detection of faults and quick, automatic recovery</li>
+  <li>Streaming Data Access : It is designed more for batch processing rather than interactive use by users</li>
+  <li>Large Data Sets : It provides high aggregate data bandwidth and scale to hundreds of nodes in a single cluster.</li>
+  <li>Simple Coherency Model : write-once-read-many access model for files</li>
+  <li>“Moving Computation is Cheaper than Moving Data” : It is often better to migrate the computation closer to where the data is located rather than moving the data to where the application is running. HDFS provides interfaces for applications to move themselves closer to where the data is located.</li>
+  <li>Portability Across Heterogeneous Hardware and Software Platforms : HDFS is easily portable from one platform to another.</li>
+</ul>
+
+:ET

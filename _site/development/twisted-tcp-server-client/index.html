@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Twisted를 사용하여 TCP Server와 Client를 한번에 | Notes for future me</title>
+<meta name="description" content="Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.예를 들면, Administrator의 목적으로.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Twisted를 사용하여 TCP Server와 Client를 한번에">
+<meta property="og:url" content="http://localhost:4000/development/twisted-tcp-server-client/">
+
+
+  <meta property="og:description" content="Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.예를 들면, Administrator의 목적으로.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2008-09-19T02:28:44+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/twisted-tcp-server-client/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Twisted를 사용하여 TCP Server와 Client를 한번에</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Twisted를 사용하여 TCP Server와 Client를 한번에">
+    <meta itemprop="description" content="Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.예를 들면, Administrator의 목적으로.">
+    <meta itemprop="datePublished" content="2008-09-19T02:28:44+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Twisted를 사용하여 TCP Server와 Client를 한번에
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.
+앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.
+예를 들면, Administrator의 목적으로.</p>
+
+<p>이를 위해, 몇몇 패키지를 import 한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">twisted.internet.protocol</span> <span class="kn">import</span> <span class="n">ServerFactory</span>
+<span class="kn">from</span> <span class="nn">twisted.application</span> <span class="kn">import</span> <span class="n">internet</span><span class="p">,</span> <span class="n">service</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>추가적으로 서버의 프로토콜과 팩토리를 정의한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AdminProtocol</span><span class="p">(</span><span class="n">LineReceiver</span><span class="p">):</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s">'n'</span><span class="p">;</span>
+
+    <span class="k">def</span> <span class="nf">lineReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">line</span>
+
+    <span class="k">def</span> <span class="nf">connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'$NEW CLIENT : %d clients are connected'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">transport</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"Too many connections, try later"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">transport</span><span class="p">.</span><span class="n">loseConnection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">-</span> <span class="mi">1</span>       
+        <span class="k">print</span> <span class="s">'$CONNECTION LOST : %d clients are remained'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span>
+
+    <span class="k">def</span> <span class="nf">startedConnecting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'$started connecting..'</span>
+
+<span class="k">class</span> <span class="nc">AdminFactory</span><span class="p">(</span><span class="n">ServerFactory</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">AdminProtocol</span>
+    <span class="n">numProtocols</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ID</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'initialized'</span>
+</code></pre></div></div>
+
+<p>Service로 등록하기 위해,
+service.Service를 상속받아 각각 ServerFactory와 ClientFactory를 리턴하도록 구현한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AdminService</span><span class="p">(</span><span class="n">service</span><span class="p">.</span><span class="n">Service</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getTestFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">TestFactory</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">TestClient</span>
+        <span class="k">return</span> <span class="n">f</span>
+
+    <span class="k">def</span> <span class="nf">getAdminFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">AdminFactory</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">AdminProtocol</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+
+<span class="n">애플리케이션</span> <span class="n">서버로</span> <span class="n">묶어</span> <span class="n">주기</span> <span class="n">위해</span><span class="p">,</span> <span class="n">다음과</span> <span class="n">같이</span> <span class="n">등록한다</span><span class="p">.</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">python</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">Application</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="n">uid</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gid</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">AdminService</span><span class="p">()</span>
+
+<span class="n">serviceCollection</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">IServiceCollection</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+<span class="n">internet</span><span class="p">.</span><span class="n">TCPServer</span><span class="p">(</span><span class="mi">8002</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">getAdminFactory</span><span class="p">()).</span><span class="n">setServiceParent</span><span class="p">(</span><span class="n">serviceCollection</span><span class="p">)</span>
+<span class="n">internet</span><span class="p">.</span><span class="n">TCPClient</span><span class="p">(</span><span class="s">'localhost'</span><span class="p">,</span> <span class="mi">8001</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">getTestFactory</span><span class="p">()).</span><span class="n">setServiceParent</span><span class="p">(</span><span class="n">serviceCollection</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이와 같이 작성한 파이썬 파일을 tac 파일로 변경하면, twisted application으로 실행할 수 있게 되는데, 이대 twistd 명령어로 실행시켜야 한다.
+```
+twistd -ny finger.tac   #just like before
+twisted -y finger.tac   # daemonize, keep pid in twistd.pid</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#python" class="page__taxonomy-item" rel="tag">python</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#twisted" class="page__taxonomy-item" rel="tag">twisted</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2008-09-19T02:28:44+09:00">September 19, 2008</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Twisted%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC+TCP+Server%EC%99%80+Client%EB%A5%BC+%ED%95%9C%EB%B2%88%EC%97%90%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftwisted-tcp-server-client%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftwisted-tcp-server-client%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftwisted-tcp-server-client%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/development/currenttimemillis_in_python/" class="pagination--pager" title="어떤 구문의 소요시간을 milliseconds로 확인하려면
+">Previous</a>
+    
+    
+      <a href="/english/recommending-places-should-vs-had-better/" class="pagination--pager" title="Recommending places [should vs. had better]
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/twisted-tcp-server-client/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/twisted-tcp-server-client"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

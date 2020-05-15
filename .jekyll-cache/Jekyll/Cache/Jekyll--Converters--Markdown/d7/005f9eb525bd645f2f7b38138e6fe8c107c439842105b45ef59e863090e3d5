@@ -1,0 +1,31 @@
+I"�
+<p>현재 실행하는 클래스의 이름과 메소드 이름, 라인 넘버를 얻어보자.
+클래스의 인스턴스에서 호출한다는 가정하에,</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">toList</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+	<span class="kn">import</span> <span class="nn">sys</span>
+	<span class="n">className</span> <span class="o">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span>
+
+	<span class="n">methodName</span> <span class="o">=</span> <span class="n">callersname</span><span class="p">()</span>
+	<span class="n">lineNumber</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">].</span><span class="n">tb_lineno</span>
+
+	<span class="k">if</span> <span class="n">toList</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">className</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">lineNumber</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">"%s.%s[%d]"</span> <span class="o">%</span> <span class="p">(</span><span class="n">className</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">lineNumber</span><span class="p">)</span>
+</code></pre></div></div>
+<p>단, callersname()은</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">callersname</span><span class="p">():</span>
+	<span class="k">return</span> <span class="n">sys</span><span class="p">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">f_code</span><span class="p">.</span><span class="n">co_name</span>
+</code></pre></div></div>
+
+<p>그러나, 호출하는 클래스가 특정 클래스를 상속한 경우,
+부모에 정의된 함수를 자식 클래스에서 그대로 사용하면서 trace()를 호출하였다면,
+부모에 정의된 메소드를 실행하고 있더라도, 자식 클래스의 이름을 
+현재 클래스의 이름으로 리턴한다.</p>
+
+<p>즉, A에 a()가 정의되어 있고, b = B(A)이나, b.a()를 실행도중 trace()를 호출하면, 
+현재 클래스의 이름이 A로 출력되는 대신 B로 출력된다.</p>
+
+:ET

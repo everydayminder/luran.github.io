@@ -1,0 +1,50 @@
+I"0<p>보통 python 2.7.x가 설치가 되어 있고, python3은 별도 설치해야 하는데,
+여전히 ver 2.x에 대한 의존도가 있어서, 별도 개발환경을 3.x로 맞추고 싶다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install python3
+</code></pre></div></div>
+
+<p>로 osx에 python3을 설치하자.
+설치를 완료하면,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python
+
+Python 2.7.10 (default, Jul 30 2016, 18:31:42)
+[GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+</code></pre></div></div>
+
+<p>/usr/local/bin/python3에 symbolic link가 있는 것을 확인하고,</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python3
+
+Python 3.6.4 (default, Jan  6 2018, 11:51:15)
+[GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+</code></pre></div></div>
+
+<p>매번, python3라고 실행할 수는 없지 않나?
+그리고, 라이브러리 의존성도 생각해야지.</p>
+
+<p>virtualenvwrapper가 설치된 상태에서, 다음과 같이 실행하자.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkvirtualenv -p /usr/local/bin/python3 python3
+</code></pre></div></div>
+
+<p>그러면, $WORKON_HOME내, python3 프로파일이 설정되고,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>workon python3
+</code></pre></div></div>
+
+<p>를 실행하는 것으로, python3 환경으로 전환할 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(python3) $ python
+
+Python 3.6.4 (default, Jan  6 2018, 11:51:15)
+[GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)] on darwin
+
+Type "help", "copyright", "credits" or "license" for more information.
+</code></pre></div></div>
+
+<p>물론, venv에서 벗어나려면 deactivate</p>
+
+:ET

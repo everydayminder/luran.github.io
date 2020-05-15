@@ -1,0 +1,12 @@
+I"�<p>앞서 간단히 만든 서버에 접속할 클라이언트를 만들어 봤다.</p>
+<h3 id="프로토콜">프로토콜</h3>
+<p>```python
+class TestClient(LineReceiver):
+	def connectionMade(self):
+		self.sendLine(“A new connection has been made!”)
+		self.factory.clientReady(self)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def lineReeived(self, line):
+    print "$ got msg [%s]rn" % line
+</code></pre></div></div>
+:ET

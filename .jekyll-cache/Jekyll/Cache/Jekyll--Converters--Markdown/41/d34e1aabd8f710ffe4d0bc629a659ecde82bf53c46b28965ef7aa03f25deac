@@ -1,0 +1,92 @@
+I"�0<p>Eclipse에 내장된 기능으로도 특정 객체의 hashCode()와 equals()를 작성할 수 있다.
+사용법은,
+마우스 오른쪽 클릭하여 나오는 context 메뉴로부터 Source &gt; Generate hashCode() and equals() … 를 클릭하면 된다.</p>
+
+<p><img src="/images/201007/cfile8-uf-127b26174c1f10fe3caa61.png" class="aligncenter" width="700" height="825" alt="" />
+그러면, 다음과 같은 코드가 생성될 것이다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+		<span class="kd">final</span> <span class="kt">int</span> <span class="n">prime</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">link</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">link</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span>
+				<span class="o">+</span> <span class="o">((</span><span class="n">menuCode</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">menuCode</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span>
+				<span class="o">+</span> <span class="o">((</span><span class="n">menuName</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">menuName</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span>
+				<span class="o">+</span> <span class="o">((</span><span class="n">upperCode</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">upperCode</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+		<span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">obj</span><span class="o">)</span>
+			<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="nc">MenuItem</span> <span class="n">other</span> <span class="o">=</span> <span class="o">(</span><span class="nc">MenuItem</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">link</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">link</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">link</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">link</span><span class="o">))</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">menuCode</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">menuCode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">menuCode</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">menuCode</span><span class="o">))</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">menuName</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">menuName</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">menuName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">menuName</span><span class="o">))</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">upperCode</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">upperCode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="n">upperCode</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">upperCode</span><span class="o">))</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+
+<p>그런데, Apache의 라이브러리를 사용하면, 보다 깔끔한(!) 코드와 가독성을 얻을 수 있다.
+우선, common-lang*.jar를 구하고, 다음과 같이 작성한다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.commons.lang.builder.EqualsBuilder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.lang.builder.HashCodeBuilder</span><span class="o">;</span>
+
+<span class="o">...</span>
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">HashCodeBuilder</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">11</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">upperCode</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">menuCode</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">menuName</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">link</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">toHashCode</span><span class="o">();</span>
+	<span class="o">}</span>
+	
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">obj</span><span class="o">)</span>
+			<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+		
+		<span class="nc">MenuItem</span> <span class="n">other</span> <span class="o">=</span> <span class="o">(</span><span class="nc">MenuItem</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+		
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">EqualsBuilder</span><span class="o">()</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">upperCode</span><span class="o">,</span> <span class="n">other</span><span class="o">.</span><span class="na">upperCode</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">menuCode</span><span class="o">,</span> 	<span class="n">other</span><span class="o">.</span><span class="na">menuCode</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">menuName</span><span class="o">,</span> 	<span class="n">other</span><span class="o">.</span><span class="na">menuName</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">link</span><span class="o">,</span> 		<span class="n">other</span><span class="o">.</span><span class="na">link</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">isEquals</span><span class="o">();</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+
+:ET

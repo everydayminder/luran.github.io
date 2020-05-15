@@ -1,0 +1,46 @@
+---
+layout: single
+title: Pacemaker, Corosync,  DRBD 기반으로 구성했는데,  failover가 안된다?
+date: 2014-07-23 00:17:54.000000000 +09:00
+categories:
+- system
+tags: [pacemaker, corosync, drbd, failover]
+author:
+  login: everydayminder
+  email: 2jhyun@gmail.com
+  display_name: everydayminder
+  first_name: ''
+  last_name: ''
+---
+1.
+만약, 이전까지 잘 되던 failover가 갑자기 되지 않는다던지,
+어느 정도 부하가 걸린 환경에서, failover까지는 정상적으로 수행했으나,
+failback을 시도했더니 정상적으로 수행되지 않는다면?
+
+2.
+crm_mon 명령어로 조회하면, 등록했던 리소스에 문제가 있는지/없는지 확인할 수 있다.
+때때로, crm_mon 명령어로는 문제점이 나타나지 않는데도 failover가 되지 않는다면?
+이럴 떄는 특정 리소스의 failcount가 INFINITY로 바뀌어 있는 경우가 있다.
+이 값을 0으로 변경해 줘야 다시 failover가 정상 동작한다.
+
+failcount를 조회하려면 다음과 같이 수행할 수 있다.
+
+```
+crm resource failcount 리소스명 show 노드명
+```
+
+이렇게 조회했더니, 특정 리소스의 failcount가 INFINITY로 나타난다면?
+다음과 같이 failcount를 리셋한다.
+
+```
+crm resource cleanup 리소스명
+```
+
+그런데,
+에러 메시지를 없애고자, crm resource cleanup 자원명을 수행했는데도,
+failover가 되지 않는다면?
+
+설정된 모든 노드에서 각각 failcount를 조회해보자.
+각 노드에 등록된 리소스들의 failcount들 중, INFINITY가 존재한다면, 해당 노드에서 cleanup을 수행한다.
+그리고 나서, 다시 failover 상황에서 검증한다.
+

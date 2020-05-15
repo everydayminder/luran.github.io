@@ -1,0 +1,3 @@
+I"�<h2 id="현재-클래스의-메소드-이름-얻기">현재 클래스의 메소드 이름 얻기</h2>
+<p>class Base 에 대해, Base.<strong>dict</strong> 라고 하면, Base에 선언된 정보를 얻을 수 있으나,</p>
+:ET

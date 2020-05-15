@@ -1,0 +1,4 @@
+I"�<p>지난 글에 설정한 바대로 ant task를 정상적으로 진행했다면,
+ant task로 emma.report 태스크를 수행했을 때, coverage.html과 coverage.xml이 생성되었을 것이다.
+참고로, 생성된 coverage.html을 살펴보자.</p>
+:ET

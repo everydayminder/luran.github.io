@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-05-15T14:06:56+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Notes for future me</title><subtitle>blog</subtitle><author><name>everydayminder</name></author><entry><title type="html">jenv 설치하기</title><link href="http://localhost:4000/development/install-jenv/" rel="alternate" type="text/html" title="jenv 설치하기" /><published>2020-05-09T13:00:00+09:00</published><updated>2020-05-09T13:00:00+09:00</updated><id>http://localhost:4000/development/install-jenv</id><content type="html" xml:base="http://localhost:4000/development/install-jenv/">&lt;h1 id=&quot;여러-버전-java&quot;&gt;여러 버전 java&lt;/h1&gt;
+
+&lt;p&gt;사실 개발하면서 Java의 버전을 계속 바꿀 일은 별로 없는 것 같다.&lt;/p&gt;
+
+&lt;p&gt;프로젝트마다 바꿀 일도 없고, 회사 정책이 바뀌지 않는한 기존의 버전을 사용할 가능성이 높다.&lt;/p&gt;
+
+&lt;p&gt;또한, 기존에 java 8을 사용한 프로젝트라면 특별한 이유가 없는 한 Java8을 유지보수할 가능성이 높다.&lt;/p&gt;
+
+&lt;p&gt;Java의 버전 릴리즈 주기가 6개월로 짧아지면서, 여러 버전을 설치하고 사용하고자 할 때 jenv를 사용하면 좋을 것이다. (Python처럼) 3년 주기의 Java LTS 버전을 감안하면, production에서는 현재로서는 Java11이 유용한 선택지가 될 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/202005/jenv.png&quot; alt=&quot;jenv.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;https://en.wikipedia.org/wiki/Java_version_history&lt;/p&gt;
+
+&lt;h2 id=&quot;jenv-java용-pyenv&quot;&gt;jenv: Java용 Pyenv&lt;/h2&gt;
+
+&lt;p&gt;Python 개발 환경에 익숙한 사람들은 아마 이미 pyenv에 익숙할 것이다.&lt;/p&gt;
+
+&lt;p&gt;그리고, java 환경에도 동일한 tool이 있다. 이름도 사용법도 유사하다. pyenv를 써온 사람들이라면 그대로 쓰면 된다. (약간의 명령어 차이와 사용법 차이는 있겠지만)&lt;/p&gt;
+
+&lt;h3 id=&quot;homebrew-cask-설치&quot;&gt;Homebrew, Cask 설치&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew upgrade brew-cask &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew cleanup &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew cask cleanup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;java-설치&quot;&gt;Java 설치&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew cask info java
+brew cask install java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2020/5 기준, java14가 설치된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;jenv-설치-환경-설정&quot;&gt;jenv 설치/ 환경 설정&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;jenv
+
+&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;which jenv &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;jenv init -&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;fi
+
+&lt;/span&gt;jenv add /Library/Java/JavaVirtualMachines/openjdk-14.0.1.jdk/Contents/Home
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;설치/ 설정 후 jenv versions를 실행해 보면,&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jenv versions
+  system
+  1.8
+  1.8.0.192
+* 14.0 (set by /Library/Java/JavaVirtualMachines/openjdk-14.0.1.jdk/Contents/Home/.java-version)
+  14.0.1
+  openjdk64-14.0.1
+  oracle64-1.8.0.192
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;만약, LTS 버전인 Java 11을 설치하고자 한다면, 다음과 같이 해보자.&lt;/p&gt;
+
+&lt;p&gt;AdaptOpenJdk를 사용하기 위해&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk11
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;설치 후, /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home 를 jenv에 추가해 준다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home 
+
+$ jenv versions
+  system
+* 1.8 (set by /Users/luran/.jenv/version)
+  1.8.0.192
+  11.0
+  11.0.7
+  14.0
+  14.0.1
+  openjdk64-11.0.7
+  openjdk64-14.0.1
+  oracle64-1.8.0.192
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;jenv-실행&quot;&gt;jenv 실행&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jenv 0.5.2
+Usage: jenv &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]
+
+Some useful jenv commands are:
+   commands    List all available jenv commands
+   local       Set or show the local application-specific Java version
+   global      Set or show the global Java version
+   shell       Set or show the shell-specific Java version
+   rehash      Rehash jenv shims (run this after installing executables)
+   version     Show the current Java version and its origin
+   versions    List all Java versions available to jenv
+   which       Display the full path to an executable
+   whence      List all Java versions that contain the given executable
+
+See `jenv help &amp;lt;command&amp;gt;' for information on a specific command.
+For full documentation, see: https://github.com/hikage/jenv#readme
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;jenv만 실행하면, pyenv와 마찬가지로 가능 옵션을 알 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;versions: 사용 가능한 옵션들 보기&lt;/li&gt;
+  &lt;li&gt;version: 현재 동작하는 옵션 보기&lt;/li&gt;
+  &lt;li&gt;local: 특정 디렉토리 이하 버전 적용&lt;/li&gt;
+  &lt;li&gt;global: 전체 버전 적용&lt;/li&gt;
+  &lt;li&gt;shell: 현재 shell에만 적용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jenv global 1.8
+jenv local 11.0
+jenv shell 14.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;등과 같이 설정하여 사용하면 된다.&lt;/p&gt;
+
+&lt;p&gt;특히 local로 설정하게 되면, .java-version에 버전 정보가 저장된다.&lt;/p&gt;
+
+&lt;p&gt;만약, global 설정과 local 설정을 조합하여 버전을 제어하려고 하는데, 너무 상위 디렉토리에서 local로 선언한다면 원하는 제어를 하기 어려워 질 수 있다.&lt;/p&gt;
+
+&lt;p&gt;global/ local 제어가 뜻대로 제어가 되지 않는다면, local을 너무 상위 디렉토리에서 선언하지는 않았는지 확인해 볼 필요가 있다. .java-version 파일을 삭제하면, 기존에 선언한 버전 정보가 삭제된다.&lt;/p&gt;</content><author><name>{&quot;login&quot;=&gt;&quot;everydayminder&quot;, &quot;email&quot;=&gt;&quot;2jhyun@gmail.com&quot;, &quot;display_name&quot;=&gt;&quot;everydayminder&quot;, &quot;first_name&quot;=&gt;&quot;&quot;, &quot;last_name&quot;=&gt;&quot;&quot;}</name><email>2jhyun@gmail.com</email></author><category term="jenv" /><category term="java" /><summary type="html">여러 버전 java</summary></entry><entry><title type="html">Local Airflow 설치하기</title><link href="http://localhost:4000/development/installing-local-airflow/" rel="alternate" type="text/html" title="Local Airflow 설치하기" /><published>2018-12-05T00:30:00+09:00</published><updated>2018-12-05T00:30:00+09:00</updated><id>http://localhost:4000/development/installing-local-airflow</id><content type="html" xml:base="http://localhost:4000/development/installing-local-airflow/">&lt;p&gt;예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.&lt;/p&gt;
+
+&lt;h1 id=&quot;airflow-local-설치-osx&quot;&gt;Airflow Local 설치 (OSX)&lt;/h1&gt;
+&lt;p&gt;AirFlow의 공식 사이트는 https://airflow.apache.org/ 이다.
+다른 어떤 문서보다 공식사이트내 설치, 설정 활용 등에 대한 가이드를 먼저 참고하는 것이 좋다.&lt;/p&gt;
+
+&lt;p&gt;pip로 airflow를 설치할 것이므로, 다음과 같이 pip를 설치한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;예전-방식&quot;&gt;예전 방식)&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;easy_install pip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;설치시 문제가 발생하여, pip를 하위 버전으로 다운그레이드하고,&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--pip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;9.0.3
+pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;airflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;와 같이 설치를 진행하였다. (당시 별 문제 없었음)&lt;/p&gt;
+
+&lt;h2 id=&quot;최근-방식&quot;&gt;최근 방식)&lt;/h2&gt;
+&lt;p&gt;그런데, 2018/12/04 기준으로 위와 같이 진행하니 다른 에러가 발생하여, 아래와 같이 변경 설치하였다. 설치 환경에 따라 다를 수 있으므로, 에러가 나는 경우에만 관련 내용을 참고하면 될 듯 하다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache-airflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;만약, 다음과 같은 에러가 뜬다면&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;File &quot;/private/tmp/pip-build-pq6f_5/apache-airflow/setup.py&quot;, line 49, in verify_gpl_dependency
+
+ raise RuntimeError(&quot;By default one of Airflow's dependencies installs a GPL &quot;
+
+ RuntimeError: By default one of Airflow's dependencies installs a GPL dependency (unidecode). To avoid this dependency set SLUGIFY_USES_TEXT_UNIDECODE=yes in your environment when you install or upgrade Airflow. To force installing the GPL version set AIRFLOW_GPL_UNIDECODE
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;맨 마지막 줄에 뜨는 메시지를 반영하여, 다음과 같이 실행한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SLUGIFY_USES_TEXT_UNIDECODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes &lt;/span&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache-airflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;또, 만약 dateutil과 관련하여 다음과 같은 에러가 뜬다면, (예전엔 못봤던 에러)&lt;/p&gt;
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Found existing installation: python-dateutil 1.5
+    Uninstalling python-dateutil-1.5:
+Could not install packages due to an EnvironmentError:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;최종적으로 다음과 같이 실행하여 airflow 설치를 완료하였다.&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SLUGIFY_USES_TEXT_UNIDECODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes &lt;/span&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache-airflow &lt;span class=&quot;nt&quot;&gt;--ignore-installed&lt;/span&gt; python-dateutil
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;airflow-설정-db-초기화&quot;&gt;Airflow 설정 DB 초기화&lt;/h1&gt;
+&lt;p&gt;설치 후, 1회만 해주면 되는 job으로 airflow가 내부 참조하는 sqlite db 초기화 작업이 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airflow initdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;airflow-web-server-실행&quot;&gt;Airflow Web Server 실행&lt;/h1&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airflow webserver &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;포트&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/201812/airflow_startup_samples.png&quot; alt=&quot;airflow_startup_samples.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;웹 서버를 띄우면, 위와 같이 여러 샘플 workflow들이 포함되어 있다.&lt;/p&gt;
+
+&lt;h1 id=&quot;example&quot;&gt;Example&lt;/h1&gt;
+&lt;p&gt;제일 위의 example_bash_operator를 살펴보면, 세부 내역을 확인할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/201812/airflow_example_treeview.png&quot; alt=&quot;airflow_example_treeview.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;각 job의 실행 순서가 다소 헷갈릴 수 있는데, leaf 부터 root로 올라가는 실행 구조이다. 
+이는 graph view에서 보면 좀더 직관적으로 표현된다. (화살표가 보여서)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/201812/airflow_example_graphview.png&quot; alt=&quot;airflow_example_graphview.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;DAG(Directed Acyclic Graph)는 말 그대로, 방향성이 있으면서 사이클이 없는 그래프 즉, 일방통행 그래프라 할 수 있다. 임의의 노드를 클릭하면, context menu가 뜨는데 해당 노드별 세부 내용 조회 및 지시를 할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/201812/airflow_node_contextmenu.png&quot; alt=&quot;airflow_node_contextmenu.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;상단의 코드 탭을 클릭하면, 이 DAG의 소스를 볼 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# -*- coding: utf-8 -*-
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# &quot;License&quot;); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;builtins&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datetime&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timedelta&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;airflow&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;airflow.models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DAG&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;airflow.operators.bash_operator&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BashOperator&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;airflow.operators.dummy_operator&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DummyOperator&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'owner'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'airflow'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'start_date'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;airflow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;days_ago&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DAG&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dag_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'example_bash_operator'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;default_args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;schedule_interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'0 0 * * *'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dagrun_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timedelta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minutes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;run_this_last&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DummyOperator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;task_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'run_this_last'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# [START howto_operator_bash]
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run_this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BashOperator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;task_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'run_after_loop'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bash_command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'echo 1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# [END howto_operator_bash]
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;run_this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run_this_last&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BashOperator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;task_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'runme_'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;bash_command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'echo &quot;&quot; &amp;amp;&amp;amp; sleep 1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run_this&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# [START howto_operator_bash_template]
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;also_run_this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BashOperator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;task_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'also_run_this'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bash_command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'echo &quot;run_id= | dag_run=&quot;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# [END howto_operator_bash_template]
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;also_run_this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run_this_last&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cli&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;workflow-실행순서-지정&quot;&gt;Workflow 실행순서 지정&lt;/h1&gt;
+&lt;p&gt;위의 tree view 또는 graph view에 표현된 바와 같이, job의 실행 순서를 지정하는 부분이
+task » run_this와 같이 표기된 부분이다.&lt;/p&gt;
+
+&lt;p&gt;Airflow 공식 가이드에도 소개된 바와 같이 두 가지의 표현방식을 사용할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-using-set_upstream-set_downstream-methods&quot;&gt;1. using set_upstream(), set_downstream() methods&lt;/h2&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;op1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_downstream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;op2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_downstream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;op3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_upstream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;2-using-bitwise-operators&quot;&gt;2. using bitwise operators&lt;/h2&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;op1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;op2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;op3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;op4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;두 표현식 모두 실행순서는 동일하다.
+op1을 먼저 실행하고, op2, op3의 순서대로 실행된다.&lt;/p&gt;
+
+&lt;h1 id=&quot;scheduler-실행&quot;&gt;Scheduler 실행&lt;/h1&gt;
+&lt;p&gt;DAG의 실행주기를 설정한 후, scheduler daemon을 띄워서 주기적으로 실행되도록 한다.&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airflow scheduler
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>{&quot;login&quot;=&gt;&quot;everydayminder&quot;, &quot;email&quot;=&gt;&quot;2jhyun@gmail.com&quot;, &quot;display_name&quot;=&gt;&quot;everydayminder&quot;, &quot;first_name&quot;=&gt;&quot;&quot;, &quot;last_name&quot;=&gt;&quot;&quot;}</name><email>2jhyun@gmail.com</email></author><category term="airflow" /><summary type="html">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.</summary></entry><entry><title type="html">Docker 기반 Local Spark Cluster 설치하기</title><link href="http://localhost:4000/development/installing-spark-cluster/" rel="alternate" type="text/html" title="Docker 기반 Local Spark Cluster 설치하기" /><published>2018-12-02T23:35:00+09:00</published><updated>2018-12-02T23:35:00+09:00</updated><id>http://localhost:4000/development/installing-spark-cluster</id><content type="html" xml:base="http://localhost:4000/development/installing-spark-cluster/">&lt;p&gt;Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.&lt;/p&gt;
+
+&lt;h1 id=&quot;spark-cluster-project-받기&quot;&gt;Spark Cluster Project 받기&lt;/h1&gt;
+&lt;p&gt;인터넷에서 다음의 프로젝트를 받아서 설치한다.&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/big-data-europe/docker-hadoop-spark-workbench.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;spark-cluster-시작하기&quot;&gt;Spark Cluster 시작하기&lt;/h1&gt;
+&lt;p&gt;위 프로젝트를 clone한 디렉토리에서, 다음과 같이 실행하면 프로젝트내 기술된 docker-compose.yml을 바탕으로 spark cluster가 기동된다. (OSX 기준, docker-for-mac 등이 설치되어 있어야 함)&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;모든 이미지들을 최초 다운로드 받는데 다소 시간이 걸리지만,
+이후에는 곧바로 실행된다.&lt;/p&gt;
+
+&lt;h1 id=&quot;실행중인-프로세스-확인&quot;&gt;실행중인 프로세스 확인&lt;/h1&gt;
+&lt;p&gt;위와 같이 클러스터를 시작하면, 원본 github 페이지에 안내된 바와 같이 아래 프로세스들이 동작하는 것을 확인할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;실행하면, 아래와 같이 동작 중인 container들이 나타난다.&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS                    PORTS                                                      NAMES
+bfbe4579b5e8        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   &lt;span class=&quot;s2&quot;&gt;&quot;entrypoint.sh /bin/…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   0.0.0.0:8081-&amp;gt;8081/tcp                                     docker-hadoop-spark-workbench_spark-worker_1
+47e1225e695c        bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8     &lt;span class=&quot;s2&quot;&gt;&quot;/entrypoint.sh /run…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   0.0.0.0:50075-&amp;gt;50075/tcp                                   docker-hadoop-spark-workbench_datanode_1
+00effc501b21        bde2020/spark-master:2.1.0-hadoop2.8-hive-java8   &lt;span class=&quot;s2&quot;&gt;&quot;entrypoint.sh /bin/…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   0.0.0.0:7077-&amp;gt;7077/tcp, 6066/tcp, 0.0.0.0:8080-&amp;gt;8080/tcp   spark-master
+2ad2864b8ef2        bde2020/hadoop-namenode:1.1.0-hadoop2.8-java8     &lt;span class=&quot;s2&quot;&gt;&quot;/entrypoint.sh /run…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   0.0.0.0:50070-&amp;gt;50070/tcp                                   namenode
+19f6e280b334        bde2020/spark-notebook:2.1.0-hadoop2.8-hive       &lt;span class=&quot;s2&quot;&gt;&quot;/entrypoint.sh /run…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes             0.0.0.0:9001-&amp;gt;9001/tcp                                     spark-notebook
+5284894c2597        bde2020/hdfs-filebrowser:3.11                     &lt;span class=&quot;s2&quot;&gt;&quot;/entrypoint.sh buil…&quot;&lt;/span&gt;   36 minutes ago      Up 36 minutes             0.0.0.0:8088-&amp;gt;8088/tcp                                     docker-hadoop-spark-workbench_hue_1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이는 프로젝트 github에 안내된 바와 같이&lt;/p&gt;
+
+&lt;p&gt;Namenode: http://localhost:50070
+Datanode: http://localhost:50075
+Spark-master: http://localhost:8080
+Spark-notebook: http://localhost:9001
+Hue (HDFS Filebrowser): http://localhost:8088/home&lt;/p&gt;
+
+&lt;p&gt;의 내용을 포함하고 있다.
+즉, 브라우저에서 위의 주소를 입력하면 동작여부를 가시적으로 확인할 수 있다.&lt;/p&gt;
+
+&lt;h1 id=&quot;spark-application-실행하기&quot;&gt;Spark Application 실행하기&lt;/h1&gt;
+&lt;p&gt;다음과 같이 spark-submit 명령어로 애플리케이션을 실행할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+spark-submit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--deploy-mode&lt;/span&gt; client &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--num-executors&lt;/span&gt; 10 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--driver-memory&lt;/span&gt; 40g &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--driver-cores&lt;/span&gt; 8 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--executor-memory&lt;/span&gt; 80g &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--executor-cores&lt;/span&gt; 10 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; spark.yarn.executor.memoryOverhead&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4096 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--jars&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;참조할 jar 경로 포함한 이름&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;패키지명 포함한 실행 대상 클래스 이름&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;클래스 파일이 들어있는 jar 파일이름&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;spark-worker-node-scale-out&quot;&gt;Spark Worker Node Scale Out&lt;/h1&gt;
+&lt;p&gt;혹시, 이미 동작중인 클러스터내 worker의 수를 더 늘리고 싶다면? 다음의 명령어로 worker의 수를 늘릴 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose scale spark-worker&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;단, 위와 같이 프로젝트 파일을 클론한 기본 상태에서는, scale out 시도시 port 매핑 충돌이 발생하여 다음과 같은 에러가 발생한다.&lt;/p&gt;
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;WARNING: The scale command is deprecated. Use the up command with the --scale flag instead.
+WARNING: The &quot;spark-worker&quot; service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash.
+Starting docker-hadoop-spark-workbench_spark-worker_1 ... done
+Creating docker-hadoop-spark-workbench_spark-worker_2 ... error
+Creating docker-hadoop-spark-workbench_spark-worker_3 ... error
+
+ERROR: for docker-hadoop-spark-workbench_spark-worker_3  Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_3 (e6579099d4cff6a3d7986dae5ebdd0ab594584d2ed2e2bd3974174016ffe9d57): Bind for 0.0.0.0:8081 failed: port is already allocated'
+
+ERROR: for docker-hadoop-spark-workbench_spark-worker_2  Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_2 (8bc751510f81453fb3ec2225d6ee0f4e1900569412644b64eafdec213a80e995): Bind for 0.0.0.0:8081 failed: port is already allocated'
+ERROR: Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_3 (e6579099d4cff6a3d7986dae5ebdd0ab594584d2ed2e2bd3974174016ffe9d57): Bind for 0.0.0.0:8081 failed: port is already allocated'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;따라서, docker-compose.yml 파일 중, worker의 포트 매핑 정보를 주석처리 또는 삭제하고 다시 실행한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  spark-worker:
+    image: bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+#    ports:
+#      - 8081:8081
+    env_file:
+      - ./hadoop.env
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위의 커맨드를 실행하면,&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Starting docker-hadoop-spark-workbench_spark-worker_1 ... &lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;Creating docker-hadoop-spark-workbench_spark-worker_2 ... &lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;Creating docker-hadoop-spark-workbench_spark-worker_3 ... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;와 같이 메시지가 뜨고, docker container 리스트에도 반영된다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS                    PORTS                                                      NAMES
+dcc35f0449ce        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   &lt;span class=&quot;s2&quot;&gt;&quot;entrypoint.sh /bin/…&quot;&lt;/span&gt;   47 seconds ago      Up 46 seconds &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   8081/tcp                                                   docker-hadoop-spark-workbench_spark-worker_2
+3915f1e48222        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   &lt;span class=&quot;s2&quot;&gt;&quot;entrypoint.sh /bin/…&quot;&lt;/span&gt;   47 seconds ago      Up 46 seconds &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   8081/tcp                                                   docker-hadoop-spark-workbench_spark-worker_3
+bfbe4579b5e8        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   &lt;span class=&quot;s2&quot;&gt;&quot;entrypoint.sh /bin/…&quot;&lt;/span&gt;   3 hours ago         Up 3 hours &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;healthy&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;      0.0.0.0:8081-&amp;gt;8081/tcp                                     docker-hadoop-spark-workbench_spark-worker_1
+47e1225e695c        bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8     &lt;span class=&quot;s2&quot;&gt;&quot;/entrypoint.sh /run…&quot;&lt;/span&gt;   3 hours
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;앞서 표기한, master 노드의 웹에 들어가서 확인해도 이 내용이 반영되어 있음을 확인 가능하다.
+&lt;img src=&quot;/images/201812/spark-workernode3.png&quot; alt=&quot;spark-workernode3.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;spark-cluster-종료하기&quot;&gt;Spark Cluster 종료하기&lt;/h1&gt;
+&lt;p&gt;실행 중인 클러스터는 다음과 같이 종료한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose down
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>{&quot;login&quot;=&gt;&quot;everydayminder&quot;, &quot;email&quot;=&gt;&quot;2jhyun@gmail.com&quot;, &quot;display_name&quot;=&gt;&quot;everydayminder&quot;, &quot;first_name&quot;=&gt;&quot;&quot;, &quot;last_name&quot;=&gt;&quot;&quot;}</name><email>2jhyun@gmail.com</email></author><category term="spark" /><category term="docker" /><summary type="html">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.</summary></entry><entry><title type="html">Local Zeppelin 설치하기 (OSX)</title><link href="http://localhost:4000/development/installing-zeppelin/" rel="alternate" type="text/html" title="Local Zeppelin 설치하기 (OSX)" /><published>2018-12-02T09:00:00+09:00</published><updated>2018-12-02T09:00:00+09:00</updated><id>http://localhost:4000/development/installing-zeppelin</id><content type="html" xml:base="http://localhost:4000/development/installing-zeppelin/">&lt;p&gt;brew가 실행가능하도록 설정되어 있다는 전제하에&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache-zeppelin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 간편하게 zeppelin을 설치한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;alias-설정&quot;&gt;alias 설정&lt;/h1&gt;
+&lt;p&gt;실행 편의를 위해, 다음과 같이 alias를 선언한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;which zeppelin.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;로 zeppelin 설치 위치를 확인하고,&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias zeppelin-start=&quot;/usr/local/bin/zeppelin.sh start&quot;
+alias zeppelin-stop=&quot;/usr/local/bin/zeppelin.sh stop&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;과 같이 본인이 사용하는 shell에 등록한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;zeppelin-실행&quot;&gt;Zeppelin 실행&lt;/h1&gt;
+&lt;p&gt;zeppelin을 실행하려면, java runtime이 설치되어 있어야 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;zeppelin-start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/images/201812/zeppelin-start.png&quot; alt=&quot;zeppelin-start.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;zeppelin-종료&quot;&gt;Zeppelin 종료&lt;/h1&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;zeppelin-stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;환경설정&quot;&gt;환경설정&lt;/h1&gt;
+&lt;p&gt;설치 디렉토리 하위로 탐색해 보면, conf 디렉토리를 발견할 수 있을 것이다.&lt;/p&gt;
+
+&lt;p&gt;예) /usr/local/Cellar/apache-zeppelin/0.8.0/libexec/conf&lt;/p&gt;
+
+&lt;p&gt;기본 설치를 완료하면, 위 디렉토리 내 설정파일들은 모두 .template의 확장자로 되어있다. (일종의 주석처리)
+이 .template 부분만 이름에서 지워주면, 원래 파일에 기록되어 있는 설정 내용들이 적용된다.
+바꿔말하면, 원하는 설정을 변경 후 파일이름으로부터 .template을 없애주고 서비스를 재시작하면 변경한 설정이 반영된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;실행-포트-변경&quot;&gt;실행 포트 변경&lt;/h2&gt;
+&lt;p&gt;conf/zeppelin-site.xml.template내 아래 설정을 찾아서, 
+원하는 포트로 변경 후, 저장하고 zeppelin-site.xml.template를 zeppelin-site.xml로 변경 저장한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8080&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server port.&lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;계정-권한-설정-anonymous---계정-지정&quot;&gt;계정 권한 설정 (anonymous -&amp;gt; 계정 지정)&lt;/h2&gt;
+&lt;p&gt;기본 설정은 익명계정으로 모든 노트북이 공유되도록 되어 있다.
+만약, 계정별로 관리하거나 보호하고자 한다면, 계정과 관련된 설정을 별도 진행해야 한다.
+계정 및 보안에 대한 설정은 conf/shiro.ini.template에 기록이 되어 있다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[users]
+# List of users with their password allowed to access Zeppelin.
+# To use a different strategy (LDAP / Database / ...) check the shiro doc at http://shiro.apache.org/configuration.html#Configuration-INISections
+# To enable admin user, uncomment the following line and set an appropriate password.
+#admin = password1, admin
+user1 = password2, role1, role2
+user2 = password3, role3
+user3 = password4, role2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위의 내용을 참조하여 계정 및 계정의 role을 부여하고 shiro.ini.template을 shiro.ini로 변경하고 서비스를 재시작하면 적용된다.&lt;/p&gt;</content><author><name>{&quot;login&quot;=&gt;&quot;everydayminder&quot;, &quot;email&quot;=&gt;&quot;2jhyun@gmail.com&quot;, &quot;display_name&quot;=&gt;&quot;everydayminder&quot;, &quot;first_name&quot;=&gt;&quot;&quot;, &quot;last_name&quot;=&gt;&quot;&quot;}</name><email>2jhyun@gmail.com</email></author><category term="zeppelin" /><summary type="html">brew가 실행가능하도록 설정되어 있다는 전제하에 brew install apache-zeppelin 위와 같이 간편하게 zeppelin을 설치한다.</summary></entry><entry><title type="html">Integrating Gradle Test Local Sonar</title><link href="http://localhost:4000/development/Integrating-Gradle-Test-Local-Sonar/" rel="alternate" type="text/html" title="Integrating Gradle Test Local Sonar" /><published>2018-08-15T00:00:00+09:00</published><updated>2018-08-15T00:00:00+09:00</updated><id>http://localhost:4000/development/Integrating-Gradle-Test-Local-Sonar</id><content type="html" xml:base="http://localhost:4000/development/Integrating-Gradle-Test-Local-Sonar/">&lt;h3 id=&quot;docker로-sonarqube-설치&quot;&gt;Docker로 sonarqube 설치&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker pull sonarqube
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;sonarqube 이미지를 다운로드하고 실행시킨다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; sonarqube &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9000:9000 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9092:9092 sonarqube:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이제 로컬 sonar를 확인할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://localhost:9000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;spring-boot-gradle-sample-project-생성&quot;&gt;Spring Boot Gradle Sample Project 생성&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;spring init &lt;span class=&quot;nt&quot;&gt;--build&lt;/span&gt; gradle &lt;span class=&quot;nt&quot;&gt;--package-name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytest &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytest &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytest &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytest &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gradle-property-선언&quot;&gt;Gradle Property 선언&lt;/h3&gt;
+
+&lt;div class=&quot;language-groovy highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;buildscript&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;classpath&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2&quot;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;org.sonarqube&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'groovy'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;plugin:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'jacoco'&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sonarqube&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.host.url&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://localhost:9090&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.sources&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;src&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.language&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;java&quot;&lt;/span&gt; 
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.sourceEncoding&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;UTF-8&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.exclusions&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;**/*Test*.*, **/Q*.java&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.test.inclusions&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;**/*Spec.groovy, **/*Test.java&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.coverage.exclusions&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;**/*Test*.*, **/Q*.java&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.java.junit.reportPaths&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${buildDir}/test-results&quot;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sonar.jacoco.reportPaths&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${buildDir}/jacoco/jacoco.exec&quot;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;testCompile&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.spockframework:spock-core:1.1-groovy-2.4'&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;testCompile&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'org.spockframework:spock-spring:1.1-groovy-2.4'&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;testRuntime&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'cglib:cglib-nodep:3.2.4'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;기존 build.gradle에 위 내용을 추가한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;gradle-task로-sonarqube-확인&quot;&gt;Gradle task로 sonarqube 확인&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./gradlew &lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;sonarqube &lt;span class=&quot;nt&quot;&gt;-Dsonar&lt;/span&gt;.host.url&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://localhost:9000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;로컬에서 테스트한 결과를 sonarqube로 연동하여 곧바로 확인할 수 있다.&lt;/p&gt;</content><author><name>everydayminder</name></author><category term="docker" /><category term="sonarqube" /><summary type="html">Docker로 sonarqube 설치</summary></entry><entry><title type="html">Jekyll로 블로그 이전시 _drafts에서 _posts로 옮기기</title><link href="http://localhost:4000/life/filename-mangement-when-migrating-to-jekyll/" rel="alternate" type="text/html" title="Jekyll로 블로그 이전시 _drafts에서 _posts로 옮기기" /><published>2018-07-02T00:00:00+09:00</published><updated>2018-07-02T00:00:00+09:00</updated><id>http://localhost:4000/life/filename-mangement-when-migrating-to-jekyll</id><content type="html" xml:base="http://localhost:4000/life/filename-mangement-when-migrating-to-jekyll/">&lt;h1 id=&quot;배경&quot;&gt;배경&lt;/h1&gt;
+
+&lt;p&gt;앞서, export -&amp;gt; import를 하면서 신경쓰게 된 부분은,&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이미지를 모두 assets에 통째로 넣고 관리할 것인가?
+    &lt;ul&gt;
+      &lt;li&gt;분명 같은 파일명을 주게 될 일도 생길테니, images/YYYYMM으로 디렉토리를 만들고 파일을 넣자&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;기존에 export한 포스트명과 이미지 이름들이 모두 인코딩 되어 있다.
+    &lt;ul&gt;
+      &lt;li&gt;나중에 수정하거나, 변경하려면 찾아내기 힘들 것 같다.&lt;/li&gt;
+      &lt;li&gt;그대로 두면, 유지보수 하기 힘들 것 같다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;물론, Git에 올리면 읽을 수도 있겠지만 개발환경에서는 분간해 내기 어렵다.&lt;/p&gt;
+
+&lt;p&gt;결국, _drafts에 있는 포스트들을 _posts로 옮기는 작업을 하되, 이름을 변경해가면서 옮겨줘야 한다. (불편)&lt;/p&gt;
+
+&lt;h1 id=&quot;활용&quot;&gt;활용&lt;/h1&gt;
+
+&lt;p&gt;vi에서 본문 편집 -&amp;gt; mv _drafts/원본파일(한글).md _posts/영문파일.md&lt;/p&gt;
+
+&lt;p&gt;이런 식으로 작업하려니 번거롭기 그지 없다.&lt;/p&gt;
+
+&lt;p&gt;이 때, NERDTreeFind를 사용해 보자. (사전 설치한 플러그인)&lt;/p&gt;
+
+&lt;h2 id=&quot;nerdtreefind-실행&quot;&gt;NERDTreeFind 실행&lt;/h2&gt;
+
+&lt;h3 id=&quot;파일-이동&quot;&gt;파일 이동&lt;/h3&gt;
+
+&lt;p&gt;extension mode로부터, m을 누르면 다음과 같이 하단에 interactive menu가 뜬다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NERDTree Menu. Use j/k/enter and the shortcuts indicated
+==========================================================
+&amp;gt; (a)dd a childnode
+  (m)ove the current node
+  (d)elete the current node
+  (c)opy the current node
+  (l)ist the current node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;여기에서 m을 한 번 더, 누르면 말 그대로 move를 하겠다는 것이고, 그에 따른 또다른 문구가 출력된다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Rename the current node
+==========================================================
+Enter the new path for the node:
+/Users/luran/devwork/blog/_drafts/2013-07-11-spring3-1-hibernate3-jasypt1-8-%ec%97%b0%eb%8f%99%ed%85%8c%ec%8a%a4%ed%8a%b8.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;보다시피, 내 경우는 예전에 워드프레스에서 작성했던 포스트들이 그냥 한글이름으로 export되면서, 향후 유지보수를 하려면 본문을 열어봐야 하는 불편함이 생겼다. 이에 _drafts 디렉토리에서 대략 편집한 후, _posts 디렉토리로 옮겨야 하는 수요가 발생한다. 이 때, NERDTreeFind에서 m - m을 눌러서, 파일 이름이나 디렉토리를 편집하고 엔터를 치면, 원하는 디렉토리로 글을 옮길 수 있다.&lt;/p&gt;</content><author><name>everydayminder</name></author><category term="jekyll" /><category term="wordpress" /><summary type="html">배경</summary></entry><entry><title type="html">Jekyll로 이전 - Jekyll 설치/ 설정</title><link href="http://localhost:4000/life/migrating-to-jekyll-setup/" rel="alternate" type="text/html" title="Jekyll로 이전 - Jekyll 설치/ 설정" /><published>2018-07-01T00:00:00+09:00</published><updated>2018-07-01T00:00:00+09:00</updated><id>http://localhost:4000/life/migrating-to-jekyll-setup</id><content type="html" xml:base="http://localhost:4000/life/migrating-to-jekyll-setup/">&lt;h1 id=&quot;이전-배경&quot;&gt;이전 배경&lt;/h1&gt;
+
+&lt;p&gt;Tistory를 거쳐, 호스팅형 Wordpess 및 설치형 Wordpress를 거쳐 Jekyll로 옮겨본다.&lt;/p&gt;
+
+&lt;p&gt;다른 사람들과 마찬가지로 트렌드도 그렇지만,&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;워드프레스가 해킹 대상이 많이 되는 점&lt;/li&gt;
+  &lt;li&gt;GitHub로 옮기면 호스팅 무료&lt;/li&gt;
+  &lt;li&gt;워드프레스보다 깔끔함&lt;/li&gt;
+  &lt;li&gt;호기심&lt;/li&gt;
+  &lt;li&gt;글쓰기의 편의성&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;등의 이류로 옮겨 보게 되었다.&lt;/p&gt;
+
+&lt;h1 id=&quot;설치-절차&quot;&gt;설치 절차&lt;/h1&gt;
+
+&lt;p&gt;다음에 혹시 이 작업을 반복할까 싶어, 겪은 내용을 기록으로 남긴다.&lt;/p&gt;
+
+&lt;h2 id=&quot;github&quot;&gt;GitHub&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GitHub을 방문하여 계정을 생성한다.&lt;/li&gt;
+  &lt;li&gt;홈페이지를 만들기 위해 GitHub IO 설정을 한다.
+    &lt;ul&gt;
+      &lt;li&gt;앞서 만든 계정.github.io 프로젝트를 생성한다.&lt;/li&gt;
+      &lt;li&gt;가이드에 따라, index.html을 생성하여 push하고, Hello World (Hello World 출력 예제)가 뜨는지 확인한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;jekyll&quot;&gt;Jekyll&lt;/h2&gt;
+
+&lt;h3 id=&quot;개발-환경-설정&quot;&gt;개발 환경 설정&lt;/h3&gt;
+
+&lt;p&gt;올리기 전에, 제대로 포스팅 되는지 로컬에서 동작 확인을 해야하므로, 로컬 개발 환경 설정도 한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 루비 설정 여부 확인
+ruby --version 
+
+gem install jekyll
+gem install bundler
+gem install github-pages
+
+# syntax highlighter
+gem install rouge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;테마-설정&quot;&gt;테마 설정&lt;/h3&gt;
+
+&lt;p&gt;이름만큼 고르기 힘든, 테마 고르기. 사람들이 많이 쓰는 것 같은 minimal-mistakes로 일단 정착하기로 한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install minimal-mistakes-jekyll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;혹은, github에서 clone 또는 다운로드 한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;기본-디렉토리-파일-설정&quot;&gt;기본 디렉토리/ 파일 설정&lt;/h3&gt;
+
+&lt;p&gt;작업 디렉토리에, _posts, _drafts 디렉토리가 없으면 생성한다.&lt;/p&gt;
+
+&lt;p&gt;버전 관리 대상이 되지 않는 파일들은 .gitignore에 등록한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;기본-동작-확인&quot;&gt;기본 동작 확인&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;를 실행시키면, 기본 설정 포트 4000으로 뜨는 것을 확인할 수 있다. 내 경우는, 4000 포트가 어떤 프로그램이 이미 쓰고 있는 모양이다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve --port 8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;과 같이 다른 포트를 지정하면, 다른 포트로 띄울 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$jekyll --help
+
+jekyll 3.8.3 -- Jekyll is a blog-aware, static site generator in Ruby
+
+Usage:
+
+  jekyll &amp;lt;subcommand&amp;gt; [options]
+
+Options:
+        -s, --source [DIR]  Source directory (defaults to ./)
+        -d, --destination [DIR]  Destination directory (defaults to ./_site)
+            --safe         Safe mode (defaults to false)
+        -p, --plugins PLUGINS_DIR1[,PLUGINS_DIR2[,...]]  Plugins directory (defaults to ./_plugins)
+            --layouts DIR  Layouts directory (defaults to ./_layouts)
+            --profile      Generate a Liquid rendering profile
+        -h, --help         Show this message
+        -v, --version      Print the name and version
+        -t, --trace        Show the full backtrace when an error occurs
+
+Subcommands:
+  docs
+  import
+  build, b              Build your site
+  clean                 Clean the site (removes site output and metadata file) without building.
+  doctor, hyde          Search site and print specific deprecation warnings
+  help                  Show the help message, optionally for a given subcommand.
+  new                   Creates a new Jekyll site scaffold in PATH
+  new-theme             Creates a new Jekyll theme scaffold
+  serve, server, s      Serve your site locally
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;serve에 대한 설명을, 좀더 확인해 보면,&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jekyll serve --help
+
+jekyll serve -- Serve your site locally
+
+Usage:
+
+  jekyll serve [options]
+
+Options:
+            --config CONFIG_FILE[,CONFIG_FILE2,...]  Custom configuration file
+        -d, --destination DESTINATION  The current folder will be generated into DESTINATION
+        -s, --source SOURCE  Custom source directory
+            --future       Publishes posts with a future date
+            --limit_posts MAX_POSTS  Limits the number of posts to parse and publish
+        -w, --[no-]watch   Watch for changes and rebuild
+        -b, --baseurl URL  Serve the website from the given base URL
+            --force_polling  Force watch to use polling
+            --lsi          Use LSI for improved related posts
+        -D, --drafts       Render posts in the _drafts folder
+            --unpublished  Render posts that were marked as unpublished
+        -q, --quiet        Silence output.
+        -V, --verbose      Print verbose output.
+        -I, --incremental  Enable incremental rebuild.
+            --strict_front_matter  Fail if errors are present in front matter
+            --ssl-cert [CERT]  X.509 (SSL) certificate.
+        -H, --host [HOST]  Host to bind to
+        -o, --open-url     Launch your site in a browser
+        -B, --detach       Run the server in the background
+            --ssl-key [KEY]  X.509 (SSL) Private Key.
+        -P, --port [PORT]  Port to listen on
+            --show-dir-listing  Show a directory listing instead of loading your index file.
+            --skip-initial-build  Skips the initial site build which occurs before the server is started.
+        -l, --livereload   Use LiveReload to automatically refresh browsers
+            --livereload-ignore ignore GLOB1[,GLOB2[,...]]  Files for LiveReload to ignore. Remember to quote the values so your shell won't expand them
+            --livereload-min-delay [SECONDS]  Minimum reload delay
+            --livereload-max-delay [SECONDS]  Maximum reload delay
+            --livereload-port [PORT]  Port for LiveReload to listen on
+        -h, --help         Show this message
+        -v, --version      Print the name and version
+        -t, --trace        Show the full backtrace when an error occurs
+        -s, --source [DIR]  Source directory (defaults to ./)
+        -d, --destination [DIR]  Destination directory (defaults to ./_site)
+            --safe         Safe mode (defaults to false)
+        -p, --plugins PLUGINS_DIR1[,PLUGINS_DIR2[,...]]  Plugins directory (defaults to ./_plugins)
+            --layouts DIR  Layouts directory (defaults to ./_layouts)
+            --profile      Generate a Liquid rendering profile
+        -h, --help         Show this message
+        -v, --version      Print the name and version
+        -t, --trace        Show the full backtrace when an error occurs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;port뿐만 아니라 host까지도 지정할 수 있다. 결국, 내 로컬에서도 serve 옵션으로 띄워놓고 운영해도 된다는 뜻이다. (당연히)&lt;/p&gt;
+
+&lt;p&gt;그러면, 외부에서도 접속할 수 있도록 공인 IP를 써 주거나, DDNS하거나, 터널링 등을 해주면 될 것이다. 그러나, github에서 서비스 해주는데, 내 로컬 repository가 노출되는게 싫은 이상, 굳이 이렇게까지 하는 사람은 별로 없을 것 같다.&lt;/p&gt;
+
+&lt;p&gt;어쨌든, 나는&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve --port 8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;으로 정착.&lt;/p&gt;</content><author><name>everydayminder</name></author><category term="jekyll" /><summary type="html">이전 배경</summary></entry><entry><title type="html">Wordpress post를 Jekyll로 이관</title><link href="http://localhost:4000/life/migrating-posts-to-jekyll/" rel="alternate" type="text/html" title="Wordpress post를 Jekyll로 이관" /><published>2018-07-01T00:00:00+09:00</published><updated>2018-07-01T00:00:00+09:00</updated><id>http://localhost:4000/life/migrating-posts-to-jekyll</id><content type="html" xml:base="http://localhost:4000/life/migrating-posts-to-jekyll/">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+
+&lt;p&gt;기존에 wordpress에 올라가 있던 글들을 Jekyll로 옮기던 과정에서의 lessons를 정리해 둔다. 또 할지도 모르니까.&lt;/p&gt;
+
+&lt;p&gt;많은 사람들이, 한결같이 “쉽게 마이그레이션 했다”고 했다.&lt;/p&gt;
+
+&lt;p&gt;그러나, 나는 오래 걸렸다. (심지어, 아직도 진행 중이다.) 그래서 적어둬야 한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;exporting-from-wordpress&quot;&gt;Exporting from Wordpress&lt;/h1&gt;
+
+&lt;p&gt;기존의 댓글은 과감히 포기하기로 한다.&lt;/p&gt;
+
+&lt;p&gt;3rd party 플러그인과, 워드프레스 빌트인 플러그인으로 각각 export/ import를 비교해봤으나, 워드프레스 자체 플러그인이 더 깔끔해 보여서, 후자를 택하기로 한다.&lt;/p&gt;
+
+&lt;p&gt;워드프레스의 도구 &amp;gt; 글을 선택하여, 글만 전체 export 한다. 한 개의 xml 파일이 생성될 것이다.&lt;/p&gt;
+
+&lt;h1 id=&quot;importing-to-jekyll&quot;&gt;Importing to Jekyll&lt;/h1&gt;
+
+&lt;p&gt;블로그의 작업 디렉토리로 이동하여, 앞서 export 및 다운로드한 xml 파일을 사용하여 포스트를 import 한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ruby -rubygems -e 'require &quot;jekyll-import&quot;; JekyllImport::Importers::WordpressDotCom.run({ &quot;source&quot; =&amp;gt; &quot;블로그이름.wordpress.2018-06-09.xml&quot; })’ 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이제, 로컬에서 jekyll을 띄워서 글들이 제대로 이사왔는지 보자.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve --port 8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;레이아웃이 깨진다.&lt;/p&gt;
+
+&lt;h2 id=&quot;이슈-1--레이아웃-미적용&quot;&gt;이슈 #1 : 레이아웃 미적용&lt;/h2&gt;
+
+&lt;p&gt;콘솔 창에서 다음과 같은 에러 메시지가 뜨는 것을 확인하였다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Build Warning: Layout 'post' requested in _posts/2014-07-03-%eb%a7%a5%ec%97%90%ec%84%9c-%eb%a7%88%ec%9a%b0%ec%8a%a4-%ec%8a%a4%ed%81%ac%eb%a1%a4-%eb%b0%a9%ed%96%a5-%eb%b0%98%eb%8c%80%eb%a1%9c-%ed%95%98%eb%a0%a4%eb%a9%b4.html does not exist.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;기본 옵션으로 이전해 온 블로그 포스트들이, 기본 레이아웃으로 ‘post’로 export되어 있어, 위와 같은 warning 메시지가 발생하였다. minimal mistakes 테마를 선택하였기에, 기본 레이아웃을 single로 변경하였다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sed -i &quot;&quot; 's/layout: post/layout: single/g' *.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;이슈-2--syntax-highlighter-미동작&quot;&gt;이슈 #2 : Syntax Highlighter 미동작&lt;/h2&gt;
+
+&lt;p&gt;이렇게 변경하고 보니, warning 메시지는 사라졌는데 기존 글들의 syntax highlighter가 제대로 동작하지 않았다.&lt;/p&gt;
+
+&lt;p&gt;highlight 구문으로 묶으면 syntax highlighter가 동작하나, ```로 묶으면 변환되지 않고 그대로 노출되는 현상을 발견하였다.&lt;/p&gt;
+
+&lt;p&gt;확장자가 html이 아니라, md여야 제대로 변환해 주는 것을 확인하였다. 기존에 import한 상태는 모두 확장자가 html로 되어 있던 상태였다. 이에, 다음과 같이 _post/*.html의 확장자를 md로 변경해 주었다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rename 's/.html/.md/' *.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이렇게 변경하고 나니, 레이아웃도 잡히고, syntax highlighter도 일단 동작하는 것을 확인하였다.&lt;/p&gt;</content><author><name>everydayminder</name></author><category term="wordpress" /><category term="jekyll" /><summary type="html">개요</summary></entry><entry><title type="html">VI에서 개행 문자(^M) 삭제하기</title><link href="http://localhost:4000/replace-carrage-return/" rel="alternate" type="text/html" title="VI에서 개행 문자(^M) 삭제하기" /><published>2018-07-01T00:00:00+09:00</published><updated>2018-07-01T00:00:00+09:00</updated><id>http://localhost:4000/replace-carrage-return</id><content type="html" xml:base="http://localhost:4000/replace-carrage-return/">&lt;p&gt;윈도우즈에서 작성된 파일을 linux/ OSX로 옮겨오다 보니, 가끔 원치 않는 개행 문자가 그대로 살아있는 경우가 있다.&lt;/p&gt;
+
+&lt;p&gt;VI에서 해당 파일을 열어보면, ^M과 같이 표시되는데, 이를 치환/ 삭제 하려면 다음과 같이 입력한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;:%s/^M//g
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;그런데, 단순히 shift + 6 M을 입력하면 치환대상이 되지 않고,&lt;/p&gt;
+
+&lt;p&gt;^M을 입력할 때, ctrl + v, ctrl + M을 눌러서 입력하면 된다.&lt;/p&gt;</content><author><name>everydayminder</name></author><category term="vi" /><summary type="html">윈도우즈에서 작성된 파일을 linux/ OSX로 옮겨오다 보니, 가끔 원치 않는 개행 문자가 그대로 살아있는 경우가 있다.</summary></entry><entry><title type="html">Python project를 위한 Docker 기반 Jenkins 설정하기 #1</title><link href="http://localhost:4000/python/tools/python-project-docker-jenkins/" rel="alternate" type="text/html" title="Python project를 위한 Docker 기반 Jenkins 설정하기 #1" /><published>2018-02-25T09:06:52+09:00</published><updated>2018-02-25T09:06:52+09:00</updated><id>http://localhost:4000/python/tools/python-project-docker-jenkins</id><content type="html" xml:base="http://localhost:4000/python/tools/python-project-docker-jenkins/">&lt;p&gt;앞서 Docker의 Kitematic으로 Jenkins 이미지를 받아서 띄워봤는데, Python 프로젝트를 위해 몇몇 설정을 변경하기 위해
+직접 Docker 이미지를 만들어보자.&lt;/p&gt;
+
+&lt;h3&gt;1. Dockerfile 작성&lt;/h3&gt;
+&lt;p&gt;Dockerfile을 만들고 아래와 같이 내용을 넣자.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Dockerfile
+FROM jenkins:latest
+USER root
+
+RUN apt-get update
+
+# pip 설치
+RUN apt-get install -y python-pip
+ENV JAVA_ARGS -Xms512m -Xmx1024m
+
+RUN apt-get update &amp;amp;&amp;amp; \
+    apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget
+
+# pyenv 설치/ 설정
+RUN git clone https://github.com/pyenv/pyenv.git .pyenv
+ENV PYENV_ROOT $HOME/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+
+# python v2, v3 설치
+RUN pyenv install 2.7.14
+RUN pyenv install 3.6.4
+RUN pyenv rehash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;2. Docker 이미지 생성&lt;/h3&gt;
+&lt;p&gt;이제 앞서 작성한 Dockerfile을 사용하여 Docker 이미지를 만들자.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build -t &quot;jenkins:python&quot; yourpath
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;3. Docker 실행&lt;/h3&gt;
+&lt;p&gt;다음과 같이 실행하자.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -p 8080:8080 -v host_directory:container_directory jenkins:python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;-p로 포트를 매핑하고, -v로 마운트할 디렉토리를 지정하자.
+docker를 실행할 때마다, jenkins를 매번 초기화/ 설정하고 싶지 않다면, volume 마운트를 하자.
+설정한 내용을 host에 기록하고, container를 띄울 때 마운트한다.
+jenkins의 기본 디렉토리가 var/jenkins_home이므로, 아래와 같이 실행한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -p 8080:8080 -v mydirectory:/var/jenkins_home jenkins:python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이후, jenkins를 unlock하고, 필요한 기본 plugin들을 업데이트하면 된다.
+나중에 다시 jenkins를 다시 시작시켜도 기존에 설정한 내용들이 유지된다.&lt;/p&gt;</content><author><name>{&quot;login&quot;=&gt;&quot;everydayminder&quot;, &quot;email&quot;=&gt;&quot;2jhyun@gmail.com&quot;, &quot;display_name&quot;=&gt;&quot;everydayminder&quot;, &quot;first_name&quot;=&gt;&quot;&quot;, &quot;last_name&quot;=&gt;&quot;&quot;}</name><email>2jhyun@gmail.com</email></author><summary type="html">앞서 Docker의 Kitematic으로 Jenkins 이미지를 받아서 띄워봤는데, Python 프로젝트를 위해 몇몇 설정을 변경하기 위해 직접 Docker 이미지를 만들어보자.</summary></entry></feed>

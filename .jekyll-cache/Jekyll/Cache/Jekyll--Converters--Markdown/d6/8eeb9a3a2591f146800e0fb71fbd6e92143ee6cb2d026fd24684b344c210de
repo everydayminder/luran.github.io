@@ -1,0 +1,52 @@
+I"�<p>Optik (aka optarse) 를 사용하면, python 애플리케이션 개발시 커맨드라인 옵션/
+파라미터를 파싱하기 쉬워진다.</p>
+
+<p>예를 들어서, 
+“실행파일명 –config 파일명” 으로 구성되는 형태의 옵션을 만들고 싶다면,</p>
+
+<p>다음과 같이 간단하게 구성할 수 있다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">optik</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">usage</span> <span class="o">=</span> <span class="s">"usage: %prog [options] arg"</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">"-c"</span><span class="p">,</span> <span class="s">"--config"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"store"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">"string"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">"filename"</span> <span class="p">)</span>
+    <span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">options</span><span class="p">.</span><span class="n">filename</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">"cfg : %s"</span> <span class="o">%</span> <span class="n">options</span><span class="p">.</span><span class="n">filename</span>
+</code></pre></div></div>
+
+<p>add_option() 내에 사용된 옵션에 대해 첨언하자면,
+ㅁ -c : 한개의 대쉬 문자 뒤에 지정되는 문자는 1 캐릭터여야 한다
+ㅁ –config : 풀로 표기하는 옵션은 두개의 대쉬 문자뒤에 표기한다.
+   (두 개의 위치는 바뀌어도 상관없다. 표기만 제대로 한다면)
+ㅁ action=”store” : c/config  옵션 뒤에 오는  argument를 활용하기 위해 지정함.
+ㅁ type=”string” : 문자열을 받도록 해줌
+ㅁ dest=”filename” : 나중에 c/config 등등 다양한 형태로 지정된 옵션을 통합하여,</p>
+
+<p>호출할 때 사용됨. 즉, c/config 옵션은 “filename”이라는 옵션으로 통합하여 
+  인지한다.
+  action = “store” 로 저장한 파일이름은 options.filename의 속성값으로 활용한다.</p>
+
+<p>기본적으로 -h/ –help 옵션은 deploy된다. 즉 테스트파일에 –help 옵션을 줘서
+실행하면,</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Usage: OptionTester.py [options] arg
+
+Options:
+  -h, --help            show this help message and exit
+  -c FILENAME, --config=FILENAME
+</code></pre></div></div>
+
+<p>와 같이 결과가 나온다.
+여기에서 참고할 만한 내용은, 대쉬의 개수에 따라 동작이 다르게 될 수도 있다는 점.</p>
+
+<p>동일한 결과를 내려면.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c FILENAME
+--config=FILENAME
+--config FILENAME
+</code></pre></div></div>
+<p>의 형태로 활용할 수 있다.
+보다 자세한 설명 및 활용 방법은 
+<a href="http://optik.sourceforge.net/">http://optik.sourceforge.net/</a> 에서 확인할 수 있다.</p>
+:ET

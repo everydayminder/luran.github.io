@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>hudson - FindBugs 연동하기 | Notes for future me</title>
+<meta name="description" content="“내가 작성한 코드는 잘 작성한 것일까?”내가 작성한 코드가 이상없이 동작하는지 검사하기 위해, JUnit 등을 사용하여 테스트를 수행해 왔다면,이제 이런 질문을 던져볼 만도 하다. 프로그래머가 작성한 코드는 “논리”의 집합이다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="hudson - FindBugs 연동하기">
+<meta property="og:url" content="http://localhost:4000/development/hudson-findbugs/">
+
+
+  <meta property="og:description" content="“내가 작성한 코드는 잘 작성한 것일까?”내가 작성한 코드가 이상없이 동작하는지 검사하기 위해, JUnit 등을 사용하여 테스트를 수행해 왔다면,이제 이런 질문을 던져볼 만도 하다. 프로그래머가 작성한 코드는 “논리”의 집합이다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2010-07-21T08:40:01+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/hudson-findbugs/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">hudson - FindBugs 연동하기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="hudson - FindBugs 연동하기">
+    <meta itemprop="description" content="“내가 작성한 코드는 잘 작성한 것일까?”내가 작성한 코드가 이상없이 동작하는지 검사하기 위해, JUnit 등을 사용하여 테스트를 수행해 왔다면,이제 이런 질문을 던져볼 만도 하다. 프로그래머가 작성한 코드는 “논리”의 집합이다.">
+    <meta itemprop="datePublished" content="2010-07-21T08:40:01+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">hudson - FindBugs 연동하기
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#findbugs는-어디에">FindBugs는 어디에?</a></li>
+  <li><a href="#설정과정은">설정과정은?</a></li>
+  <li><a href="#findbugs-설치하기">FindBugs 설치하기</a></li>
+  <li><a href="#ant-task에-findbugs-등록하기">Ant Task에 FindBugs 등록하기</a></li>
+  <li><a href="#hudson내-설정하기">Hudson내 설정하기</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>“내가 작성한 코드는 잘 작성한 것일까?”
+내가 작성한 코드가 이상없이 동작하는지 검사하기 위해, JUnit 등을 사용하여 테스트를 수행해 왔다면,
+이제 이런 질문을 던져볼 만도 하다. 
+프로그래머가 작성한 코드는 “논리”의 집합이다.</p>
+
+<p>그렇다면, 테스트케이스는 “그 논리가 적합한가?” 혹은 “그 논리에 헛점이 있는가?”를 검증하기 위한
+것이라고 할 수 있을 것이다.
+그러면, 그 “논리를 세우는 방법이 잘 되어 있는가?”를 검증하는 방법도 있을 법하다.
+그래서, “코드검사”를 수행한다!! 
+코드 검사는 내가 작성하는 코드가 표준에 맞는지, 어떤 잠재적인 오류 패턴을 내포하고 있는지 등을
+검사해 준다.</p>
+
+<p>CheckStyle, PMD, FindBugs 등 여러 가지가 있으나, FindBugs를 hudson에 연동하여 사용해 보자.</p>
+
+<h3 id="findbugs는-어디에">FindBugs는 어디에?</h3>
+<p>FIndBugs는 <a title="[http://findbugs.sourceforge.net]로 이동합니다." target="_blank" href="http://findbugs.sourceforge.net">http://findbugs.sourceforge.net</a> 로부터 정보를 얻을 수 있다.
+다운로드는 물론이고, 설명도 잘 되어 있다.</p>
+
+<h3 id="설정과정은">설정과정은?</h3>
+<p>지금까지 hudson과 연결한 다른 플러그인의 설치 방법과 크게 다르지 않다.</p>
+<ul>
+  <li>FindBugs 설치하기/ 환경변수 등록하기</li>
+  <li>Ant task에 FindBugs 등록하기</li>
+  <li>Hudson내 설정하기
+의 절차를 따를 것이다.</li>
+</ul>
+
+<h3 id="findbugs-설치하기">FindBugs 설치하기</h3>
+<p>왼쪽 메뉴에 크게 Downloads 섹션이 있다.
+링크를 클릭하고, findbugs-1.3.9.zip을 다운 받았다.
+이제 원하는 곳에 설치하자. 
+설치라고 해봐야, 압축풀고 환경변수에 등록하는 일 밖에 없다.
+환경변수에</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FINDBUGS_HOME=findbugs 설치디렉토리
+</code></pre></div></div>
+<p>로 지정하였다.</p>
+
+<h3 id="ant-task에-findbugs-등록하기">Ant Task에 FindBugs 등록하기</h3>
+<p>FindBugs 홈페이지에 자세한 설명이 되어 있다.</p>
+
+<p>세부 내용은 다음 링크를 참조하자. <a title="[http://findbugs.sourceforge.net/manual/anttask.html]로 이동합니다." target="_blank" href="http://findbugs.sourceforge.net/manual/anttask.html">http://findbugs.sourceforge.net/manual/anttask.html</a></p>
+
+<p>환경변수 설정은 다음과 같이 한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- FindBugs configuration/directories --&gt;</span>
+	<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"findbugs.home"</span>  	<span class="na">value=</span><span class="s">"${env.FINDBUGS_HOME}"</span><span class="nt">/&gt;</span> 
+	<span class="nt">&lt;path</span> <span class="na">id=</span><span class="s">"findbugs.classpath"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;pathelement</span> <span class="na">location=</span><span class="s">"${findbugs.home}/lib/findbugs-ant.jar"</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/path&gt;</span>
+</code></pre></div></div>
+<p>findbugs라는 task도 다음과 같이 정의한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- target : FindBugs --&gt;</span>
+	<span class="nt">&lt;taskdef</span> <span class="na">name=</span><span class="s">"findbugs"</span> 
+			<span class="na">classname=</span><span class="s">"edu.umd.cs.findbugs.anttask.FindBugsTask"</span> 
+			<span class="na">classpathref=</span><span class="s">"findbugs.classpath"</span><span class="nt">/&gt;</span>
+	
+	<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">"findbugs"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">"${report.home}/findbugs"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;findbugs</span> <span class="na">home=</span><span class="s">"${findbugs.home}"</span>
+                <span class="na">output=</span><span class="s">"xml:withMessages"</span>
+                <span class="na">outputFile=</span><span class="s">"${report.home}/findbugs/findbugs.xml"</span> 
+				<span class="na">excludeFilter=</span><span class="s">"${report.home}/findbugs/findbugs-filter.xml"</span> 
+				<span class="na">timeout=</span><span class="s">"1800000"</span> <span class="na">jvmargs=</span><span class="s">"-Xmx512m"</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;sourcePath</span> <span class="na">path=</span><span class="s">"${src.home}"</span> <span class="nt">/&gt;</span>
+			<span class="nt">&lt;class</span> <span class="na">location=</span><span class="s">"${build.home}"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;/findbugs&gt;</span>
+	<span class="nt">&lt;/target&gt;</span>
+</code></pre></div></div>
+
+<h3 id="hudson내-설정하기">Hudson내 설정하기</h3>
+<p>먼저, FindBugs 플러그인을 설치하자. 
+Hudson의 왼쪽 메뉴에 있는 “Hudson 관리하기”를 클릭하고 나타나는 화면으로부터, Manage Plugins를 클릭한다.
+Availabe 탭을 클릭하여, 목록을 보면 다음과 같이 FindBugs plugin 항목이 보인다.</p>
+
+<p><img src="/images/201007/cfile5-uf-194512154c4d4bf17360c4.png" class="aligncenter" width="700" height="32" alt="" /></p>
+
+<p>FindBugs를 체크하고, 우측 하단의 Install 버튼을 클릭한다.
+해당 플러그인을 설치하면, 다음 화면이 나타난다.</p>
+
+<p><img src="/images/201007/cfile10-uf-175737184c4d4efa0650f7.png" class="aligncenter" width="692" height="228" alt="" /></p>
+
+<p>이제, hudson을 재시작 해보자.
+그러나, 아직 findbugs가 실행되는 것은 아니다. 앞에서 설정한 ant task가 실행되도록 설정하지 않았기 때문이다.
+해당 프로젝트로부터 configure 를 클릭하여, ant task를 추가하자.
+Build 부분에 Inovke Ant를 추가하여, Targets로 findbugs를 기록한다. 
+(앞에서 findbugs task를 이미 build.xml에 추가하였다.)</p>
+
+<p><img src="/images/201007/cfile10-uf-18690d194c4d5114caf4eb.png" class="aligncenter" width="700" height="84" alt="" /></p>
+
+<p>이대로 마치면, 다음 빌드에 findbugs는 실행되지만 hudson에서 직접 결과를 볼 수는 없을 것이다.
+findbugs의 report를 publish 하자.</p>
+
+<p>Post-build Actions에 가보면, 어느새 Publish FindBugs analysis results라는 옵션이 생겨있을 것이다.
+이를 체크하고, 자신의프로젝트/report/findbugs/findbugs.xml 과 같은 형태로 적어주고 저장한다.</p>
+
+<p><img src="/images/201007/cfile3-uf-173265164c4d51fa3d6bc6.png" class="aligncenter" width="700" height="92" alt="" />
+이제 새로 빌드해 보자.
+그러면, 왼쪽 부분에 FindBugs Warnings라는 메뉴가 생길 것이다.</p>
+
+<p><img src="/images/201007/cfile23-uf-124c6f184c4d52953f4c41.png" class="aligncenter" width="187" height="305" alt="" /></p>
+
+<p>FindBugs가 무엇을 했는지는 클릭해 보면 알 수 있다.
+<img src="/images/201007/cfile28-uf-206bfa1e4c4d52ee6445d9.png" class="aligncenter" width="700" height="299" alt="" /></p>
+
+<p>(파일명은 일부러 가렸다.)
+문제가 되는 부분의 파일명과 Distribution에 색깔로 위험 정도를 표시해 준다.</p>
+
+<p>세부 항목을 잠시 살펴보면,
+<img src="/images/201007/cfile10-uf-12781d1d4c4d53b986ec00.png" class="aligncenter" width="700" height="277" alt="" /></p>
+
+<p>해당 부분에서 위와 같은 경고 사항이 발생했고, 해결 방법을 권고해 준다.
+참고로 위의 예는, 변수를 선언했으나 사용하지 않았음을 알려주는 경우이다.</p>
+
+<p>FindBugs 등의 코드 검사를 수행시키면, 참 많은 잔소리를 듣게 된다.
+그러나, 이는 코드의 품질을 높일 수 있도록 도와주는 즐거운 잔소리가 분명하다.</p>
+
+<p>보다 안전한 코딩을 위해, 기꺼이 잔소리를 들어보자!</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#ci" class="page__taxonomy-item" rel="tag">ci</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#findbugs" class="page__taxonomy-item" rel="tag">findbugs</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#hudson" class="page__taxonomy-item" rel="tag">hudson</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2010-07-21T08:40:01+09:00">July 21, 2010</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=hudson+-+FindBugs+%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fhudson-findbugs%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fhudson-findbugs%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fhudson-findbugs%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/development/hudson-javadoc/" class="pagination--pager" title="hudson - javadoc 생성하기
+">Previous</a>
+    
+    
+      <a href="/english/there-is-no-ing/" class="pagination--pager" title="there is no ~ing
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/hudson-findbugs/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/hudson-findbugs"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

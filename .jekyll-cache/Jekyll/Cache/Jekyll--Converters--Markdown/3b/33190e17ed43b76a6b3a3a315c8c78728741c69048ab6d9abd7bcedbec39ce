@@ -1,0 +1,7 @@
+I"�<ol>
+  <li>먼저, java를 설치한다.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo apt-get install sun-java6-jdk
+</code></pre></div>    </div>
+  </li>
+</ol>
+:ET

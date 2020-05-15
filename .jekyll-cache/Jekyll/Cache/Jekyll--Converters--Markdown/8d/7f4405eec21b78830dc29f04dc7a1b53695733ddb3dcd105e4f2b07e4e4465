@@ -1,0 +1,71 @@
+I"� <p>Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.
+앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.
+예를 들면, Administrator의 목적으로.</p>
+
+<p>이를 위해, 몇몇 패키지를 import 한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">twisted.internet.protocol</span> <span class="kn">import</span> <span class="n">ServerFactory</span>
+<span class="kn">from</span> <span class="nn">twisted.application</span> <span class="kn">import</span> <span class="n">internet</span><span class="p">,</span> <span class="n">service</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>추가적으로 서버의 프로토콜과 팩토리를 정의한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AdminProtocol</span><span class="p">(</span><span class="n">LineReceiver</span><span class="p">):</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s">'n'</span><span class="p">;</span>
+
+    <span class="k">def</span> <span class="nf">lineReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">line</span>
+
+    <span class="k">def</span> <span class="nf">connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'$NEW CLIENT : %d clients are connected'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">transport</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"Too many connections, try later"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">transport</span><span class="p">.</span><span class="n">loseConnection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span> <span class="o">-</span> <span class="mi">1</span>       
+        <span class="k">print</span> <span class="s">'$CONNECTION LOST : %d clients are remained'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">numProtocols</span>
+
+    <span class="k">def</span> <span class="nf">startedConnecting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'$started connecting..'</span>
+
+<span class="k">class</span> <span class="nc">AdminFactory</span><span class="p">(</span><span class="n">ServerFactory</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">AdminProtocol</span>
+    <span class="n">numProtocols</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ID</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'initialized'</span>
+</code></pre></div></div>
+
+<p>Service로 등록하기 위해,
+service.Service를 상속받아 각각 ServerFactory와 ClientFactory를 리턴하도록 구현한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AdminService</span><span class="p">(</span><span class="n">service</span><span class="p">.</span><span class="n">Service</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getTestFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">TestFactory</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">TestClient</span>
+        <span class="k">return</span> <span class="n">f</span>
+
+    <span class="k">def</span> <span class="nf">getAdminFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">AdminFactory</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">AdminProtocol</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+
+<span class="n">애플리케이션</span> <span class="n">서버로</span> <span class="n">묶어</span> <span class="n">주기</span> <span class="n">위해</span><span class="p">,</span> <span class="n">다음과</span> <span class="n">같이</span> <span class="n">등록한다</span><span class="p">.</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">python</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">Application</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="n">uid</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gid</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">AdminService</span><span class="p">()</span>
+
+<span class="n">serviceCollection</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">IServiceCollection</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+<span class="n">internet</span><span class="p">.</span><span class="n">TCPServer</span><span class="p">(</span><span class="mi">8002</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">getAdminFactory</span><span class="p">()).</span><span class="n">setServiceParent</span><span class="p">(</span><span class="n">serviceCollection</span><span class="p">)</span>
+<span class="n">internet</span><span class="p">.</span><span class="n">TCPClient</span><span class="p">(</span><span class="s">'localhost'</span><span class="p">,</span> <span class="mi">8001</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">getTestFactory</span><span class="p">()).</span><span class="n">setServiceParent</span><span class="p">(</span><span class="n">serviceCollection</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이와 같이 작성한 파이썬 파일을 tac 파일로 변경하면, twisted application으로 실행할 수 있게 되는데, 이대 twistd 명령어로 실행시켜야 한다.
+```
+twistd -ny finger.tac   #just like before
+twisted -y finger.tac   # daemonize, keep pid in twistd.pid</p>
+:ET

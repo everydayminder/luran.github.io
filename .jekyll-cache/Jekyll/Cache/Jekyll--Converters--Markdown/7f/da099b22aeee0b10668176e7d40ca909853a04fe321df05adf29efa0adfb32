@@ -1,0 +1,32 @@
+I"	<p>moreunit은 작성중인 클래스에 테스트 코드가 작성되어 있는지를 시각적으로 보여주는 플러그인이다.
+해당 플러그인에 대한 자세한 설명은</p>
+
+<p><a title="[http://moreunit.sourceforge.net/index.html]로 이동합니다." target="_blank" href="http://moreunit.sourceforge.net/index.html">http://moreunit.sourceforge.net/index.html</a></p>
+
+<p>에서 확인할 수 있다.
+설치는, 직접 다운로드하여 플러그인 디렉토리에 풀어주거나, 
+이클립스 플러그인 설치 메뉴로부터,</p>
+
+<p>http://moreunit.sourceforge.net/update-site/
+를 등록하여 다른 플러그인 설치 과정과 동일하게 설치하면 된다.
+본인의 경우, 별다른 기본 설정없이도 작성중인 클래스에 대해 테스트 클래스를 찾아 보여주었는데,
+설정이 동작하지 않는다면 properties context menu로부터 세부 설정이 가능하다.
+동작시의 화면은 moreunit의 공식사이트에 있는 것과 별 차이가 없다.
+직접 테스트해본 화면은 다음과 같다.
+우선, 아래 그림은 moreunit을 설치하기 전의 파일 구성이다.</p>
+
+<p><img src="/images/201008/cfile9-uf-182dc9174c7c96b090a6e3.png" class="aligncenter" width="232" height="217" alt="" />
+이제 설치를 완료하고 나면, 똑같은 파일리스트에 빨간 동그라미를 표시한 것과 같이 오른쪽 상단에
+녹색마크가 표시된다. 이는 해당 클래스에 테스트케이스가 작성되어 있음을 나타낸다.</p>
+
+<p><img src="/images/201008/cfile2-uf-202dc9174c7c96b191d7f9.png" class="aligncenter" width="249" height="235" alt="" />
+표시가 생긴 임의의 클래스를 살펴보면, 테스트 케이스가 작성된 메소드에는 메소드의 좌측 라인에 마찬가지로 
+테스트케이스가 있음을 나타내는 마크가 보인다.</p>
+
+<p><img src="/images/201008/cfile2-uf-112dc9174c7c96b192c310.png" class="aligncenter" width="392" height="54" alt="" />
+해당 라인에서 마우스 오른쪽 버튼을 클릭하여 context메뉴를 통해 이동하거나, 단축키 ctrl + j를 누른다면,
+해당 메소드의 테스트케이스로 직접 이동할 수 있다.</p>
+
+<p><img src="/images/201008/cfile3-uf-122dc9174c7c96b19316ab.png" class="aligncenter" width="673" height="102" alt="" /></p>
+
+:ET

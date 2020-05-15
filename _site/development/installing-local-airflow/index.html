@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Local Airflow 설치하기 | Notes for future me</title>
+<meta name="description" content="예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Local Airflow 설치하기">
+<meta property="og:url" content="http://localhost:4000/development/installing-local-airflow/">
+
+
+  <meta property="og:description" content="예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-12-05T00:30:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/installing-local-airflow/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Local Airflow 설치하기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Local Airflow 설치하기">
+    <meta itemprop="description" content="예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.">
+    <meta itemprop="datePublished" content="2018-12-05T00:30:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Local Airflow 설치하기
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#airflow-local-설치-osx">Airflow Local 설치 (OSX)</a>
+    <ul>
+      <li><a href="#예전-방식">예전 방식)</a></li>
+      <li><a href="#최근-방식">최근 방식)</a></li>
+    </ul>
+  </li>
+  <li><a href="#airflow-설정-db-초기화">Airflow 설정 DB 초기화</a></li>
+  <li><a href="#airflow-web-server-실행">Airflow Web Server 실행</a></li>
+  <li><a href="#example">Example</a></li>
+  <li><a href="#workflow-실행순서-지정">Workflow 실행순서 지정</a>
+    <ul>
+      <li><a href="#1-using-set_upstream-set_downstream-methods">1. using set_upstream(), set_downstream() methods</a></li>
+      <li><a href="#2-using-bitwise-operators">2. using bitwise operators</a></li>
+    </ul>
+  </li>
+  <li><a href="#scheduler-실행">Scheduler 실행</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때문에 유지보수나 관리, 성능개선 트래킹 관점에서도 crontab과는 비교할 수 없을만큼 유용하다.</p>
+
+<h1 id="airflow-local-설치-osx">Airflow Local 설치 (OSX)</h1>
+<p>AirFlow의 공식 사이트는 https://airflow.apache.org/ 이다.
+다른 어떤 문서보다 공식사이트내 설치, 설정 활용 등에 대한 가이드를 먼저 참고하는 것이 좋다.</p>
+
+<p>pip로 airflow를 설치할 것이므로, 다음과 같이 pip를 설치한다.</p>
+
+<h2 id="예전-방식">예전 방식)</h2>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>easy_install pip
+</code></pre></div></div>
+
+<p>설치시 문제가 발생하여, pip를 하위 버전으로 다운그레이드하고,</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--pip</span><span class="o">==</span>9.0.3
+pip <span class="nb">install </span>airflow
+</code></pre></div></div>
+<p>와 같이 설치를 진행하였다. (당시 별 문제 없었음)</p>
+
+<h2 id="최근-방식">최근 방식)</h2>
+<p>그런데, 2018/12/04 기준으로 위와 같이 진행하니 다른 에러가 발생하여, 아래와 같이 변경 설치하였다. 설치 환경에 따라 다를 수 있으므로, 에러가 나는 경우에만 관련 내용을 참고하면 될 듯 하다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pip <span class="nb">install </span>apache-airflow
+</code></pre></div></div>
+
+<p>만약, 다음과 같은 에러가 뜬다면</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File "/private/tmp/pip-build-pq6f_5/apache-airflow/setup.py", line 49, in verify_gpl_dependency
+
+ raise RuntimeError("By default one of Airflow's dependencies installs a GPL "
+
+ RuntimeError: By default one of Airflow's dependencies installs a GPL dependency (unidecode). To avoid this dependency set SLUGIFY_USES_TEXT_UNIDECODE=yes in your environment when you install or upgrade Airflow. To force installing the GPL version set AIRFLOW_GPL_UNIDECODE
+</code></pre></div></div>
+<p>맨 마지막 줄에 뜨는 메시지를 반영하여, 다음과 같이 실행한다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span><span class="nv">SLUGIFY_USES_TEXT_UNIDECODE</span><span class="o">=</span><span class="nb">yes </span>pip <span class="nb">install </span>apache-airflow
+</code></pre></div></div>
+
+<p>또, 만약 dateutil과 관련하여 다음과 같은 에러가 뜬다면, (예전엔 못봤던 에러)</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Found existing installation: python-dateutil 1.5
+    Uninstalling python-dateutil-1.5:
+Could not install packages due to an EnvironmentError:
+</code></pre></div></div>
+
+<p>최종적으로 다음과 같이 실행하여 airflow 설치를 완료하였다.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span><span class="nv">SLUGIFY_USES_TEXT_UNIDECODE</span><span class="o">=</span><span class="nb">yes </span>pip <span class="nb">install </span>apache-airflow <span class="nt">--ignore-installed</span> python-dateutil
+</code></pre></div></div>
+
+<h1 id="airflow-설정-db-초기화">Airflow 설정 DB 초기화</h1>
+<p>설치 후, 1회만 해주면 되는 job으로 airflow가 내부 참조하는 sqlite db 초기화 작업이 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airflow initdb
+</code></pre></div></div>
+
+<h1 id="airflow-web-server-실행">Airflow Web Server 실행</h1>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airflow webserver <span class="nt">-p</span> <span class="o">{</span>포트<span class="o">}</span>
+</code></pre></div></div>
+
+<p><img src="/images/201812/airflow_startup_samples.png" alt="airflow_startup_samples.png" /></p>
+
+<p>웹 서버를 띄우면, 위와 같이 여러 샘플 workflow들이 포함되어 있다.</p>
+
+<h1 id="example">Example</h1>
+<p>제일 위의 example_bash_operator를 살펴보면, 세부 내역을 확인할 수 있다.</p>
+
+<p><img src="/images/201812/airflow_example_treeview.png" alt="airflow_example_treeview.png" /></p>
+
+<p>각 job의 실행 순서가 다소 헷갈릴 수 있는데, leaf 부터 root로 올라가는 실행 구조이다. 
+이는 graph view에서 보면 좀더 직관적으로 표현된다. (화살표가 보여서)</p>
+
+<p><img src="/images/201812/airflow_example_graphview.png" alt="airflow_example_graphview.png" /></p>
+
+<p>DAG(Directed Acyclic Graph)는 말 그대로, 방향성이 있으면서 사이클이 없는 그래프 즉, 일방통행 그래프라 할 수 있다. 임의의 노드를 클릭하면, context menu가 뜨는데 해당 노드별 세부 내용 조회 및 지시를 할 수 있다.</p>
+
+<p><img src="/images/201812/airflow_node_contextmenu.png" alt="airflow_node_contextmenu.png" /></p>
+
+<p>상단의 코드 탭을 클릭하면, 이 DAG의 소스를 볼 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># -*- coding: utf-8 -*-
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="kn">import</span> <span class="nn">airflow</span>
+<span class="kn">from</span> <span class="nn">airflow.models</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.bash_operator</span> <span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.dummy_operator</span> <span class="kn">import</span> <span class="n">DummyOperator</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'owner'</span><span class="p">:</span> <span class="s">'airflow'</span><span class="p">,</span>
+    <span class="s">'start_date'</span><span class="p">:</span> <span class="n">airflow</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">dates</span><span class="p">.</span><span class="n">days_ago</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s">'example_bash_operator'</span><span class="p">,</span>
+    <span class="n">default_args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
+    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'0 0 * * *'</span><span class="p">,</span>
+    <span class="n">dagrun_timeout</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">run_this_last</span> <span class="o">=</span> <span class="n">DummyOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'run_this_last'</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># [START howto_operator_bash]
+</span><span class="n">run_this</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'run_after_loop'</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo 1'</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># [END howto_operator_bash]
+</span>
+<span class="n">run_this</span> <span class="o">&gt;&gt;</span> <span class="n">run_this_last</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'runme_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+        <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo "" &amp;&amp; sleep 1'</span><span class="p">,</span>
+        <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">task</span> <span class="o">&gt;&gt;</span> <span class="n">run_this</span>
+
+<span class="c1"># [START howto_operator_bash_template]
+</span><span class="n">also_run_this</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'also_run_this'</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo "run_id= | dag_run="'</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># [END howto_operator_bash_template]
+</span><span class="n">also_run_this</span> <span class="o">&gt;&gt;</span> <span class="n">run_this_last</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">dag</span><span class="p">.</span><span class="n">cli</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h1 id="workflow-실행순서-지정">Workflow 실행순서 지정</h1>
+<p>위의 tree view 또는 graph view에 표현된 바와 같이, job의 실행 순서를 지정하는 부분이
+task » run_this와 같이 표기된 부분이다.</p>
+
+<p>Airflow 공식 가이드에도 소개된 바와 같이 두 가지의 표현방식을 사용할 수 있다.</p>
+
+<h2 id="1-using-set_upstream-set_downstream-methods">1. using set_upstream(), set_downstream() methods</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">op1</span><span class="p">.</span><span class="n">set_downstream</span><span class="p">(</span><span class="n">op2</span><span class="p">)</span>
+<span class="n">op2</span><span class="p">.</span><span class="n">set_downstream</span><span class="p">(</span><span class="n">op3</span><span class="p">)</span>
+<span class="n">op3</span><span class="p">.</span><span class="n">set_upstream</span><span class="p">(</span><span class="n">op4</span><span class="p">)</span>
+</code></pre></div></div>
+<h2 id="2-using-bitwise-operators">2. using bitwise operators</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">op1</span> <span class="o">&gt;&gt;</span> <span class="n">op2</span> <span class="o">&gt;&gt;</span> <span class="n">op3</span> <span class="o">&lt;&lt;</span> <span class="n">op4</span>
+</code></pre></div></div>
+
+<p>두 표현식 모두 실행순서는 동일하다.
+op1을 먼저 실행하고, op2, op3의 순서대로 실행된다.</p>
+
+<h1 id="scheduler-실행">Scheduler 실행</h1>
+<p>DAG의 실행주기를 설정한 후, scheduler daemon을 띄워서 주기적으로 실행되도록 한다.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airflow scheduler
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#airflow" class="page__taxonomy-item" rel="tag">airflow</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-12-05T00:30:00+09:00">December 05, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Local+Airflow+%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-local-airflow%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-local-airflow%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-local-airflow%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/development/installing-spark-cluster/" class="pagination--pager" title="Docker 기반 Local Spark Cluster 설치하기
+">Previous</a>
+    
+    
+      <a href="/development/install-jenv/" class="pagination--pager" title="jenv 설치하기
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/Integrating-Gradle-Test-Local-Sonar/" rel="permalink">Integrating Gradle Test Local Sonar
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  less than 1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Docker로 sonarqube 설치
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/installing-local-airflow/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/installing-local-airflow"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

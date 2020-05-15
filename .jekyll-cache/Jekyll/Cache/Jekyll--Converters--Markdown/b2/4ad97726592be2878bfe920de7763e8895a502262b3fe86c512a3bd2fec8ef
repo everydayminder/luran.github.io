@@ -1,0 +1,42 @@
+I"&
+<p>2011/6/22에 릴리즈된 Eclipse Indigo의 기능중,</p>
+<ul>
+  <li>m2eclipse에 대한 지원이 강화되었다는 것</li>
+  <li>myln을 통해 Hudson을 연동할 수 있다는 것</li>
+</ul>
+
+<p>등의 이유로, Helios에서 Indigo로 업그레이드 해보려고 한다. (그냥 다시 설치)</p>
+
+<h2 id="m2e-plugin-설치">m2e plugin 설치</h2>
+<p>최신 m2eclipse 플러그인 이름이 m2e로 변경되었다.
+Help &gt; Install New Software 에서 m2e를 찾아보자.</p>
+
+<p>Collaboration 밑에 m2e 항목을 발견할 수 있다.</p>
+
+<p><img src="/images/201110/cfile24-uf-2063763d4ea11d751c4ad0.png" class="aligncenter" width="700" height="397" alt="" /></p>
+
+<p style="margin:0;">체크를 하고 설치하자.
+<p style="margin:0;"><img src="/images/201110/cfile29-uf-1220f63a4ea12c4c332c99.png" class="aligncenter" width="525" height="500" alt="" />
+<p style="margin:0;"><img src="/images/201110/cfile22-uf-1320f63a4ea12c4c34e0c5.png" class="aligncenter" width="617" height="548" alt="" />
+<p style="margin:0;"><img src="/images/201110/cfile30-uf-1420f63a4ea12c4c35037f.png" class="aligncenter" width="615" height="623" alt="" />
+<p style="margin:0;"><img src="/images/201110/cfile4-uf-1620f63a4ea12c4d36c316.png" class="aligncenter" width="616" height="620" alt="" />
+"Finish"를 하면, 프로젝트가 생성된다.
+생성된 디렉토리 구조는 다음과 같다.
+
+<p style="margin:0;"><img src="/images/201110/cfile23-uf-115942444ea513fb12facb.png" class="aligncenter" width="249" height="254" alt="" />
+생성된 pom.xml은 아래와 같다.
+<p style="margin:0;"><img src="/images/201110/cfile9-uf-125942444ea513fb13eacf.png" class="aligncenter" width="700" height="292" alt="" />
+
+기존의 WTP 프로젝트는 등록한 WAS에 곧바로 연결하여 사용할 수 있는데, 현재 maven으로 만든 프로젝트는 WAS에 곧바로 사용할 수가 없다. (불편하다!)
+일단, 이렇게 생성한 프로젝트가 정상적으로 실행되는지부터 살펴보고 나중에 환경 설정을 바꿔보자.
+mvn package를 실행하면, target 디렉토리내 myweb.war이 생성된다.
+
+$CATALINA_HOME/webapps에 myweb.war를 복사하고,
+
+웹 브라우저에서 http://localhost:8080/myweb을 실행하면,
+<p style="margin:0;"><img src="/images/201110/cfile10-uf-1418b4474ea516e1166c60.png" class="aligncenter" width="435" height="184" alt="" />
+
+과 같이, Hello World!가 출력된다.
+그러나, 매번 이렇게 war 파일을 복사하는 건 너무 불편하다. 분명 더 쉽게 쓰는 방법이 있을 것이다.
+</p></p></p></p></p></p></p></p>
+:ET

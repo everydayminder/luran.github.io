@@ -1,0 +1,119 @@
+---
+layout: single
+title: 한 서버에Tomcat 여러 개 띄우기 (multiple instances)
+date: 2012-01-25 13:28:00.000000000 +09:00
+categories: [system, development]
+tags: [tomcat]
+author:
+  login: everydayminder
+  email: 2jhyun@gmail.com
+  display_name: everydayminder
+  first_name: ''
+  last_name: ''
+---
+이런 경우가 발생한다.
+한 서버에 포트를 달리해서, tomcat을 여러 개 띄워야 하는 경우가.
+개발시 servlet context만 달리해서 검사하곤 했는데,
+servlet context를 root로 fix해서 개발된 소스를 받아들게 되었다. (절대경로로 root context만 고려해서 작성된 소스코드)
+
+두 개의 사이트를 띄워야 하는데, 둘 다 root context로 동작하게 되어있다.
+tomcat을 띄우고자 서버 두 개를 쓰는 것은 오버하는 것이고, 
+한 번에 두 개 혹은 그 이상의 tomcat을 띄워서 배포해 보자.
+
+본 설정은 tomcat 6.x를 기반으로 설정하였다.
+
+## 1. Tomcat 설치
+http://tomcat.apache.org로부터 설치 파일을 다운로드 하였다.
+설정의 편의상, apache-tomcat-6.0.35-windows-x64.zip을 다운로드 하였다.
+설치를 원하는 디렉토리에 압축을 풀고, 예전에 설치했던 것과 마찬가지로
+환경변수를 설치 디렉토리로 잡아주자. (java는 미리 설치했다고 가정한다.)
+
+```
+CATALINA_HOME = c:/dev/tomcat6
+```
+압축파일은 다음과 같은 디렉토리들을 포함하고 있다.
+
+>+ bin
+>+ conf
+>+ lib
+>+ logs
+>+ temp
+>+ webapps
+>+ work
+
+## 2. 복사본 만들기
+띄우고자 하는 사이트가 각각 adimweb, userweb이라고 하자.
+그러면, tomcat 디렉토리의 내부 디렉토리들을 복사하자.
+복사할 대상 디렉토리는
+
+>+ conf
+>+ logs
+>+ temp
+>+ webapps
+>+ work
+
+이다.
+
+tomcat6 디렉토리에 adminweb, userweb 디렉토리를 생성하고,
+위의 디렉토리들을 각각 adminweb, userweb에 복사한다. (복사 후, 원래 존재하던 tomcat6의 위 디렉토리들은 삭제한다.)
+
+즉, 다음과 같은 구조로 만든다.
+>+ tomcat6
+>  + bin
+>  + lib
+>  + adminweb
+>    + conf
+>    + logs
+>    + temp
+>    + webapps
+>    + work
+>  + userweb
+>    + conf
+>    + logs
+>    + temp
+>    + webapps
+>    + work
+
+## 3. 포트 설정
+이제 adminweb과 userweb의 사용 포트를 변경하자.
+현재, 각각의 설정파일은 adminweb/conf/server.xml과 userweb/conf/server.xml에 저장되어 있다.
+그런데, 두 설정값이 동일한 것이 문제이다.
+
+두 파일중 하나를 골라, 포트 값을 바꿔주자.
+안 겹치고, 사용중이지 않은 값으로 바꿔준다. (예 : 파일1에서 8010쓰고 있으면, 8011로 지정하는 식)
+총 3-4곳의 port값을 변경해주면 될 것이다. 잘 저장한다.
+
+## 4. 환경변수 추가 설정
+여러 개의 인스턴스를 띄우려면, CATALINA_BASE 라는 환경변수를 선언해줘야 한다.
+게다가, 실행의 편의를 돕기 위해, 각 인스턴스의 시작/종료 shell이 있으면 좋을 것이다. (원본도 그렇게 실행/종료 시키니까)
+
+원본 startup,bat, shutdown.bat에서 필요한 부분만 똑 떼어와서 다음과 같이 파일을 만들고, 해당 디렉토리에 복사해 넣는다.
+```
+[adminweb/startup.bat]
+set "CATALINA_BASE=%CATALINA_HOME%adminweb"
+set "EXECUTABLE=%CATALINA_HOME%bincatalina.bat"
+call "%EXECUTABLE%" start
+
+[adminweb/shutdown.bat]
+set "CATALINA_BASE=%CATALINA_HOME%adminweb"
+set "EXECUTABLE=%CATALINA_HOME%bincatalina.bat"
+call "%EXECUTABLE%" stop
+
+[userweb/startup.bat]
+set "CATALINA_BASE=%CATALINA_HOME%userweb"
+set "EXECUTABLE=%CATALINA_HOME%bincatalina.bat"
+call "%EXECUTABLE%" start
+
+[userweb/shutdown.bat]
+set "CATALINA_BASE=%CATALINA_HOME%userweb"
+set "EXECUTABLE=%CATALINA_HOME%bincatalina.bat"
+call "%EXECUTABLE%" stop
+```
+
+## 5. Tomcat 띄우기
+adminweb, userweb의 startup을 각각 실행시키자.
+conf/server.xml에 설정한 포트로 접속을 시도하자.
+그러면, 원래 tomcat을 띄운 후 보게 되는 초기화면을 각각 볼 수 있을 것이다.
+
+더 많은 인스턴스를 띄우려면, 위의 작업을 반복하면 된다.
+

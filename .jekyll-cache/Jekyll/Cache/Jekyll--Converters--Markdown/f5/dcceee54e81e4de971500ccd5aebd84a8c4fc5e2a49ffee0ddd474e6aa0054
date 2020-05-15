@@ -1,0 +1,4 @@
+I"(<p>우선, Oracle 사이트에서 oracle thin client를 다운로드 해야 한다.
+이 때, 본인이 실제 사용하는 OS의 bit가 아닌, Toad의 bit와 동일한 버전의 thin client가 필요하다.
+즉, 64bit Windows라도 32bit Toad 라면, 32bit Oracle thin client 설치 필요.</p>
+:ET

@@ -1,0 +1,3 @@
+I"�<p>앞서 Docker의 Kitematic으로 Jenkins 이미지를 받아서 띄워봤는데, Python 프로젝트를 위해 몇몇 설정을 변경하기 위해
+직접 Docker 이미지를 만들어보자.</p>
+:ET

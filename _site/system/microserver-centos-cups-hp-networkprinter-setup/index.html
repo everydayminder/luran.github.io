@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>MicroServer + CentOS + CUPS 조합으로 HP MFP 1005를 네트워크 프린터로 쓰기 | Notes for future me</title>
+<meta name="description" content="지난 번에 CentOS에 hplip를 설치하여, CentOS에서 직접 HP MFP1005로 인쇄가 되는 것을 확인하였다.내 PC의 문제인지는 모르겠으나, HP에서 제공하는 프린터 드라이버를 다운로드 하여 프린터를 직접 연결하였으나제대로 인식되지 않아 프린트를 하기 어려웠다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="MicroServer + CentOS + CUPS 조합으로 HP MFP 1005를 네트워크 프린터로 쓰기">
+<meta property="og:url" content="http://localhost:4000/system/microserver-centos-cups-hp-networkprinter-setup/">
+
+
+  <meta property="og:description" content="지난 번에 CentOS에 hplip를 설치하여, CentOS에서 직접 HP MFP1005로 인쇄가 되는 것을 확인하였다.내 PC의 문제인지는 모르겠으나, HP에서 제공하는 프린터 드라이버를 다운로드 하여 프린터를 직접 연결하였으나제대로 인식되지 않아 프린트를 하기 어려웠다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2012-03-04T15:16:08+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/system/microserver-centos-cups-hp-networkprinter-setup/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#system" itemprop="item"><span itemprop="name">System</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">MicroServer + CentOS + CUPS 조합으로 HP MFP 1005를 네트워크 프린터로 쓰기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="MicroServer + CentOS + CUPS 조합으로 HP MFP 1005를 네트워크 프린터로 쓰기">
+    <meta itemprop="description" content="지난 번에 CentOS에 hplip를 설치하여, CentOS에서 직접 HP MFP1005로 인쇄가 되는 것을 확인하였다.내 PC의 문제인지는 모르겠으나, HP에서 제공하는 프린터 드라이버를 다운로드 하여 프린터를 직접 연결하였으나제대로 인식되지 않아 프린트를 하기 어려웠다.">
+    <meta itemprop="datePublished" content="2012-03-04T15:16:08+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">MicroServer + CentOS + CUPS 조합으로 HP MFP 1005를 네트워크 프린터로 쓰기
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>지난 번에 CentOS에 hplip를 설치하여, CentOS에서 직접 HP MFP1005로 인쇄가 되는 것을 확인하였다.
+내 PC의 문제인지는 모르겠으나, HP에서 제공하는 프린터 드라이버를 다운로드 하여 프린터를 직접 연결하였으나
+제대로 인식되지 않아 프린트를 하기 어려웠다.</p>
+
+<p style="margin:0;">
+&lt;HP MFP 1005와 궁합이 맞은 우리집 OS들&gt;
+* Windows XP : 동작
+* Windows Vista : 오류
+* Windows 7 : 오류
+* CentOS 6 : 동작
+
+그래서, 항상 켜 놓는 MicroServer를 프린터 서버로 활용하게 되었다.
+
+<b>1. CUPS(Common Unix Printing System)의 설치</b>
+우선 CUPS가 설치되어 있어야 한다.
+
+<div class="txc-textbox" style="background-color:rgb(254,222,199);border-color:rgb(254,137,67);border-style:dashed;border-width:1px;padding:10px;">
+<p style="margin:0;">yum install cups
+
+&lt;/div&gt;
+
+<b>2. CUPS 시작</b>
+CUPS가 동작하고 있지 않다면, 실행시킨다.
+<div class="txc-textbox" style="background-color:rgb(254,222,199);border-color:rgb(254,137,67);border-style:dashed;border-width:1px;padding:10px;">
+<p style="margin:0;">service cups start
+
+&lt;/div&gt;
+
+<b>3. 로컬에서 CUPS 관리페이지 접속 확인</b>
+우선, 서버에서 http://localhost:631로 접속해보자(localhost).
+정상적으로 설치되었다면, 다음과 같은 관리 페이지가 나타날 것이다.
+
+<a href="http://luran.zz.mu/wp-content/uploads/1/"></a>
+<div>
+
+<b>4. CUPS 환경 설정</b>
+이제, 클라이언트 PC에서도 이 관리 사이트에 원격으로 접속할 수 있도록 설정을 변경하자.&nbsp;
+/etc/cups/cupsd.conf를 열어보자.
+
+# Restrict access to the server라는 부분을 찾아본다.
+외부에서 접속할 시스템의 IP 또는 hostname을 적어주면 되는데, 기본적으로 localhost만 기록되어 있다.
+Allow 192.168.1.0/24 를 추가하였다.
+
+# Restrict access to the admin pages를 찾아본다.
+
+admin 페이지를 사용할 수 있는 시스템의 IP 또는 hostname을 적어주면 된다.
+마찬가지로, Allow 192.168.1.0/24를 추가하였다.
+이 옵션을 적어주지 않으면, 위와 같이 관리자 페이지가 뜨는 상태라 하더라도 Administration 탭을 사용할 수 없다.
+설정을 변경하였으므로, service cups restart
+
+<b>5. 방화벽 설정 변경</b>
+관리자 페이지는 기본적으로 631 포트를 사용한다.
+방화벽 룰에 추가하자.
+
+```
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 631 -j ACCEPT
+-A INPUT -m state --state NEW -m udp -p udp --dport 631 -j ACCEPT
+```
+추가하고, service iptables restart
+
+
+<b>6. 리모트 PC로부터 CUPS 관리페이지 접속 확인</b>
+이제 다른 PC에서 관리자 페이지로 접속시도하여, 위와 같은 관리자 페이지가 정상적으로 나타나는지,
+Administration 탭에 접근 가능한지 확인해 보자.
+
+위와 같이 성공적으로 관리자 페이지를 설치완료했다면,&nbsp;http://서버IP:631로 접속할 수 있을 것이다. 
+나의 경우는 http://192.168.1.x:631로 접속할 수 있고, Administration 탭내의 Manage Printers를 클릭하면,
+설치되어 있는 프린터가 정상적으로 나타났다. 프린터 이름을 클릭하면, URL 부분이 다음과 같은 형태의 이름을
+나타낼 것이다.
+
+http://서버IP:631/printers/프린터명
+
+<b>7. [Windwos7/Vista] hostfile 변경</b>&nbsp;
+실제 접속도 위 형태의 URL을 활용하여 프린터를 설정하면 된다.
+그런데, 서버IP를 그대로 하면 프린터 설정이 잘 안된다는 글도 보았고, 나 역시도 직접 IP를 적었더니 인식이 잘 되지
+않았다.&nbsp;
+
+대신, hostfile에 서버에서 사용하는 이름 그대로 등록해준다. (이름이 다르면 인식이 안되는 것 같다.)
+서버가 192.168.1.x이고, 이름이 aaa 인 경우(uname -a), hostfile에도 그대로 적어준다.
+내 hostfile에 bbb라고 적어줬더니 제대로 안되는 것 같다.
+
+참고 :&nbsp;
+
+<a href="http://www.owlfish.com/thoughts/winipp-cups-2003-07-20.html">http://www.owlfish.com/thoughts/winipp-cups-2003-07-20.html</a>&nbsp;
+
+당연히, http://내가적은hostname:631/printers/프린터명 으로 접속시도하면 원래 나타나는 관리자 화면이
+보여야 한다.
+
+
+<b>8. 클라이언트 - 프린터 드라이버 설치</b>
+프린터를 이와 같은 방법으로 설정한 이유는, 앞서 언급했듯이 HP 사이트에 올라와 있는 드라이버를
+집에 있는 PC들의 OS(Windows7, Vista)들에 &nbsp;각각 설치했으나 정상적으로 프린터를 쓸 수 없었기 때문이다.
+
+프린터 추가를 선택한다.
+네트워크 프린터를 선택한다.
+이름으로 공유 프린터 선택하라는 란에, 위의 주소를 입력한다. (http://호스트이름:631/printers/프린터명)
+모델은 "Generic"으로, 프린터는 "MS Publisher Imagesetter"로 설정한다.
+테스트 페이지 인쇄를 해본다. 된다 ^^v
+
+</div>
+</p></div></p></div></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#centos" class="page__taxonomy-item" rel="tag">centos</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cups" class="page__taxonomy-item" rel="tag">cups</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#hp" class="page__taxonomy-item" rel="tag">hp</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#printer" class="page__taxonomy-item" rel="tag">printer</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#system" class="page__taxonomy-item" rel="tag">system</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2012-03-04T15:16:08+09:00">March 04, 2012</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=MicroServer+%2B+CentOS+%2B+CUPS+%EC%A1%B0%ED%95%A9%EC%9C%BC%EB%A1%9C+HP+MFP+1005%EB%A5%BC+%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC+%ED%94%84%EB%A6%B0%ED%84%B0%EB%A1%9C+%EC%93%B0%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fmicroserver-centos-cups-hp-networkprinter-setup%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fmicroserver-centos-cups-hp-networkprinter-setup%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fmicroserver-centos-cups-hp-networkprinter-setup%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/64bit-centos-lame-mplayer/" class="pagination--pager" title="64bit CentOS 6에 lame, mplayer 설치하기
+">Previous</a>
+    
+    
+      <a href="/system/centos-6-64-bitnami-redmine/" class="pagination--pager" title="CentOS 6 (64)에 BitNami로 RedMine설치
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/system/microserver-centos-cups-hp-networkprinter-setup/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/system/microserver-centos-cups-hp-networkprinter-setup"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,17 @@
+I"e<p>layout: single
+title: Redis Study Note - single 인스턴스 설치
+date: 2016-09-17 14:53:32.000000000 +09:00
+categories:</p>
+<ul>
+  <li>system
+tags: [redis]
+author:
+login: everydayminder
+email: 2jhyun@gmail.com
+display_name: everydayminder
+first_name: ‘’
+last_name: ‘’
+—
+Redis single instance를 다음과 같이 설치해 본다.</li>
+</ul>
+:ET

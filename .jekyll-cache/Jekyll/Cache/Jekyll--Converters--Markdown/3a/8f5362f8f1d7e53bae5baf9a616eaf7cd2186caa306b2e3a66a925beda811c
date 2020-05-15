@@ -1,0 +1,5 @@
+I"5<p>Ubuntu-desktop은 GUI모드로 부팅된다.
+redhat 계열 리눅스와는 달리 runlevel을 수정하는 것만으로는 동작하지 않는다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mv /etc/rc3.d/S30gdm /etc/rc3.d/K30gdm
+</code></pre></div></div>
+:ET

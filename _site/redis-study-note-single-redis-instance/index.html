@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Redis Study Note Single Redis Instance | Notes for future me</title>
+<meta name="description" content="layout: singletitle: Redis Study Note - single 인스턴스 설치date: 2016-09-17 14:53:32.000000000 +09:00categories:  systemtags: [redis]author:login: everydayminderemail: 2jhyun@gmail.comdisplay_name: everydayminderfirst_name: ‘’last_name: ‘’—Redis single instance를 다음과 같이 설치해 본다.">
+
+
+  <meta name="author" content="everydayminder">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Redis Study Note Single Redis Instance">
+<meta property="og:url" content="http://localhost:4000/redis-study-note-single-redis-instance/">
+
+
+  <meta property="og:description" content="layout: singletitle: Redis Study Note - single 인스턴스 설치date: 2016-09-17 14:53:32.000000000 +09:00categories:  systemtags: [redis]author:login: everydayminderemail: 2jhyun@gmail.comdisplay_name: everydayminderfirst_name: ‘’last_name: ‘’—Redis single instance를 다음과 같이 설치해 본다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2016-09-17T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/redis-study-note-single-redis-instance/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">Redis Study Note Single Redis Instance</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">everydayminder</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, South Korea</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+            <li><a href="https://luran.me" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i> Website</a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Redis Study Note Single Redis Instance">
+    <meta itemprop="description" content="layout: singletitle: Redis Study Note - single 인스턴스 설치date: 2016-09-17 14:53:32.000000000 +09:00categories:  systemtags: [redis]author:login: everydayminderemail: 2jhyun@gmail.comdisplay_name: everydayminderfirst_name: ‘’last_name: ‘’—Redis single instance를 다음과 같이 설치해 본다.">
+    <meta itemprop="datePublished" content="2016-09-17T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Redis Study Note Single Redis Instance
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>layout: single
+title: Redis Study Note - single 인스턴스 설치
+date: 2016-09-17 14:53:32.000000000 +09:00
+categories:</p>
+<ul>
+  <li>
+    <p>system
+tags: [redis]
+author:
+login: everydayminder
+email: 2jhyun@gmail.com
+display_name: everydayminder
+first_name: ‘’
+last_name: ‘’
+—
+Redis single instance를 다음과 같이 설치해 본다.</p>
+  </li>
+  <li>OS : CentOS 6.8 / VirtualBox</li>
+  <li>Redis 버전 : 3.2.3</li>
+</ul>
+
+<p><strong>공식사이트</strong>
+Redis 공식 사이트 : http://redis.io</p>
+
+<p><strong>다운로드</strong>
+2016/9/16현재 최신 stable버전인 3.2를 다운로드 한다.</p>
+
+<p><strong>설치</strong>
+공식 사이트에 안내된 바와 같이, 단일 인스턴스 설치 과정 자체는 무척 간단하다.</p>
+
+<p>http://download.redis.io/releases/redis-3.2.3.tar.gz</p>
+
+<p>에서 다운로드하고,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tar xzf redis-3.2.3.tar.gz
+$ cd redis-3.2.3
+$ make
+</code></pre></div></div>
+
+<p>이대로 설치를 진행하면, gcc부터 시작하여 여러 라이브러리가 없다고 줄줄이 에러가 발생한다.
+README.md파일을 읽어보면, 의존성 라이브러리들이 deps 디렉토리에 존재한다는 것을 알 수 있다.
+일단 다음과 같이 실행한다. (추후 다른 라이브러리들도 필요할 것 같아, 일단 epel-release도 함께 설치하였다.)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ yum install epel-release
+$ yum install gcc
+</code></pre></div></div>
+
+<p>설치시 의존성 문제가 발생하면, 아래와 같이 초기화하고 다시 설치해 본다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make distclean
+</code></pre></div></div>
+
+<p>정상적으로 설치를 마쳤다면, 다음과 같은 메시지가 눈에 띌 것이다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hint: It's a good idea to run 'make test' ;)
+</code></pre></div></div>
+<p>테스트를 실행해보면, 이번에는 tcl을 설치하라고 한다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ yum install tcl
+</code></pre></div></div>
+<p>tcl을 설치 후, 이제 make test를 실행하면</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make test
+</code></pre></div></div>
+<p>수많은 테스트를 알아서 수행한다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Execution time of different units:
+  1 seconds - unit/type/incr
+  1 seconds - unit/printver
+  2 seconds - unit/auth
+  2 seconds - unit/keyspace
+  0 seconds - unit/quit
+  3 seconds - unit/scan
+  2 seconds - unit/multi
+  7 seconds - unit/protocol
+  11 seconds - unit/expire
+  23 seconds - unit/type/list
+  11 seconds - integration/aof
+  4 seconds - integration/rdb
+  3 seconds - integration/convert-zipmap-hash-on-load
+  2 seconds - integration/logging
+  1 seconds - unit/pubsub
+  2 seconds - unit/slowlog
+  46 seconds - unit/aofrw
+  51 seconds - unit/other
+  1 seconds - unit/introspection
+  57 seconds - unit/type/hash
+  2 seconds - unit/limits
+  58 seconds - integration/replication
+  7 seconds - unit/introspection-2
+  19 seconds - unit/scripting
+  10 seconds - unit/bitfield
+  72 seconds - unit/type/string
+  81 seconds - unit/type/set
+  38 seconds - unit/bitops
+  96 seconds - integration/replication-2
+  102 seconds - unit/type/zset
+  63 seconds - unit/maxmemory
+  117 seconds - unit/dump
+  127 seconds - unit/sort
+  58 seconds - unit/memefficiency
+  121 seconds - integration/replication-psync
+  86 seconds - unit/geo
+  156 seconds - unit/type/list-2
+  159 seconds - unit/type/list-3
+  155 seconds - integration/replication-4
+  160 seconds - integration/replication-3
+  92 seconds - unit/hyperloglog
+  114 seconds - unit/obuf-limits
+
+\o/ All tests passed without errors!
+
+Cleanup: may take some time... OK
+</code></pre></div></div>
+
+<p>make까지 성공했으면 src/redis-server로 실행가능한 상태가 되었을 것이다.
+아래와 같이 실행하면, /usr/local/bin에 redis-server, cli 파일 등이 복사된다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make install
+</code></pre></div></div>
+
+<p>환경설정 파일 등의 절차를 쉽게 하도록, utils/install_server.sh를 실행한다.
+포트, 로그 위치, config에 관련된 정보/ 위치에 대해 물으나, 기본 설정으로 모두 그대로 enter를 쳤고,
+executable의 위치는 다른 가이드에 나온대로 기본 인식이 되지 않아, /usr/local/bin/redis-server를 직접 입력하였다.</p>
+
+<p>redis 기본 포트가 6379라, /etc/init.d/redis_6379 파일이 생성되었다.
+아래의 명령어로 서비스를 시작/ 정지시킬 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ service redis_6379 start
+$ service redis_6379 stop
+</code></pre></div></div>
+
+<p>redis가 정상적으로 떠 있는 상태라면,</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ps -ef | grep redis
+
+root     22694     1  0 00:25 ?        00:00:05 /usr/local/bin/redis-server 127.0.0.1:6379
+</code></pre></div></div>
+<p>이제, redis client로 접속하면,</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ /usr/local/bin/redis-cli
+127.0.0.1:6379&amp;gt;
+</code></pre></div></div>
+<p>와 같이 접속 상태가 안내되고, 다음과 같이 기본 동작 상태를 확인할 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>27.0.0.1:6379&amp;gt; set test 1234
+OK
+
+127.0.0.1:6379&amp;gt; set name &amp;quot;abc def&amp;quot;
+OK
+
+127.0.0.1:6379&amp;gt; exists name
+(integer) 1
+
+127.0.0.1:6379&amp;gt; get name
+&amp;quot;abc def&amp;quot;
+
+127.0.0.1:6379&amp;gt; get test
+&amp;quot;1234&amp;quot;
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2016-09-17T00:00:00+09:00">September 17, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Redis+Study+Note+Single+Redis+Instance%20http%3A%2F%2Flocalhost%3A4000%2Fredis-study-note-single-redis-instance%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fredis-study-note-single-redis-instance%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fredis-study-note-single-redis-instance%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/reading/iclouddrive-good-reader-continuous-reading/" class="pagination--pager" title="iCloudDrive + Good Reader를 통한 지속적인 읽기
+">Previous</a>
+    
+    
+      <a href="/system/osx-virtualbox-host-guest-linuxcentos-ssh/" class="pagination--pager" title="OSX VirtualBox의 host에서 guest linux(CentOS)로 ssh 접속 설정하려면?
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/redis-study-note-single-redis-instance/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/redis-study-note-single-redis-instance"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

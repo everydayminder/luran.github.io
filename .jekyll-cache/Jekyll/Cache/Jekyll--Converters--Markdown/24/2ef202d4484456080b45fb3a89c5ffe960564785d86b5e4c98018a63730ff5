@@ -1,0 +1,15 @@
+I"Y<p><strong>1. 10.0.0.1에 접속
+</strong></p>
+
+<p><strong>2. cat /proc/drbd</strong>
+   -&gt; primary인지 secondary인지 정보가 출력됨</p>
+
+<p><strong>3. drbdadm primary mysql       
+</strong>   -&gt; primary로 전환</p>
+
+<p><strong>4. mount /dev/drbd0 /drbd/
+</strong></p>
+
+<p><strong>5. service mysql start</strong></p>
+
+:ET

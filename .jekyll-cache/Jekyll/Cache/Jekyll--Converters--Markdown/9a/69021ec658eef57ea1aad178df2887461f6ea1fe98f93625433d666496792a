@@ -1,0 +1,34 @@
+I"
+<p>DRBD, Pacemaker, Corosync기반으로 H/A 환경을 구축하고, 그 위에 PostgreSQL을 실행시켰는데
+H/A failover가 정상적으로 되는지 확인하기 위해 다음과 같은 테스트를 수행하였다.</p>
+
+<ol>
+  <li>Postgres kill 시키기 : auto restart</li>
+  <li>Virtual IP용 NIC 강제로 ifdown : fail over</li>
+  <li>crm node standby 명령어 실행을 통한 강제 switch over</li>
+</ol>
+
+<p>위의 테스트를 트래픽이 없거나(적은) 환경에서는 별 문제 없이 수행할 수 있었는데,
+트래픽을 많이 발생시킨 (heavy transaction) 환경에서는 기대와는 다르게 동작하는 것을 확인하였다.
+그 에러 메시지가 crm_mon 명령어로 확인했을 때, PostgreSQL이 정상적으로 동작하지 않으면서 “Unmanaged”
+라고 뜨는 것이었다.</p>
+
+<p>이를 위해 crm resource edit를 하여,
+PostgreSQL 리소스의 정보를 아래와 같이 수정하였다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   op monitor role=Started timeout=120 interval=30 depth=0 \
+        op start role=Stopped interval=0 timeout=120s \
+        op stop role=Started interval=0 timeout=120s  
+</code></pre></div></div>
+
+<p>모니터링, 시작, 종료시 interval과 timeout을 부여했는데,
+특히 timeout의 값을 120초로 주었다.</p>
+
+<p>만약, 이보다 더 작은 값으로 지정한다면 edit 종료시, crm shell에서 사실 “default보다 작은 값을 지정했다”면서
+경고 메시지를 준다.</p>
+
+<p>경고를 무시하면, 이와 같이 Unmanaged라는 상황을 만날 수 있다.</p>
+
+<p>교훈)
+테스트 환경 구축만으로 잘 되었다고 생각하면, 트래픽이 발생하는 운영 상황에서 auto failover가 안되는 수가 있다.</p>
+:ET

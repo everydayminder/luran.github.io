@@ -1,0 +1,18 @@
+I"-<ul class="toc__menu">
+  <li><a href="#환경-구성">환경 구성</a></li>
+  <li><a href="#노드별-사전-준비사항">노드별 사전 준비사항</a></li>
+  <li><a href="#주요-설치-순서">주요 설치 순서</a></li>
+  <li><a href="#설치-환경설정">설치/ 환경설정</a>
+    <ul>
+      <li><a href="#표기참고">표기/참고</a></li>
+      <li><a href="#설치-전-환경-설정-both">설치 전 환경 설정 (both)</a></li>
+      <li><a href="#노드-기본-설정특별한-언급이-없는-한-root-계정에서-실행">노드 기본 설정(특별한 언급이 없는 한, root 계정에서 실행)</a></li>
+      <li><a href="#프로그램-설치-postgresql-pacemaker-corosync-drbd">프로그램 설치 (postgreSQL, pacemaker, corosync, DRBD)</a></li>
+    </ul>
+  </li>
+  <li><a href="#drbd-설정">DRBD 설정</a></li>
+  <li><a href="#postgresql-on-drbd-테스트">PostgreSQL on DRBD 테스트</a></li>
+  <li><a href="#corosync-환경설정">Corosync 환경설정</a></li>
+  <li><a href="#pacemaker-설정">Pacemaker 설정</a></li>
+</ul>
+:ET

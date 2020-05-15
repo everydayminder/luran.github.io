@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Docker 기반 Local Spark Cluster 설치하기 | Notes for future me</title>
+<meta name="description" content="Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Docker 기반 Local Spark Cluster 설치하기">
+<meta property="og:url" content="http://localhost:4000/development/installing-spark-cluster/">
+
+
+  <meta property="og:description" content="Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-12-02T23:35:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/installing-spark-cluster/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Docker 기반 Local Spark Cluster 설치하기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Docker 기반 Local Spark Cluster 설치하기">
+    <meta itemprop="description" content="Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.">
+    <meta itemprop="datePublished" content="2018-12-02T23:35:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Docker 기반 Local Spark Cluster 설치하기
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#spark-cluster-project-받기">Spark Cluster Project 받기</a></li>
+  <li><a href="#spark-cluster-시작하기">Spark Cluster 시작하기</a></li>
+  <li><a href="#실행중인-프로세스-확인">실행중인 프로세스 확인</a></li>
+  <li><a href="#spark-application-실행하기">Spark Application 실행하기</a></li>
+  <li><a href="#spark-worker-node-scale-out">Spark Worker Node Scale Out</a></li>
+  <li><a href="#spark-cluster-종료하기">Spark Cluster 종료하기</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.</p>
+
+<h1 id="spark-cluster-project-받기">Spark Cluster Project 받기</h1>
+<p>인터넷에서 다음의 프로젝트를 받아서 설치한다.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/big-data-europe/docker-hadoop-spark-workbench.git
+</code></pre></div></div>
+
+<h1 id="spark-cluster-시작하기">Spark Cluster 시작하기</h1>
+<p>위 프로젝트를 clone한 디렉토리에서, 다음과 같이 실행하면 프로젝트내 기술된 docker-compose.yml을 바탕으로 spark cluster가 기동된다. (OSX 기준, docker-for-mac 등이 설치되어 있어야 함)</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up
+</code></pre></div></div>
+
+<p>모든 이미지들을 최초 다운로드 받는데 다소 시간이 걸리지만,
+이후에는 곧바로 실행된다.</p>
+
+<h1 id="실행중인-프로세스-확인">실행중인 프로세스 확인</h1>
+<p>위와 같이 클러스터를 시작하면, 원본 github 페이지에 안내된 바와 같이 아래 프로세스들이 동작하는 것을 확인할 수 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps
+</code></pre></div></div>
+<p>실행하면, 아래와 같이 동작 중인 container들이 나타난다.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS                    PORTS                                                      NAMES
+bfbe4579b5e8        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   <span class="s2">"entrypoint.sh /bin/…"</span>   36 minutes ago      Up 36 minutes <span class="o">(</span>healthy<span class="o">)</span>   0.0.0.0:8081-&gt;8081/tcp                                     docker-hadoop-spark-workbench_spark-worker_1
+47e1225e695c        bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8     <span class="s2">"/entrypoint.sh /run…"</span>   36 minutes ago      Up 36 minutes <span class="o">(</span>healthy<span class="o">)</span>   0.0.0.0:50075-&gt;50075/tcp                                   docker-hadoop-spark-workbench_datanode_1
+00effc501b21        bde2020/spark-master:2.1.0-hadoop2.8-hive-java8   <span class="s2">"entrypoint.sh /bin/…"</span>   36 minutes ago      Up 36 minutes <span class="o">(</span>healthy<span class="o">)</span>   0.0.0.0:7077-&gt;7077/tcp, 6066/tcp, 0.0.0.0:8080-&gt;8080/tcp   spark-master
+2ad2864b8ef2        bde2020/hadoop-namenode:1.1.0-hadoop2.8-java8     <span class="s2">"/entrypoint.sh /run…"</span>   36 minutes ago      Up 36 minutes <span class="o">(</span>healthy<span class="o">)</span>   0.0.0.0:50070-&gt;50070/tcp                                   namenode
+19f6e280b334        bde2020/spark-notebook:2.1.0-hadoop2.8-hive       <span class="s2">"/entrypoint.sh /run…"</span>   36 minutes ago      Up 36 minutes             0.0.0.0:9001-&gt;9001/tcp                                     spark-notebook
+5284894c2597        bde2020/hdfs-filebrowser:3.11                     <span class="s2">"/entrypoint.sh buil…"</span>   36 minutes ago      Up 36 minutes             0.0.0.0:8088-&gt;8088/tcp                                     docker-hadoop-spark-workbench_hue_1
+</code></pre></div></div>
+
+<p>이는 프로젝트 github에 안내된 바와 같이</p>
+
+<p>Namenode: http://localhost:50070
+Datanode: http://localhost:50075
+Spark-master: http://localhost:8080
+Spark-notebook: http://localhost:9001
+Hue (HDFS Filebrowser): http://localhost:8088/home</p>
+
+<p>의 내용을 포함하고 있다.
+즉, 브라우저에서 위의 주소를 입력하면 동작여부를 가시적으로 확인할 수 있다.</p>
+
+<h1 id="spark-application-실행하기">Spark Application 실행하기</h1>
+<p>다음과 같이 spark-submit 명령어로 애플리케이션을 실행할 수 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+spark-submit <span class="se">\</span>
+    <span class="nt">--deploy-mode</span> client <span class="se">\</span>
+    <span class="nt">--num-executors</span> 10 <span class="se">\</span>
+    <span class="nt">--driver-memory</span> 40g <span class="se">\</span>
+    <span class="nt">--driver-cores</span> 8 <span class="se">\</span>
+    <span class="nt">--executor-memory</span> 80g <span class="se">\</span>
+    <span class="nt">--executor-cores</span> 10 <span class="se">\</span>
+    <span class="nt">--conf</span> spark.yarn.executor.memoryOverhead<span class="o">=</span>4096 <span class="se">\</span>
+    <span class="nt">--jars</span> <span class="o">{</span>참조할 jar 경로 포함한 이름<span class="o">}</span> <span class="se">\</span>
+    <span class="nt">--class</span> <span class="o">{</span>패키지명 포함한 실행 대상 클래스 이름<span class="o">}</span> <span class="se">\</span>
+      <span class="o">{</span>클래스 파일이 들어있는 jar 파일이름<span class="o">}</span>
+</code></pre></div></div>
+
+<h1 id="spark-worker-node-scale-out">Spark Worker Node Scale Out</h1>
+<p>혹시, 이미 동작중인 클러스터내 worker의 수를 더 늘리고 싶다면? 다음의 명령어로 worker의 수를 늘릴 수 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose scale spark-worker<span class="o">=</span>3
+</code></pre></div></div>
+
+<p>단, 위와 같이 프로젝트 파일을 클론한 기본 상태에서는, scale out 시도시 port 매핑 충돌이 발생하여 다음과 같은 에러가 발생한다.</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WARNING: The scale command is deprecated. Use the up command with the --scale flag instead.
+WARNING: The "spark-worker" service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash.
+Starting docker-hadoop-spark-workbench_spark-worker_1 ... done
+Creating docker-hadoop-spark-workbench_spark-worker_2 ... error
+Creating docker-hadoop-spark-workbench_spark-worker_3 ... error
+
+ERROR: for docker-hadoop-spark-workbench_spark-worker_3  Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_3 (e6579099d4cff6a3d7986dae5ebdd0ab594584d2ed2e2bd3974174016ffe9d57): Bind for 0.0.0.0:8081 failed: port is already allocated'
+
+ERROR: for docker-hadoop-spark-workbench_spark-worker_2  Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_2 (8bc751510f81453fb3ec2225d6ee0f4e1900569412644b64eafdec213a80e995): Bind for 0.0.0.0:8081 failed: port is already allocated'
+ERROR: Cannot start service spark-worker: b'driver failed programming external connectivity on endpoint docker-hadoop-spark-workbench_spark-worker_3 (e6579099d4cff6a3d7986dae5ebdd0ab594584d2ed2e2bd3974174016ffe9d57): Bind for 0.0.0.0:8081 failed: port is already allocated'
+</code></pre></div></div>
+<p>따라서, docker-compose.yml 파일 중, worker의 포트 매핑 정보를 주석처리 또는 삭제하고 다시 실행한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  spark-worker:
+    image: bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+#    ports:
+#      - 8081:8081
+    env_file:
+      - ./hadoop.env
+</code></pre></div></div>
+
+<p>위의 커맨드를 실행하면,</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Starting docker-hadoop-spark-workbench_spark-worker_1 ... <span class="k">done
+</span>Creating docker-hadoop-spark-workbench_spark-worker_2 ... <span class="k">done
+</span>Creating docker-hadoop-spark-workbench_spark-worker_3 ... <span class="k">done</span>
+</code></pre></div></div>
+<p>와 같이 메시지가 뜨고, docker container 리스트에도 반영된다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS                    PORTS                                                      NAMES
+dcc35f0449ce        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   <span class="s2">"entrypoint.sh /bin/…"</span>   47 seconds ago      Up 46 seconds <span class="o">(</span>healthy<span class="o">)</span>   8081/tcp                                                   docker-hadoop-spark-workbench_spark-worker_2
+3915f1e48222        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   <span class="s2">"entrypoint.sh /bin/…"</span>   47 seconds ago      Up 46 seconds <span class="o">(</span>healthy<span class="o">)</span>   8081/tcp                                                   docker-hadoop-spark-workbench_spark-worker_3
+bfbe4579b5e8        bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8   <span class="s2">"entrypoint.sh /bin/…"</span>   3 hours ago         Up 3 hours <span class="o">(</span>healthy<span class="o">)</span>      0.0.0.0:8081-&gt;8081/tcp                                     docker-hadoop-spark-workbench_spark-worker_1
+47e1225e695c        bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8     <span class="s2">"/entrypoint.sh /run…"</span>   3 hours
+</code></pre></div></div>
+
+<p>앞서 표기한, master 노드의 웹에 들어가서 확인해도 이 내용이 반영되어 있음을 확인 가능하다.
+<img src="/images/201812/spark-workernode3.png" alt="spark-workernode3.png" /></p>
+
+<h1 id="spark-cluster-종료하기">Spark Cluster 종료하기</h1>
+<p>실행 중인 클러스터는 다음과 같이 종료한다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose down
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#docker" class="page__taxonomy-item" rel="tag">docker</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#spark" class="page__taxonomy-item" rel="tag">spark</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-12-02T23:35:00+09:00">December 02, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Docker+%EA%B8%B0%EB%B0%98+Local+Spark+Cluster+%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-spark-cluster%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-spark-cluster%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Finstalling-spark-cluster%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/development/installing-zeppelin/" class="pagination--pager" title="Local Zeppelin 설치하기 (OSX)
+">Previous</a>
+    
+    
+      <a href="/development/installing-local-airflow/" class="pagination--pager" title="Local Airflow 설치하기
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/Integrating-Gradle-Test-Local-Sonar/" rel="permalink">Integrating Gradle Test Local Sonar
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  less than 1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Docker로 sonarqube 설치
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/installing-spark-cluster/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/installing-spark-cluster"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

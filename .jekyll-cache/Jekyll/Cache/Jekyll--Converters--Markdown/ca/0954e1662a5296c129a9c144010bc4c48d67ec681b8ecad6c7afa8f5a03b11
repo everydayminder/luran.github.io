@@ -1,0 +1,56 @@
+I"�
+<p>이제는 일일 빌드보다 Continuous Integration(지속적인 통합)이 트렌드이다. 이와 관련하여, 수많은 종류의 tool이 존재하나, 그 중 Hudson이라는 무료 CI 툴을 설치하고, 주요 설정 방법, 사용방법에 대해 정리하고자 한다.</p>
+
+<h3 id="1-준비물">1. 준비물</h3>
+<ul>
+  <li>JDK</li>
+  <li>Tomcat (설치 방법에 따라 다름)</li>
+  <li>Hudson</li>
+</ul>
+
+<h3 id="2-설치-준비하기">2. 설치 준비하기</h3>
+<p>(1) JDK</p>
+<ul>
+  <li><a title="[http://http;///java.sun.com]로 이동합니다." target="_blank" href="http://http;///java.sun.com">http://java.sun.com</a></li>
+  <li>JAVA_HOME을 jdk 설치 디렉토리로 지정함</li>
+</ul>
+
+<p>(2) Tomcat</p>
+<ul>
+  <li><a title="[http://tomcat.apache.org]로 이동합니다." target="_blank" href="http://tomcat.apache.org">http://tomcat.apache.org</a> 로부터 tomcat을 다운로드하여 설치함</li>
+  <li>CATALINA_HOME을 tomcat의 설치 디렉토리로 지정함</li>
+</ul>
+
+<p>(3) Hudson</p>
+<ul>
+  <li><a title="[http://hudson-ci.org]로 이동합니다." target="_blank" href="http://hudson-ci.org">http://hudson-ci.org</a></li>
+  <li>hudson.zip을 받았다면, hudson.war로 이름 변경</li>
+</ul>
+
+<h3 id="3-설치하기">3. 설치하기</h3>
+<p>(1) Tomcat에 연동하여 설치하기</p>
+<ul>
+  <li>tomcat 설치 디렉토리의 webapps에 hudson.war를 복사한다.</li>
+  <li>tomcat을 시작시킨다.</li>
+  <li>tomcat이 실행되면서 hudson.war의 설치가 진행된다.</li>
+  <li>http://localhost:8080/hudson 을 입력한다. 끝.</li>
+</ul>
+
+<p>(2) Tomcat과 독립적으로 설치하기</p>
+<ul>
+  <li>항상 웹 서버를 띄워놓고 작업하는 것만이 좋은 해결책은 아님.</li>
+  <li>별도의 애플리케이션으로 독립적으로 띄워보자.</li>
+  <li>hudson.bat 또는 hudson.sh을 다음과 같이 작성한다.</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java <span class="nt">-DHUDSON_HOME</span><span class="o">=</span>C:/dev/hudson <span class="nt">-jar</span> hudson.war <span class="nt">-Xms370m</span> <span class="nt">-Xmx370m</span> <span class="nt">--httpPort</span><span class="o">=</span>8001 <span class="nt">--ajp13Port</span><span class="o">=</span>8019 <span class="o">&gt;</span> error.log.txt
+</code></pre></div></div>
+<ul>
+  <li>단, 본인은 hudson.war의 위치가 C:/dev/hudson이다.</li>
+  <li>콘솔로 hudson이 동작한다.</li>
+  <li>http://localhost:8001 을 입력한다. 끝.</li>
+</ul>
+
+<p><img src="/images/201006/cfile5.uf.165247164C1731971079CC.png" class="aligncenter" width="700" height="401" alt="" /></p>
+
+:ET

@@ -1,0 +1,6 @@
+I"�<p>windows 자체도 DNS caching을 하므로, 
+콘솔에서 다음과 같이 입력한다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ipconfig /flushdns
+</code></pre></div></div>
+
+:ET

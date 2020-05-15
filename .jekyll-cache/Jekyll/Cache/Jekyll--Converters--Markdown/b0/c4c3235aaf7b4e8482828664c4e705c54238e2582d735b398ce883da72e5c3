@@ -1,0 +1,4 @@
+I"<p>Twisted에서 제공하는 TAC를 사용하면, 여러개의 서비스를 동시에 묶어 application service로 등록 사용할 수 있다.
+앞서 만들었던 TestClient에 추가적으로 Server의 요소를 넣고자 한다.
+예를 들면, Administrator의 목적으로.</p>
+:ET

@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Tomcat Web Application 모니터링 툴 - javamelody 설정 방법 | Notes for future me</title>
+<meta name="description" content="Tomcat Web Application을 모니터링하거나, profiiling하기 위한 괜찮은 툴을 소개한다.Javamelody(https://code.google.com/p/javamelody)를 설정하는 방법은 무척 간단하다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Tomcat Web Application 모니터링 툴 - javamelody 설정 방법">
+<meta property="og:url" content="http://localhost:4000/development/tomcat-web-application-javamelody/">
+
+
+  <meta property="og:description" content="Tomcat Web Application을 모니터링하거나, profiiling하기 위한 괜찮은 툴을 소개한다.Javamelody(https://code.google.com/p/javamelody)를 설정하는 방법은 무척 간단하다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2013-08-01T02:20:35+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/tomcat-web-application-javamelody/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Tomcat Web Application 모니터링 툴 - javamelody 설정 방법</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Tomcat Web Application 모니터링 툴 - javamelody 설정 방법">
+    <meta itemprop="description" content="Tomcat Web Application을 모니터링하거나, profiiling하기 위한 괜찮은 툴을 소개한다.Javamelody(https://code.google.com/p/javamelody)를 설정하는 방법은 무척 간단하다.">
+    <meta itemprop="datePublished" content="2013-08-01T02:20:35+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Tomcat Web Application 모니터링 툴 - javamelody 설정 방법
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>Tomcat Web Application을 모니터링하거나, profiiling하기 위한 괜찮은 툴을 소개한다.
+Javamelody(https://code.google.com/p/javamelody)를 설정하는 방법은 무척 간단하다.</p>
+
+<p><strong>1. Jar 설정</strong>
+WEB-INF/lib 내 javamedloy.zip내의 javamelody.jar와 jrobin-x.jar를 복사한다.
+내 경우는 maven 을 사용하므로, 기존의 pom.xml에 다음과 같이 dependency를 추가하였다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;dependency&gt;</span>
+ <span class="nt">&lt;groupId&gt;</span>net.bull.javamelody<span class="nt">&lt;/groupId&gt;</span>
+ <span class="nt">&lt;artifactId&gt;</span>javamelody-core<span class="nt">&lt;/artifactId&gt;</span>
+ <span class="nt">&lt;version&gt;</span>1.43.0<span class="nt">&lt;/version&gt;</span>
+ <span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p><strong>2. web.xml 설정</strong>
+기존에 실행하던 웹 애플리케이션을 모니터링/분석해야 하므로, web.xml의 내용을 편집한다.
+보통 web.xml에서는 선언된 순서로 우선순위를 지니므로, 다른 서블릿 선언보다 위쪽에 다음의
+설정을 추가로 기록한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;filter&gt;</span>
+ <span class="nt">&lt;filter-name&gt;</span>monitoring<span class="nt">&lt;/filter-name&gt;</span>
+ <span class="nt">&lt;filter-class&gt;</span>net.bull.javamelody.MonitoringFilter<span class="nt">&lt;/filter-class&gt;</span>
+ <span class="nt">&lt;/filter&gt;</span>
+ <span class="nt">&lt;filter-mapping&gt;</span>
+ <span class="nt">&lt;filter-name&gt;</span>monitoring<span class="nt">&lt;/filter-name&gt;</span>
+ <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+ <span class="nt">&lt;/filter-mapping&gt;</span>
+ <span class="nt">&lt;listener&gt;</span>
+ <span class="nt">&lt;listener-class&gt;</span>net.bull.javamelody.SessionListener<span class="nt">&lt;/listener-class&gt;</span>
+ <span class="nt">&lt;/listener&gt;</span>
+</code></pre></div></div>
+
+<p><strong>3. 동작 확인</strong>
+기본 설정은 이것으로 일단 끝!
+이제 web application을 실행시키자.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> http://&lt;host&gt;/&lt;context&gt;/monitoring
+</code></pre></div></div>
+<p>과 같이 실행시키면, 기존 사이트에 대한 모니터링 페이지가 정상 적으로 보일 것이다.
+대략 다음과 같은 화면이 뜬다.</p>
+
+<p><a title="JavaMelody 모니터링 화면 참고" href="http://http://javamelody.googlecode.com/svn/trunk/javamelody-core/src/site/resources/screenshots/graphs.png">http://javamelody.googlecode.com/svn/trunk/javamelody-core/src/site/resources/screenshots/graphs.png</a></p>
+
+<p><strong>4. 보안설정(ID/Password 기반)</strong>
+role 기반으로 간략하게 보안 설정을 해보자. web.xml에 다음의 내용을 추가한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;login-config&gt;</span>
+ <span class="nt">&lt;auth-method&gt;</span>BASIC<span class="nt">&lt;/auth-method&gt;</span>
+ <span class="nt">&lt;realm-name&gt;</span>Monitoring<span class="nt">&lt;/realm-name&gt;</span>
+ <span class="nt">&lt;/login-config&gt;</span>
+
+<span class="nt">&lt;security-role&gt;</span>
+ <span class="nt">&lt;role-name&gt;</span>monitoring<span class="nt">&lt;/role-name&gt;</span>
+ <span class="nt">&lt;/security-role&gt;</span>
+
+<span class="nt">&lt;security-constraint&gt;</span>
+ <span class="nt">&lt;web-resource-collection&gt;</span>
+ <span class="nt">&lt;web-resource-name&gt;</span>Monitoring<span class="nt">&lt;/web-resource-name&gt;</span>
+ <span class="nt">&lt;url-pattern&gt;</span>/monitoring<span class="nt">&lt;/url-pattern&gt;</span>
+ <span class="nt">&lt;/web-resource-collection&gt;</span>
+ <span class="nt">&lt;auth-constraint&gt;</span>
+ <span class="nt">&lt;role-name&gt;</span>monitoring<span class="nt">&lt;/role-name&gt;</span>
+ <span class="nt">&lt;/auth-constraint&gt;</span>
+ <span class="nt">&lt;/security-constraint&gt;</span>
+</code></pre></div></div>
+
+<p>만약, 이대로 tomcat을 restart하고, /monitoring으로 접근한다면, HTTP BASIC Authentication으로 인증 요청을 할 것이다.</p>
+
+<p><strong>5. tomcat-user 추가</strong>
+위의 인증창에 접근할 수 있는 사용자를 추가하자.
+tomcat-users.xml을 찾아 다음과 같이 사용자 정보를 추가한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;tomcat-users&gt;</span>
+ ..
+ <span class="nt">&lt;role</span> <span class="na">rolename=</span><span class="s">"monitoring"</span><span class="nt">/&gt;</span>
+ <span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">"monitoring"</span> <span class="na">password=</span><span class="s">"monitoring"</span> <span class="na">roles=</span><span class="s">"monitoring"</span> <span class="nt">/&gt;</span>
+ ..
+ <span class="nt">&lt;/tomcat-users&gt;</span>
+</code></pre></div></div>
+
+<p>이제 Tomcat을 재시작하고, BASIC authentication popup window가 뜨면, 위의 정보로 인증하고, 처음에 본 모니터링 페이지가 정상적으로 뜨는지 확인한다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#javamelody" class="page__taxonomy-item" rel="tag">javamelody</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#monitoring" class="page__taxonomy-item" rel="tag">monitoring</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#tomcat" class="page__taxonomy-item" rel="tag">tomcat</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2013-08-01T02:20:35+09:00">August 01, 2013</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Tomcat+Web+Application+%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81+%ED%88%B4+-+javamelody+%EC%84%A4%EC%A0%95+%EB%B0%A9%EB%B2%95%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftomcat-web-application-javamelody%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftomcat-web-application-javamelody%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Ftomcat-web-application-javamelody%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/system/tomcat-ssl-certificate-ssl-apr-error-handling/" class="pagination--pager" title="Tomcat SSL인증서 설정시 APR 관련 에러 발생시
+">Previous</a>
+    
+    
+      <a href="/development/c3p0-timeout-idle_test_period/" class="pagination--pager" title="c3p0 timeout과 idle_test_period의 설정
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/tomcat-web-application-javamelody/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/tomcat-web-application-javamelody"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

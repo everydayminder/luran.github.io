@@ -1,0 +1,25 @@
+I"i	<p>거의 5-6년만에 python으로 한 번 변환하는 로직을 짜보게 되었다.
+google님 감사합니다.
+PDT 시각을 현재 시각으로 변환해 보고자 한다.</p>
+
+<p>약 16시간의 차이가 있기 때문에, 내 시각에서 PDT를 구하려면 -16시간을, 역으로는 +16시간을 연산해주면
+되는 아주 간단한 요구사항이다.</p>
+
+<p>본 포스트에서는, now - 16을 하는대신, (이것은 구글에서 pdt now 라는 검색어로 검색해봐도 금방 나오는 값이다.)
+PDT 시간을 입력하면 현지 시각으로 변환하는 로직을 작성해 보고자 한다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">()</span>
+<span class="n">hours_16</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+
+
+<span class="n">user_input</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">'Enter PDT in yyyymmddHHMMSS format : '</span><span class="p">)</span>
+<span class="n">pdt_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">user_input</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="o">%</span><span class="n">Y</span><span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">d</span><span class="o">%</span><span class="n">H</span><span class="o">%</span><span class="n">M</span><span class="o">%</span><span class="n">S</span><span class="o">&amp;</span><span class="n">quot</span><span class="p">;)</span>
+<span class="n">converted_time</span> <span class="o">=</span> <span class="n">pdt_time</span> <span class="o">+</span> <span class="n">hours_16</span>
+
+<span class="k">print</span> <span class="n">converted_time</span>
+
+</code></pre></div></div>
+
+:ET

@@ -1,0 +1,51 @@
+I"{<p>주로 Hudson을 썼는데, 이번에는 TeamCity를 설치하고 사용해 보고자 한다.
+다운로드 사이트 : http://www.jetbrains.com/teamcity/</p>
+
+<p>2011/10/11 현재 최신 버전은 6.5이며, 만들 수 있는 설정 및 사용자 수에 제약이 있지만,
+Professional Edition 만으로도 테스트는 충분할 것이다.</p>
+
+<p style="margin:0;"><img src="/images/201110/cfile25-uf-19028b4f4e93ff810698c1.png" class="aligncenter" width="700" height="449" alt="" />
+플랫폼에 따라 또는 연동 방식에 따라 설치본이 나뉜다.
+즉, 윈도우즈 서비스로 실행시킬 수도 있고, core만 설치하여 별도로 실행시킬 수도 있는 것 같다.
+나열된 여러가지 플랫폼과 설치 방법중, 내가 택한 옵션은
+"윈도우즈 플랫폼에, 기존의 J2EE 컨테이너에 설치하기"이다.
+
+그러면, 나의 다운로드는 "JavaEE Container 탭"의 다운로드를 선택하면서 시작된다.
+사이트로부터 다운로드한 파일명은 "TeamCity-6.5.4.war"이다.
+
+Tomcat을 설치한 CATALINA_HOME의 webapps 밑에 TeamCity-6.5.4.war를 복사하는 것만으로도 1차 설치는 완료된다.
+TeamCity 사이트의 가이드에 안내된 바와 같이, CATALINA_HOME/conf/server.xml의 connector 태그에,
+```
+useBodyEncodingFoRUIR = "true"
+```
+
+라고 추가해주고, Tomcat을 띄우면 정상적으로 동작하는 것을 확인할 수 있다.
+
+http://localhost:8080/TeamCity-6.5.4
+
+그 다음부터는 계정 설정하는 화면이 곧바로 뜨기 때문에 설정을 잡아주면 될 것 같다.
+다만, 이 방식은 Tomcat을 항상 띄워야 하기 때문에 번거로워서, exe 파일 타입으로 다시 설치를 진행해 보았다.
+다운로드한 exe파일을 실행하면, 관리포트를 물어본다.
+
+8111로 입력하고 나면,
+
+<p style="margin:0;"><img src="/images/201110/cfile9-uf-136067364e9526a804b29d.png" class="aligncenter" width="699" height="517" alt="" />
+
+와 같이 뜬다.
+설치를 서비스형으로 하면, 매우 간단하게 설치가 완료된다.
+설치 완료 후, 곧바로 웹 페이지를 띄우라고 하면, 곧바로 지정한 포트로 관리페이지가 뜨는 것을 볼 수 있다.
+
+<p style="margin:0;"><img src="/images/201110/cfile30-uf-134ed14f4e952884294073.png" class="aligncenter" width="625" height="345" alt="" />
+
+"Register a New User Account"를 클릭하여 사용자 계정을 추가하자.
+
+<p style="margin:0;"><img src="/images/201110/cfile3-uf-2050d2394e9528cc05078b.png" class="aligncenter" width="628" height="419" alt="" />
+
+생성한 계정으로 로그인을 하면, 다음과 같은 화면이 나타난다.
+이는 Tomcat에 연동해서 설치한 것과 exe형으로 설치한 것과 (당연히) 동일한 화면이다.
+
+<p style="margin:0;"><img src="/images/201110/cfile1-uf-13618c364e9529541123ed.png" class="aligncenter" width="700" height="252" alt="" />
+
+
+</p></p></p></p></p>
+:ET

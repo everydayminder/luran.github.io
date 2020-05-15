@@ -1,0 +1,21 @@
+I"<p>JUnit에서 작성한 어떤 테스트케이스가 Exception을 던지고, 
+그 Exception이 던져진 것이 맞는 상황임을 검증하고자 한다면,</p>
+
+<p>JUnit3에서는</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testDivideByZeroV3</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span><span class="o">/</span><span class="mi">0</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">assertSame</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getClass</span><span class="o">(),</span> <span class="nc">ArithmeticException</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+<p>반면, JUnit4에서는</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span><span class="o">=</span><span class="nc">ArithmeticException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testDivideByZeroV4</span><span class="o">()</span> <span class="o">{</span>
+		<span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span><span class="o">/</span><span class="mi">0</span><span class="o">;</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+<p>예외 처리만으로도 JUnit4가 JUnit3보다 간략하다는 것을 확인할 수 있다.</p>
+:ET

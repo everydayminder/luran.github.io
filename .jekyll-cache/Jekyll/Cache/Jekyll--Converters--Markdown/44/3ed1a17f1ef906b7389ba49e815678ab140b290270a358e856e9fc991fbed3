@@ -1,0 +1,26 @@
+I"�<p>지난 여름에 과전류로 정전이 두 차례 되었는데,
+아마도 그 때 HDD가 문제가 생긴 것 같았다.</p>
+
+<p>MircroServer에 연결해 놓은 HDD중, 마스터는 그냥 다시 linux를 설치했고,
+두 번째 HDD에 이상이 있는지 검사해 보았다.</p>
+
+<p>이 때 사용한 명령어가 fsck
+unmount된 상태에서 다음과 같이 실행하여 이상이 없음을 확인하였다. 휴우~</p>
+
+<div class="txc-textbox" style="background-color:rgb(254,222,199);border-color:rgb(254,137,67);border-style:dashed;border-width:1px;padding:10px;">
+[root@localhost ~]# fsck -TV /dev/sdb1
+[/sbin/fsck.ext3 (1) -- /dev/sdb1] fsck.ext3 /dev/sdb1&nbsp;
+e2fsck 1.41.12 (17-May-2010)
+
+data: recovering journal
+data: clean, 8633/65544192 files, 81666168/262146654 blocks
+
+
+[root@localhost ~]# fsck -TV /dev/sdb2
+[/sbin/fsck.ext3 (1) -- /dev/sdb2] fsck.ext3 /dev/sdb2&nbsp;
+
+e2fsck 1.41.12 (17-May-2010)
+backup: recovering journal
+backup: clean, 11/56565760 files, 3601452/226231346 blocks
+</div>
+:ET

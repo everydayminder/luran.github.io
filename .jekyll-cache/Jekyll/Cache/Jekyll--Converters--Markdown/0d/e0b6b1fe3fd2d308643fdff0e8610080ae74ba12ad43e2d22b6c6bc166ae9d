@@ -1,0 +1,7 @@
+I"�<ul class="toc__menu">
+  <li><a href="#pyenv-virtualenv-설치">pyenv-virtualenv 설치</a></li>
+  <li><a href="#pyenv를-활용한-virtualenv-생성">pyenv를 활용한 virtualenv 생성</a></li>
+  <li><a href="#autoenv를-통한-가상-환경-적용-자동화">autoenv를 통한 가상 환경 적용 자동화</a></li>
+  <li><a href="#autoenv-vs-pyenv-local">autoenv vs. pyenv local</a></li>
+</ul>
+:ET

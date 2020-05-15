@@ -1,0 +1,17 @@
+I"P<p>sudo vi /etc/X11/xorg.conf 를 실행하여
+해당 파일을 편집한다.</p>
+
+<p>Section “InputDevice”
+    Identifier “Configured Mouse”
+    Driver “mouse”
+    Option “CorePointer”
+    Option “Device” “/dev/input/mice”
+    Option “Protocol” “<font color="#177fcd"><u><strong>ImPS/2</strong></u>"</font>
+    Option “Buttons” “5”
+    Option “ZAxisMapping” “4 5”
+EndSection</p>
+
+<p>마우스 디바이스 정의 부분 중, Protocol 부분을 위와 같이
+바꿔주고 재시작하면, 휠 마우스의 휠이 동작한다.</p>
+
+:ET

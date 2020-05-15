@@ -1,0 +1,4 @@
+I"�<p>ElementTree와 같은 패키지를 사용하여 XML를 파싱하는 경우,
+XML 엘리먼트의 짝이 안맞는 등, 유효하지 않은 XML 구성이 탐지되면
+ExpatError가 뜨는데,</p>
+:ET

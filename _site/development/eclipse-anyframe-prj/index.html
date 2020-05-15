@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Eclipse + Anyframe IDE를 활용한 Anyframe 프로젝트 만들기 | Notes for future me</title>
+<meta name="description" content="지난 번에 Eclipse에 설치한 Anyframe IDE를 활용하여 Anyframe 프로젝트를 만들어 보려고 한다.1. Anyframe IDE를 활용한 프로젝트 생성">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="Eclipse + Anyframe IDE를 활용한 Anyframe 프로젝트 만들기">
+<meta property="og:url" content="http://localhost:4000/development/eclipse-anyframe-prj/">
+
+
+  <meta property="og:description" content="지난 번에 Eclipse에 설치한 Anyframe IDE를 활용하여 Anyframe 프로젝트를 만들어 보려고 한다.1. Anyframe IDE를 활용한 프로젝트 생성">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2011-11-08T12:26:56+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/eclipse-anyframe-prj/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Eclipse + Anyframe IDE를 활용한 Anyframe 프로젝트 만들기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Eclipse + Anyframe IDE를 활용한 Anyframe 프로젝트 만들기">
+    <meta itemprop="description" content="지난 번에 Eclipse에 설치한 Anyframe IDE를 활용하여 Anyframe 프로젝트를 만들어 보려고 한다.1. Anyframe IDE를 활용한 프로젝트 생성">
+    <meta itemprop="datePublished" content="2011-11-08T12:26:56+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Eclipse + Anyframe IDE를 활용한 Anyframe 프로젝트 만들기
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>지난 번에 Eclipse에 설치한 Anyframe IDE를 활용하여 Anyframe 프로젝트를 만들어 보려고 한다.
+<b>1. Anyframe IDE를 활용한 프로젝트 생성</b></p>
+<p style="margin:0;"><img src="/assets/cfile25-uf-13160e344eb91e8e152a50.png" class="aligncenter" width="527" height="501" alt="" />
+
+File &gt; New &gt; Other &gt; Anyframe &gt; Project를 선택한다.
+(Anyframe 항목이 보이지 않는다면, 아마도 이전 단계에서 Anyframe IDE가 제대로 설치되지 않았기 때문일 것이다.)
+
+<p style="margin:0;"><img src="/assets/cfile24-uf-15291e3a4eb91f1d07692b.png" class="aligncenter" width="526" height="647" alt="" />
+프로젝트 관련 항목을 입력하자.
+<p style="margin:0;"><img src="/assets/cfile2-uf-114a813d4eb91f862b9f85.png" class="aligncenter" width="524" height="645" alt="" />
+
+DBMS를 hsqldb로 해보자.
+만약, 앞서 anyframe 사이트에서 안내하는 예제를 실행했었다면, hsqldb jar 파일이 local repository에 이미 존재할 것이다.
+그렇지 않다면, hsqldb jar를 별도로 다운로드하여 Driver Jar Path에 별도로 지정해주어야 한다.
+
+<b>2. 프로젝트를 생성했는데 에러가 난다?</b>
+내 경우, 프로젝트를 새로 생성했는데, 프로젝트 view에 엑스박스가 가득했다.
+<p style="margin:0;"><img src="/assets/cfile25-uf-174961334eb94c0d255b4c.png" class="aligncenter" width="248" height="228" alt="" />
+
+처음에는 심지어 pom.xml에도 에러마크가 떴다.
+다음과 같은 내용을 검토하자.
+
+<b>1) m2eclipse 플러그인이 설치안되어 있는 경우</b>
+  이전 포스트에서, Anyframe IDE를 설치할 때 관련 플러그인을 찾아서 설치하라고 체크박스에 체크했는데도
+  실제로는 설치가 되어 있지 않았다. 결국, 나중에 별도로 설치를 해야만 했다.
+
+<b>2) 관련 플러그인들이 다운로드가 안되었을 경우</b>
+  내 경우, pom.xml에 에러 마크가 떠있었을 경우, anyframe core 외 2개의 플러그인을 찾을 수 없다는 에러 메시지가 떴다.
+  local repository에 직접 들어가서 보니, jar 파일이 있어야 할 곳에 *.jar.lastUpdated라는 확장자 파일들만 생성되어 있었다.
+
+  maven context 메뉴에서 Disable Dependency Management + Enable Dependency Management를 번갈아서 해보고,
+  Update Dependencies도 해보았으나 내 경우는 변화가 없었다.
+
+  즉, pom.xml 파일에 표기가 되어 있어도 repository에 다운로드가 정상적으로 되지 않는 상황이었던 것 같다.
+  Eclipse상에서는 여러 번, 반복해도 repository에 변화가 없는 것 같아서 command line에서 maven client를 직접 
+  실행시켰더니, 다운로드가 된다! (그러나, 어떤 jar는 정상적으로 다운로드 될때까지 반복해서 실행했다.)
+
+  결국, 관련 jar를 모두 다운로드 받고나서야 에러 표시가 사라졌다. (당연하지)
+
+<p style="margin:0;"><img src="/assets/cfile10-uf-173863384eb951801d2e26.png" class="aligncenter" width="248" height="688" alt="" />
+
+<b>3. 프로젝트 실행</b>
+WTP에 연동하여, 다음과 같이 등록하자.
+<p style="margin:0;"><img src="/assets/cfile9-uf-1528533f4eba11f306521a.png" class="aligncenter" width="526" height="541" alt="" />
+
+그 다음부터는 동일하다. Servers 탭에서 시작시키고, 웹 브라우저에서 동작 여부를 확인하자.
+프로젝트가 정상적으로 시작되었다면,
+다음과 같은 웹페이지가 보이고, 링크를 클릭하면 영화리스트 조회 등을 할 수 있는 화면이 나타난다.
+
+<p style="margin:0;"><img src="/assets/cfile22-uf-143f073d4eba12c233597b.png" class="aligncenter" width="700" height="291" alt="" />
+
+<b>4. New Project는 New가 아니다?
+</b>
+그런데, Anyframe 프로젝트를 새로 생성했는데 왜 이런 모습이 생기는 것인가?
+
+New Project를 했는데, Sample Project를 보여준다.
+개인적인 생각으로는, 현재 Project 메뉴는 Sample Project로 바꾸고, New Project를 별도로 두면 어떨까 싶다.
+
+그냥 틀을 잡아주는 것으로. 물론, 틀을 잡아주려면 그냥 Maven 프로젝트를 새로 만드는 것과 별로 차이는 없을 것 같기도 하다.
+</p></p></p></p></p></p></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#anyframe" class="page__taxonomy-item" rel="tag">anyframe</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#eclipse" class="page__taxonomy-item" rel="tag">eclipse</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#maven" class="page__taxonomy-item" rel="tag">maven</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2011-11-08T12:26:56+09:00">November 08, 2011</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Eclipse+%2B+Anyframe+IDE%EB%A5%BC+%ED%99%9C%EC%9A%A9%ED%95%9C+Anyframe+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8+%EB%A7%8C%EB%93%A4%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Feclipse-anyframe-prj%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Feclipse-anyframe-prj%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Feclipse-anyframe-prj%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/development/eclipse-anyframe-ide-m2eclipse-setup/" class="pagination--pager" title="Eclipse + Anyframe IDE + m2eclipse 설치하기
+">Previous</a>
+    
+    
+      <a href="/development/hibernate-cannot-simultaneously-fetch-multiple-bags/" class="pagination--pager" title="[hibernate] cannot simultaneously fetch multiple bags
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/eclipse-anyframe-prj/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/eclipse-anyframe-prj"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,67 @@
+I"�<h3 id="docker로-sonarqube-설치">Docker로 sonarqube 설치</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull sonarqube
+</code></pre></div></div>
+
+<p>sonarqube 이미지를 다운로드하고 실행시킨다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--name</span> sonarqube <span class="nt">-p</span> 9000:9000 <span class="nt">-p</span> 9092:9092 sonarqube:latest
+</code></pre></div></div>
+
+<p>이제 로컬 sonar를 확인할 수 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:9000
+</code></pre></div></div>
+
+<h3 id="spring-boot-gradle-sample-project-생성">Spring Boot Gradle Sample Project 생성</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spring init <span class="nt">--build</span> gradle <span class="nt">--package-name</span><span class="o">=</span>mytest <span class="nt">--name</span><span class="o">=</span>mytest <span class="nt">-g</span><span class="o">=</span>mytest <span class="nt">-a</span><span class="o">=</span>mytest <span class="nt">-x</span>
+</code></pre></div></div>
+
+<h3 id="gradle-property-선언">Gradle Property 선언</h3>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buildscript</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="n">dependencies</span> <span class="o">{</span>
+<span class="o">...</span>
+		<span class="n">classpath</span> <span class="s2">"org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">"org.sonarqube"</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'groovy'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'jacoco'</span>
+
+<span class="o">...</span>
+<span class="n">sonarqube</span> <span class="o">{</span>
+	<span class="n">properties</span> <span class="o">{</span>
+		<span class="n">property</span> <span class="s2">"sonar.host.url"</span><span class="o">,</span> <span class="s2">"http://localhost:9090"</span>
+		<span class="n">property</span> <span class="s2">"sonar.sources"</span><span class="o">,</span> <span class="s2">"src"</span>
+		<span class="n">property</span> <span class="s2">"sonar.language"</span><span class="o">,</span> <span class="s2">"java"</span> 
+		<span class="n">property</span> <span class="s2">"sonar.sourceEncoding"</span><span class="o">,</span> <span class="s2">"UTF-8"</span>
+		<span class="n">property</span> <span class="s2">"sonar.exclusions"</span><span class="o">,</span> <span class="s2">"**/*Test*.*, **/Q*.java"</span>
+		<span class="n">property</span> <span class="s2">"sonar.test.inclusions"</span><span class="o">,</span> <span class="s2">"**/*Spec.groovy, **/*Test.java"</span>
+		<span class="n">property</span> <span class="s2">"sonar.coverage.exclusions"</span><span class="o">,</span> <span class="s2">"**/*Test*.*, **/Q*.java"</span>
+		<span class="n">property</span> <span class="s2">"sonar.java.junit.reportPaths"</span><span class="o">,</span> <span class="s2">"${buildDir}/test-results"</span>
+		<span class="n">property</span> <span class="s2">"sonar.jacoco.reportPaths"</span><span class="o">,</span> <span class="s2">"${buildDir}/jacoco/jacoco.exec"</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+	<span class="n">testCompile</span> <span class="s1">'org.spockframework:spock-core:1.1-groovy-2.4'</span>
+	<span class="n">testCompile</span> <span class="s1">'org.spockframework:spock-spring:1.1-groovy-2.4'</span>
+	<span class="n">testRuntime</span> <span class="s1">'cglib:cglib-nodep:3.2.4'</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>기존 build.gradle에 위 내용을 추가한다.</p>
+
+<h3 id="gradle-task로-sonarqube-확인">Gradle task로 sonarqube 확인</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./gradlew <span class="nb">test </span>sonarqube <span class="nt">-Dsonar</span>.host.url<span class="o">=</span>http://localhost:9000
+</code></pre></div></div>
+
+<p>로컬에서 테스트한 결과를 sonarqube로 연동하여 곧바로 확인할 수 있다.</p>
+
+:ET

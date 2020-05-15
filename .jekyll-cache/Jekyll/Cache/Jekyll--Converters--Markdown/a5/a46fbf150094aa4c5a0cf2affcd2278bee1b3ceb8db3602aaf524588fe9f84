@@ -1,0 +1,4 @@
+I"�<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql &gt; select * into outfile '파일명' fields terminated by '구분자' from 테이블명
+</code></pre></div></div>
+
+:ET

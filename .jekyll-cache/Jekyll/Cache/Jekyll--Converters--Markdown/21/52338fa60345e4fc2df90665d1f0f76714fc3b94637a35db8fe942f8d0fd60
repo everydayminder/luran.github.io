@@ -1,0 +1,105 @@
+I"<h2 id="1-samba-설치">1. samba 설치</h2>
+<p>우선 samba를 설치하자.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nb">install </span>samba
+</code></pre></div></div>
+
+<h3 id="2-사용자-추가">2. 사용자 추가</h3>
+<p>samba를 사용할 사용자를 추가하고, 그 사용자를 samba 사용자로 등록하자.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useradd luran
+passwd luran
+</code></pre></div></div>
+
+<p>luran이라는 사용자를 추가하였다.
+그러면, 이 계정은 다음과 같이 samba 사용자로 추가할 수 있다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smbpasswd <span class="nt">-a</span> luran
+</code></pre></div></div>
+
+<h3 id="3-samba-환경-설정">3. samba 환경 설정</h3>
+<p>/etc/samba/smb.conf를 수정하자.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>workgroup <span class="o">=</span> WORKGROUP
+hosts allow <span class="o">=</span> 192.168.1.
+</code></pre></div></div>
+<p>으로 설정하였다.
+나의 데이터가 있는 곳을 추가해 주었다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>mydata]
+ comment <span class="o">=</span> my data
+ path <span class="o">=</span> /mnt/data/share
+ public <span class="o">=</span> <span class="nb">yes
+ </span>writable <span class="o">=</span> <span class="nb">yes
+ </span>write list <span class="o">=</span> luran
+ create mask <span class="o">=</span> 0777
+ directory mask <span class="o">=</span> 0777
+</code></pre></div></div>
+
+<h3 id="4-selinux-설정">4. selinux 설정</h3>
+<p>selinux가 사용중으로 설정되어 있으면 samba 접속이 안되므로, 사용 해제하자.
+다음 방법 중, 한 가지를 하면 되겠다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setenforce 0
+
+또는
+
+vi /etc/selinux/config
+<span class="nv">SELINUX</span><span class="o">=</span> disabled <span class="o">(</span>기본 값은 enforcing<span class="o">)</span>
+</code></pre></div></div>
+
+<p>sestatus -v 를 실행하면, selinux의 상태를 확인할 수 있다.</p>
+
+<h3 id="5-방화벽-설정">5. 방화벽 설정</h3>
+<p>vi /etc/sysconfig/iptables 를 열어서, 다음과 같이 추가한다.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-A</span> INPUT <span class="nt">-m</span> state <span class="nt">--state</span> NEW <span class="nt">-m</span> tcp <span class="nt">-p</span> tcp <span class="nt">--dport</span> 137:139 <span class="nt">-j</span> ACCEPT
+<span class="nt">-A</span> INPUT <span class="nt">-m</span> state <span class="nt">--state</span> NEW <span class="nt">-m</span> udp <span class="nt">-p</span> udp <span class="nt">--dport</span> 137:139 <span class="nt">-j</span> ACCEPT
+<span class="nt">-A</span> INPUT <span class="nt">-m</span> state <span class="nt">--state</span> NEW <span class="nt">-m</span> tcp <span class="nt">-p</span> tcp <span class="nt">--dport</span> 445 <span class="nt">-j</span> ACCEPT
+</code></pre></div></div>
+<p>추가한 후에 저장하고, iptables를 재시작 시킨다.</p>
+
+<h3 id="6-samba-시작">6. samba 시작</h3>
+<p>일회적으로 혹은 지금 당장 실행시키려면,</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service smb start
+</code></pre></div></div>
+<p>로도 충분할 것이다.
+그러나, 부팅마다 자동으로 실행시키고 싶다면, 다음과 같이 하자.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 현재 samba 설정 상태 조회</span>
+<span class="nv">$ </span>chkconfig <span class="nt">--list</span> smb
+smb       0:off  1:off  2:off  3:off  4:off  5:off  6:off
+
+<span class="c"># ### 부팅시 자동 시작되게 바꾸기</span>
+<span class="nv">$ </span>chkconfig smb on
+<span class="nv">$ </span>chkconfig <span class="nt">--list</span> smb
+
+smb       0:off  1:off  2:on  3:on  4:on  5:on  6:off&lt;/div&gt;
+
+<span class="c"># runlevel 3, 5에서 시작되게 바꾸기</span>
+<span class="nv">$ </span>chkconfig <span class="nt">--level</span> 35 smb on
+<span class="nv">$ </span>chkconfig <span class="nt">--list</span> smb&lt;/div&gt;
+smb       0:off  1:off  2:off  3:on  4:off  5:on  6:off
+</code></pre></div></div>
+
+<h3 id="7-윈도우즈에서-접속-테스트">7. 윈도우즈에서 접속 테스트</h3>
+<p>탐색기나, 실행 창을 띄워서 \접속아이피를 입력하자.
+그러면, 인증 창이 뜨고, 앞서 설정한 계정 정보를 요청할 것이다.</p>
+
+<h3 id="8-한글-디스플레이-설정">8. 한글 디스플레이 설정</h3>
+<p>global 옵션에 다음과 같이 추가한다.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dos charset <span class="o">=</span> cp949
+unix charset <span class="o">=</span> cp949
+</code></pre></div></div>
+
+<h3 id="9-socket-option-최적화">9. socket option 최적화</h3>
+
+<p>사람들이 많이 하는 옵션이다. 이런 건 따라하자.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>socket option <span class="o">=</span> TCP_NODELAY <span class="nv">SO_RCVBUF</span><span class="o">=</span>8192 <span class="nv">SO_SNDBUF</span><span class="o">=</span>8192
+</code></pre></div></div>
+
+<h3 id="10-기타">10. 기타</h3>
+<p>내 경우, 위와 같이 설정한 후에 윈도우즈에서 연결했으나, 제한된 리소스라는 에러가 떴으나,
+service nmb restart 도 해줬더니 동작이 되었다.</p>
+
+:ET

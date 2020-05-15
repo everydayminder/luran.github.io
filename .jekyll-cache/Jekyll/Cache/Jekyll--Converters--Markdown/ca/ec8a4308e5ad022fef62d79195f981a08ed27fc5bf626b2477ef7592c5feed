@@ -1,0 +1,5 @@
+I"V<p>이런 경우가 발생한다.
+한 서버에 포트를 달리해서, tomcat을 여러 개 띄워야 하는 경우가.
+개발시 servlet context만 달리해서 검사하곤 했는데,
+servlet context를 root로 fix해서 개발된 소스를 받아들게 되었다. (절대경로로 root context만 고려해서 작성된 소스코드)</p>
+:ET

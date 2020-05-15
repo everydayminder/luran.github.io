@@ -1,0 +1,42 @@
+I"<h2 id="requirements">Requirements</h2>
+<ul>
+  <li>Java 1.5.x, preferably from Sun.</li>
+  <li>Hadoop 0.16.x. This version of HBase will only run on Hadoop 0.16.x..</li>
+  <li>ssh must be installed and sshd must be running to use Hadoop’s scripts 
+   to manage remote Hadoop daemons.</li>
+  <li>HBase currently is a file handle hog. The usual default of 1024 on *nix systems 
+   is insufficient if you are loading any significant amount of data into regionservers. 
+  See the FAQ: Why do I see “java.io.IOException…(Too many open files)” in my logs?  for how to up the limit.</li>
+</ul>
+
+<h2 id="c-installation-of-hbase">[C] Installation of HBase</h2>
+<ol>
+  <li>Java 1.5.x
+    <ul>
+      <li>installed java 1.6.x</li>
+      <li>Not sure whether 1.6.x will work</li>
+    </ul>
+  </li>
+  <li>Unzipped the Hadoop archive file (ver 1.3) at ~/hbase</li>
+  <li>ssh &amp; sshd configuration (execution)
+    <ul>
+      <li>sudo apt-get install openssh-server</li>
+      <li>sudo /etc/init.d/ssh start (stop)</li>
+    </ul>
+  </li>
+  <li>edit the limit number of file handlers
+    <ul>
+      <li>checked /etc/security/limits.conf but there is no option to edit for this</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="c-hbase-configuration">[C] HBase Configuration</h2>
+<ol>
+  <li>${HBASE_HOME} : the real location of hbase (/home/luran/hbase)</li>
+  <li>modify JAVA_HOME information on ${HBASE_HOME}/conf/hbase-env.sh</li>
+  <li>start HBase by ${HBASE_HOME}/bin/start_hbase.sh</li>
+  <li>stop HBase by ${HBASE_HOME}/bin/stop-hbase.sh</li>
+</ol>
+
+:ET

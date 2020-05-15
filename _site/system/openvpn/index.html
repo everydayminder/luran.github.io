@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>아이폰으로 집의 네트워크에 VPN으로 접속하려면? | Notes for future me</title>
+<meta name="description" content="나중에 다시 할 수도 있는 재설치를 위해 기록으로 남겨둔다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="아이폰으로 집의 네트워크에 VPN으로 접속하려면?">
+<meta property="og:url" content="http://localhost:4000/system/openvpn/">
+
+
+  <meta property="og:description" content="나중에 다시 할 수도 있는 재설치를 위해 기록으로 남겨둔다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2013-12-24T23:58:01+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/system/openvpn/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#system" itemprop="item"><span itemprop="name">System</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">아이폰으로 집의 네트워크에 VPN으로 접속하려면?</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="아이폰으로 집의 네트워크에 VPN으로 접속하려면?">
+    <meta itemprop="description" content="나중에 다시 할 수도 있는 재설치를 위해 기록으로 남겨둔다.">
+    <meta itemprop="datePublished" content="2013-12-24T23:58:01+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">아이폰으로 집의 네트워크에 VPN으로 접속하려면?
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>나중에 다시 할 수도 있는 재설치를 위해 기록으로 남겨둔다.</p>
+
+<p>예전에 사용하던 IPTIME 공유기를 가지고 있었다면,
+일단 우선적으로 공유기에서 제공하는 VPN 기능을 검토했을 것이다. (그랬으면 쉬웠을텐데..다시 살까?)</p>
+
+<p>일단, 현재 집에서 사용하는 공유기는 Netgear 공유기이다.
+이 모델에는 VPN 기능이 제공되지 않는다.</p>
+
+<p>따라서, 검색/ 정보 수집을 통해 PPTPD, OpenVPN, OpenSwan 등을 조사했으며,
+공유기 내부에서도 잘 동작한다고 알려진 OpenVPN을 설치하기로 하였다.</p>
+
+<p>우선, OpenVPN에 대한 설치파일/세부 정보는 openvpn.net으로부터 확인할 수 있다.
+최초 설치 시도는 CentOS VM상에 yum install을 통해 설치/실행하는 것을 진행하였으나,
+OpenVPN-AS(Access Server)가 설치가 쉽다는 내용을 접하고, OpenVPN-AS로 급선회하였다.</p>
+
+<p>OpenVPN Server와 달리, AS의 경우 설치 과정이 매우 간단했다.
+해당 RPM 설치 후, 모든 설정을 관리자웹 상에서 설정해 주기만 하면 될 뿐만 아니라,
+사이트내에 각 기능별 설명들이 기본적으로 표기가 되어 있어서 도움이 되었다.
+(OpenVPN 서버의 경우, 기본 값들이 무슨 기능을 하는지 주석이 달려있기는 하지만,
+다소 설명이 부족하다는 느낌을 받았다.)</p>
+
+<ol>
+  <li>집 네트워크 구성</li>
+</ol>
+
+<p>PC1 -+
+         |
+PC2 -+—-+ 공유기 +—-+ ISP 공유기 +—-+ 인터넷 +—-+ 아이폰
+         |
+PC3 -+</p>
+
+<p>예전에 케이블 인터넷을 사용했을 경우, ISP 공유기 대신 케이블 모뎀이 위치했고,
+내 공유기 설정에서 포트포워딩을 설정해주는 것만으로 집 내부 PC들에
+접근이 가능했으나, 이사 후 ISP 제공 공유기가 앞단에 더 존재하게 되어 ISP 공유기
+설정도 함께 변경해 줘야만 내부 접근이 가능하게 되었다. (DMZ로 설정하거나, 다른 룰을 추가하거나)</p>
+
+<ol>
+  <li>VPN 연결 개요
+위의 환경 구성을 바탕으로, VPN을 다음과 같이 환경을 구성하였다.</li>
+</ol>
+
+<p>     +——————————- VPN Tunnel ——————————–+
+Linux     –+
+(VPNGW)  |
+NIC#1(e)  |
+NIC#2      |
+                |
+PC1       –+—-+ 공유기 +—-+ ISP 공유기 +—-+ 인터넷 +—-+ 아이폰
+NIC#3      |      NIC#5(e)            NIC#7(e)                                 NIC#9
+                |      NIC#6                 NIC#8
+PC2       –+
+NIC#4</p>
+
+<ul>
+  <li>e : external</li>
+</ul>
+
+<p>집 내부 공유기 내부에서의 PC들간은 별도의 설정이 없어도 공유기에 연결한 것만으로
+NIC#6를 통해 NIC#2, NIC#3, NIC#4끼리 통신할 것이다.</p>
+
+<p>내부에서 외부로 접속하고자 한다면, NIC#5를 거쳐 나갈 것이다.
+다만, 위의 경우와 같이 2개의 공유기를 거쳐야 한다면, NIC#5로부터 #8, #7을 거쳐 외부로
+나갈 것이다.</p>
+
+<p>Linux를 VPNGW로 삼고, 외부에서 이 Linux를 VPNGW로 접속하여 PC1,2로 연결하도록 하는
+것이 목표이다.</p>
+
+<ol>
+  <li>OpenVPN-AS 설치
+www.openvpn.net에 접속하여, OpenVPN-AS(Access Server)를 다운로드한다.
+내 경우는 CentOS용 RPM을 다운로드하였고, 설치하였다.</li>
+</ol>
+
+<p>passwd openvpn</p>
+
+<p>을 실행하여, openvpn 계정의 비밀번호를 변경한다.
+그러면, 추후 OpenVPN관리자 계정의 비밀번호로 사용할 수 있게 된다.</p>
+
+<p>설치는 일반 OpenVPN 서버 설치 과정에 비해 OpenVPN-AS 설치 과정이 훨씬 간단했다.
+(easy-rsa를 사용한 server, client 인증서 생성 등의 과정을 별도로 할 필요가 없다.)</p>
+
+<p>정상적으로 설치가 되었다면, https://vpngw의 비공인 IP:943으로 접속하면,
+OpenVPN-AS의 관리 페이지가 뜬다. 이 때, 인증서를 신뢰할 수 없다고 뜨면 무시하기를
+눌러서 진행하자.</p>
+
+<p>1) 서버용관리 - https://주소:943/admin
+2) 클라이언트 - https://주소:943</p>
+
+<p>서버용 페이지에 접속하여 살펴보면, 좌측의 큰 메뉴 기준으로 Status/Configuration/
+User Management/Authentication/Tools 메뉴가 존재한다.</p>
+
+<p>이 메뉴들 중, 실제로 내용 수정을 한 페이지 기준으로 기록한다.</p>
+<ul>
+  <li>Status : 별도 수정 항목 없음</li>
+  <li>Configuration</li>
+  <li>License : 기본 라이센스 (2명)</li>
+  <li>Server Network Settings</li>
+  <li>Hostname or IP Address : 내 집에서 달고 나가는 공인 IP (공유기 관리웹에서 확인하거나, 내 IP를 확인해 주는 사이트 등을 통해 확인 가능)</li>
+  <li>Interface and IP Address : NIC#2의 주소 기록</li>
+  <li>VPN Mode : Layer 3 (routing/NAT)</li>
+  <li>VPN Settings</li>
+  <li>Dynamic IP Address Network : Network Address 디폴트값 그대로 사용 (ex - 172.27.224.0)</li>
+  <li>Routing : using NAT</li>
+  <li>Specify private subnet : NIC#2, #3, #4용 (ex - 192.168.1.0/24)</li>
+</ul>
+
+<p>나머지 값들은 기본 값을 그대로 사용해도 된다.</p>
+
+<p>이렇게 서버를 설정하고 나서, 클라이언트의 원활한 설정을 위해 집 내부망에서 아이폰으로
+https://주소:943으로 접속해보자.
+그러면, 클라이언트를 다운로드할 수 있는 링크가 출력되고, 아이폰의 경우 결국 AppStore에서
+OpenVPN 클라이언트를 다운로드할 수 있도록 연결된다.</p>
+
+<p>클라이언트에서 접속한 웹 페이지로부터 하단의 링크를 클릭하면,
+직접 profile을 다운로드 할 수 있다. 다운로드한 파일을 OpenVPN 클라이언트에서 열기를
+지정해주면, 결국 이 설정 파일은 OpenVPN 클라이언트에 import 되면서, 자동으로
+프로파일이 추가된다.
+(만약, OpenVPN-AS버전이 아니라 Community Edition으로 직접 수동 설치를 진행했다면,
+인증서 파일 및 클라이언트 설정파일을 복사/수정하여 client.ovpn 파일을 만들어 주었어야
+했을 것이며, opvn 파일 및 인증서 등을 itunes를 사용하여 동기화 해주거나, 이메일로
+직접 전송해서 import시켜야 했을 것이다.)</p>
+
+<p>이후, 아이폰의 네트워크를 3G/LTE 등 외부망으로 선택하고, OpenVPN 클라이언트를 통해
+접속시도하면, 성공적으로 VPN 접속이 이뤄지는 것을 확인할 수 있다.</p>
+
+<p>IP를 확인해보면, 터널IP를 새로 받은 것을 확인할 수 있으며, telnet 클라이언트를
+이용하여 내부망에 있는 PC로 ping을 날려도 정상적으로 동작하는 것을 확인할 수 있다.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#openvpn" class="page__taxonomy-item" rel="tag">openvpn</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#vpn" class="page__taxonomy-item" rel="tag">vpn</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#system" class="page__taxonomy-item" rel="tag">system</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2013-12-24T23:58:01+09:00">December 24, 2013</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%95%84%EC%9D%B4%ED%8F%B0%EC%9C%BC%EB%A1%9C+%EC%A7%91%EC%9D%98+%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%EC%97%90+VPN%EC%9C%BC%EB%A1%9C+%EC%A0%91%EC%86%8D%ED%95%98%EB%A0%A4%EB%A9%B4%3F%20http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fopenvpn%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fopenvpn%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fsystem%2Fopenvpn%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/system/freenx-centos-6-x-64bits/" class="pagination--pager" title="FreeNX 설치 (CentOS 6.x; 64bits)
+">Previous</a>
+    
+    
+      <a href="/development/sonar-jenkins/" class="pagination--pager" title="Sonar + Jenkins 설정
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/system/openvpn/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/system/openvpn"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

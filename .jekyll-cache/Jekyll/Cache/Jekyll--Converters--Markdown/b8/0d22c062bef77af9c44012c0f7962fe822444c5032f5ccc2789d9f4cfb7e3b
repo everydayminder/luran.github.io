@@ -1,0 +1,6 @@
+I"Q<p><strong><font color="#0000ff"><u><font color="#0000ff">1. Localhost에서 인증하기</font></u>
+</font></strong>
+루트의 권한을 가진 ID로 로그인하여 다양하게 스크립트를 실행할 경우,
+SSH 로그인을 필요로 할 수 있고, 이 때, 매번 password를 입력해야할 경우
+번거로울 수 있다.</p>
+:ET

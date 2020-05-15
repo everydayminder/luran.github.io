@@ -1,0 +1,7 @@
+I"7<ol>
+  <li>Web Application 배포
+$CATALINA_HOME/webapps에 web application 디렉토리를 통쨰로 복사하면 배포가 된다.
+또한, war 파일을 복사해도 배포가 된다. (설정이 잘 되어 있다면) tomcat이 war 파일을 압축 풀고,
+배포하는 것을 확인할 수 있다.</li>
+</ol>
+:ET

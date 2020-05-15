@@ -1,0 +1,4 @@
+I"�<p>현재 Jenkins를 통해 CI(Continuouse Integration)를 하고 있고,
+코드의 정적 분석을 FindBugs, PMD, CheckStyle을 써서 리포트를 보고 있긴 하지만,
+Sonar를 접하고 설치/ 사용해보고자 한다.</p>
+:ET

@@ -1,0 +1,25 @@
+I"�<h2 id="c-installiation-of-ubuntu-710">[C] Installiation of Ubuntu 7.10</h2>
+<ul>
+  <li>flow</li>
+  <li>downloaded the image file</li>
+  <li>
+    <p>installation complete (without security packages)</p>
+  </li>
+  <li>comments</li>
+  <li>installed Ubuntu 8.04 (the latest version)</li>
+  <li>failed to install other development packages on it</li>
+  <li>version 8.04 seems NOT stable as 7.xx -&gt; let’s install version 7.10 instead</li>
+  <li>it takes too long!! (about an hour) 
+   -&gt; backing up the vmware image file after installation will be desirable</li>
+</ul>
+
+<h2 id="c-installation-of-vmware-tools">[C] Installation of vmware-tools</h2>
+<ul>
+  <li>choose ‘Install VMware-tools’ from the VMWare menu</li>
+  <li>mount VMware tools from the desktop</li>
+  <li>copy VMware tools tar.gz file to anywhere that i want</li>
+  <li>extract the archive file, and change the permission to root user by ‘sudo -i’</li>
+  <li>execute vmware-install.pl</li>
+</ul>
+
+:ET

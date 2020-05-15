@@ -1,0 +1,40 @@
+I"u<p>SCJD를 준비 하면서, 준비하는 내용을 SVN에 관리하고, 빌드 및 테스트 등은 Hudson을 통해 진행하려고 한다. 
+이 과정에서 SVN은 www.unfuddle.com으로 선정하였다.</p>
+
+<p>그 이유는,</p>
+
+<ul style="list-style-type:disc;">
+<li>무료이다.</li>
+<li>적어도 200MB 정도의 공간은 제공한다.</li>
+<li>issue 관리가 가능하다.</li>
+<li>비공개이다.</li>
+</ul>
+
+<p>본 포스팅에서는 www.unfuddle.com의 각 메뉴를 간단하게 소개하고자 한다. 혹시, 관심이 있는 분들은 미리 살짝 볼 수 있을 것이다. (예전에도 말했지만, 공개 프로젝트라면 www.assembla.com도 상당히 좋을 것이라 생각한다.)</p>
+
+<p><span style="font-weight:bold;">1. Dashboard</span>
+<img src="/images/201006/cfile4-uf-153e97244c1dddf27564e4.png" class="aligncenter" width="700" height="268" alt="" />
+대쉬보드에서는 메시지 추가, 마일스톤 추가, 티켓 추가, 프로젝트 추가, 프로젝트원 초대 등 프로젝트 전반에 대한 기능을 수행할 수 있도록 되어 있다. 물론, 최근 메시지나 마일스톤, 액티비티 등을 보여주고, 달력을 통해서도 일의 진척사항을 보는데 도움을 준다.</p>
+
+<p><br style="font-weight:bold;" /><span style="font-weight:bold;">2. Projects</span>
+<img src="/images/201006/cfile23-uf-172035254c1dde8242c81b.png" class="aligncenter" width="700" height="252" alt="" />
+본 화면에서는 프로젝트의 설정을 바꾸거나, 새 프로젝트를 등록할 수 있다. 무료 계정이라면 1개의 프로젝트를 사용할 수 있다.
+<br style="font-weight:bold;" /><span style="font-weight:bold;">3. Repositories</span>
+<img src="/images/201006/cfile3-uf-1477c2224c1ddedd9ffa21.png" class="aligncenter" width="700" height="252" alt="" /></p>
+
+<p>SVN 리파지터리는 무제한으로 준다고 한다.
+<span style="font-weight:bold;">4. Tickets</span></p>
+
+<p><img src="/images/201006/cfile8-uf-16568e204c1ddf2601d449.png" class="aligncenter" width="700" height="280" alt="" />
+티켓으로 이슈를 관리할 수 있다. report 기능은 아직 써보지는 않았지만, 발행 또는 완료된 티켓들을 조합하여 보고서를 만드는 것으로 보인다.</p>
+
+<p> 
+<span style="font-weight:bold;">5. People</span>
+<img src="/images/201006/cfile7-uf-2068fb1e4c1ddfc109011f.png" class="aligncenter" width="700" height="148" alt="" />
+프로젝트 구성원에 대한 정보를 보여준다. 무료 계정에서는 최대 2인의 프로젝트원을 구성할 수 있다.</p>
+
+<p><span style="font-weight:bold;">6. Settings</span>
+<img src="/images/201006/cfile2-uf-17035b1d4c1ddff4dc9bab.png" class="aligncenter" width="700" height="661" alt="" />
+계정의 plan (무료 또는 유료 상품들)을 결정할 수 있고, timezone을 설정할 수 있다.
+현재 계정의 사용량을 보여준다. (무료기준 200MB기준)</p>
+:ET

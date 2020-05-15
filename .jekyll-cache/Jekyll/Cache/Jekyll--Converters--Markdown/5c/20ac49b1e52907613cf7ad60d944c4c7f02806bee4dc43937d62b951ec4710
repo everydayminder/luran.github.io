@@ -1,0 +1,68 @@
+I"#<p>앞서 간단히 만든 서버에 접속할 클라이언트를 만들어 봤다.</p>
+<h3 id="프로토콜">프로토콜</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TestClient</span><span class="p">(</span><span class="n">LineReceiver</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">connectionMade</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">sendLine</span><span class="p">(</span><span class="s">"A new connection has been made!"</span><span class="p">)</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">clientReady</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+	
+	<span class="k">def</span> <span class="nf">lineReeived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+	    <span class="k">print</span> <span class="s">"$ got msg [%s]rn"</span> <span class="o">%</span> <span class="n">line</span>
+
+    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+	    <span class="n">reactor</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="팩토리">팩토리</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TestFactory</span><span class="p">(</span><span class="n">ClientFactory</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">TestClient</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">startFactory</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">clientConnectionFailed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="n">reactor</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">clientConnectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="n">reactor</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">startFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'-- startFactory() called'</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">messageQueue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">clientInstance</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">clientReady</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'-- clientReady() called'</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">clientInstance</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">messageQueue</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">sendMessge</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sendMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">clientInstance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'$ client instance is not null'</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">clientInstance</span><span class="p">.</span><span class="n">sendLine</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">'$ client instance is null'</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">messageQueue</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>참고로, 창의적으로 고안해서 만든게 아니라 googling 해서 뜨는 걸 보고 
+작성했다. 아마도 메일링리스트 였던 듯. (나중에 출처를 찾게 되면 꼭 수정해야겠다)</p>
+
+<p>이와 같이, 클라이언트용 프로토콜과 팩토리를 만들었으면 서버에 접속하도록 해보자.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">TestFactory</span><span class="p">()</span>
+    <span class="n">reactor</span><span class="p">.</span><span class="n">connectTCP</span><span class="p">(</span><span class="s">'127.0.0.1'</span><span class="p">,</span> <span class="mi">8001</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="p">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>이렇게 하면, 앞서 띄운 서버에 연결을 하게 되고, 웬만하면 연결이 끊기지 않는다.
+(기특하다)
+물론, 몇몇 필요한 클래스는  앞서 import 해줘야 한다.</p>
+
+<p>예)</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">twisted.protocols.basic</span> <span class="kn">import</span> <span class="n">LineReceiver</span>
+
+<span class="kn">from</span> <span class="nn">twisted.internet.protocol</span> <span class="kn">import</span> <span class="n">ClientFactory</span><span class="p">,</span> <span class="n">ServerFactory</span>
+<span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="kn">import</span> <span class="n">reactor</span>
+</code></pre></div></div>
+:ET

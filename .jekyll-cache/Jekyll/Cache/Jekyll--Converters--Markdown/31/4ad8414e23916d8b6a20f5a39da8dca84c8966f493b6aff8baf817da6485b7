@@ -1,0 +1,5 @@
+I"|<h3 id="현재-함수의-이름-얻기">현재 함수의 이름 얻기</h3>
+<p>```python
+def whoami():
+ import sys</p>
+:ET

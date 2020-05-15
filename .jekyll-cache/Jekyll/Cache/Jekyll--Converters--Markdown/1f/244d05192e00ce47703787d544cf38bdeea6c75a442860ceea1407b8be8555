@@ -1,0 +1,12 @@
+I"-<ol>
+  <li>어떤 사용자 id가 등록되어 있는지 보려면,
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from dba_users;
+</code></pre></div>    </div>
+  </li>
+  <li>특정 사용자의 비밀번호를 변경하려면,
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alter user 사용자명 identified by &lt;span style="color:rgb(165,42,42);background-color:yellow;font-weight:bold;"&gt;비밀번호&lt;/span&gt;;
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+:ET

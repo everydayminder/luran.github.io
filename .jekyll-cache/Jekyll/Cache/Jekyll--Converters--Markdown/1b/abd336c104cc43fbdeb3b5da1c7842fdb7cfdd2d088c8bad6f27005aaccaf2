@@ -1,0 +1,11 @@
+I"�<p>만약, 비정상적인 종료 등으로 인해 yum이 lock이 걸렸고,
+기다려도 풀리지 않는다면, 다음과 같이 강제로 lock을 해제시킬 수 있다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat /var/run/yum.pid
+</code></pre></div></div>
+
+<p>을 실행시켜서 확인 후,</p>
+
+<p>불필요하다면 해당파일을 지워준다.</p>
+
+:ET

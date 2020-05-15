@@ -1,0 +1,17 @@
+I"r<p>Windows &gt; Preferences &gt; Java &gt; Code Style &gt; Code Templates &gt; Code &gt; Method body부분을 살펴보면
+기본값으로</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// ${todo} Auto-generated method stub
+ ${body_statement}
+</code></pre></div></div>
+<p>와 같이 지정되어 있다. 이것을 다음과 같이 바꿔서 써보자.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">throw</span> <span class="k">new</span> <span class="nc">UnsupportedOperationException</span><span class="o">();</span>
+</code></pre></div></div>
+
+<p>그러면, 나중에 특정 interface를 implement하는 경우와 같이 자동으로 method를 구현시키는 경우,
+자동으로 UnsupportedOperationException을 던지는 메소드를 작성하게 된다.
+자동으로 구현된 메소드를 그냥 의미없이 null을 리턴하거나 아무 일도 하지 않는 채로 두는 것보다,
+UnsupportedOperationException을 던지는 채로 두어야 나중에 손보게 될 확률이 높아진다. (꼭 챙기게 됨)</p>
+
+:ET

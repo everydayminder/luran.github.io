@@ -1,0 +1,4 @@
+I"a<p>ㅁ Queue.Queue
+   1. push(‘a’) : 6.39s
+   2. push(‘a’) + pop() : 11.37s</p>
+:ET

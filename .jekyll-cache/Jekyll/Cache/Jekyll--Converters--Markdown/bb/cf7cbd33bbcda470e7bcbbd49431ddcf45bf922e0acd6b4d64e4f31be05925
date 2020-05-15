@@ -1,0 +1,23 @@
+I"�<h2 id="related-articles-by-michael-g-noll">Related articles by Michael G. Noll</h2>
+<ol>
+  <li>
+    <p>Running Hadoop On Ubuntu Linux (Single Node Cluster)
+<a href="http://wiki.apache.org/hadoop/Running_Hadoop_On_Ubuntu_Linux_%28Single-Node_Cluster%29">http://wiki.apache.org/hadoop/Running_Hadoop_On_Ubuntu_Linux_%28Single-Node_Cluster%29</a></p>
+  </li>
+  <li>
+    <p>Running Hadoop On Ubuntu Linux (Multi Node Cluster)
+<a href="http://www.michael-noll.com/wiki/Running_Hadoop_On_Ubuntu_Linux_%28Multi-Node_Cluster%29">http://www.michael-noll.com/wiki/Running_Hadoop_On_Ubuntu_Linux_%28Multi-Node_Cluster%29</a></p>
+  </li>
+</ol>
+
+<p>[Comments]</p>
+<ol>
+  <li>I created a VMWare Team project file and added two instances of existing virtual machines.</li>
+  <li>Each VMWare instance has a single node cluster.</li>
+</ol>
+
+<ul>
+  <li>IP alias name should be defined before loop back alias name (localhost) in ‘/etc/hosts’ file.</li>
+</ul>
+
+:ET

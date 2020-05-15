@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="eu" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>커맨드라인에서 Maven/java 웹 프로젝트를 Tomcat에  배포하려면? | Notes for future me</title>
+<meta name="description" content="java 웹 애플리케이션을 Tomcat에 배포하려면 여러 가지 방법이 있다.  웹 애플리케이션 디렉토리 전체를 webapps 밑에 직접 복사하거나,  웹 애플리케이션 디렉토리를 압축한 WAR 파일을 webapps 밑에 직접 복사하거나,  Tomcat의 매니저 웹 GUI를 통해, WAR 파일을 배포할 수 있다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="eu_US">
+<meta property="og:site_name" content="Notes for future me">
+<meta property="og:title" content="커맨드라인에서 Maven/java 웹 프로젝트를 Tomcat에  배포하려면?">
+<meta property="og:url" content="http://localhost:4000/development/deploy-tomcat-application-by-commandline/">
+
+
+  <meta property="og:description" content="java 웹 애플리케이션을 Tomcat에 배포하려면 여러 가지 방법이 있다.  웹 애플리케이션 디렉토리 전체를 webapps 밑에 직접 복사하거나,  웹 애플리케이션 디렉토리를 압축한 WAR 파일을 webapps 밑에 직접 복사하거나,  Tomcat의 매니저 웹 GUI를 통해, WAR 파일을 배포할 수 있다.">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-22T23:38:27+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/development/deploy-tomcat-application-by-commandline/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "everydayminder",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Notes for future me Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- 커스텀 영역 -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/images/profile/favicon.ico" />
+<!-- 구글 나눔고딕 웹폰트 적용 -->
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap&subset=korean" rel="stylesheet">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!-- IE 9 경고-->
+<div class="notice--danger align-center hide" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Notes for future me
+          <span class="site-subtitle">Version 1.0</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/posts/" >Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#development" itemprop="item"><span itemprop="name">Development</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">커맨드라인에서 Maven/java 웹 프로젝트를 Tomcat에  배포하려면?</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name"></h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:2jhyun@gmail.com">
+            <meta itemprop="email" content="2jhyun@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="커맨드라인에서 Maven/java 웹 프로젝트를 Tomcat에  배포하려면?">
+    <meta itemprop="description" content="java 웹 애플리케이션을 Tomcat에 배포하려면 여러 가지 방법이 있다.  웹 애플리케이션 디렉토리 전체를 webapps 밑에 직접 복사하거나,  웹 애플리케이션 디렉토리를 압축한 WAR 파일을 webapps 밑에 직접 복사하거나,  Tomcat의 매니저 웹 GUI를 통해, WAR 파일을 배포할 수 있다.">
+    <meta itemprop="datePublished" content="2015-02-22T23:38:27+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">커맨드라인에서 Maven/java 웹 프로젝트를 Tomcat에  배포하려면?
+</h1>
+          
+            <p class="page__meta">
+                 <br/>
+                <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+
+            </p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              
+            </nav>
+          </aside>
+        
+        <p>java 웹 애플리케이션을 Tomcat에 배포하려면 여러 가지 방법이 있다.</p>
+<ol>
+  <li>웹 애플리케이션 디렉토리 전체를 webapps 밑에 직접 복사하거나,</li>
+  <li>웹 애플리케이션 디렉토리를 압축한 WAR 파일을 webapps 밑에 직접 복사하거나,</li>
+  <li>Tomcat의 매니저 웹 GUI를 통해, WAR 파일을 배포할 수 있다.</li>
+</ol>
+
+<p>그러나, 직접 특정 디렉토리에 복사하는 방법은 무엇보다 번거롭다.
+Tomcat의 매니저 웹을 통해 배포하는 것은 쉽지만, 자동으로 배포를 하고자 한다면 매번
+사용하기 어렵다.</p>
+
+<p>다음과 같은 경우, Cargo라는 프로그램/ 플러그인을 사용하면 좋을 것 같다.</p>
+<ol>
+  <li>커맨드라인으로부터 웹 애플리케이션을 배포하고 싶다.</li>
+  <li>WAS가 로컬/리모트로 접근 가능하다.</li>
+  <li>Ant/ Maven을 사용하고 있다.</li>
+  <li>WAS가 다른 것으로 대체될 가능성, 혹은 서로 다른 WAS가 내 웹 애플리케이션에 혼용될 수도 있다.</li>
+  <li>그러나, 동일한 방법으로 웹 애플리케이션을 여전히 배포하고 싶다. (커맨드라인으로부터)</li>
+</ol>
+
+<p>Cargo에 대한 정확하고, 자세한 정보는 무엇보다 공식 홈페이지(http://cargo.codehaus.org)를 참조하는 것이
+바람직하다.</p>
+
+<p>홈페이지의 What is CARGO?란에서는 다음과 같이 Cargo를 소개하고 있다.
+Cargo is a thin wrapper that allows you to manipulate various type of application containers
+(Java EE and others) in a standard way.</p>
+
+<p>주목할 만한 것은 결국, various type of application containers in a standard way라고 보면 될 듯 하다.</p>
+
+<ul>
+  <li> Cargo가 지원하는 Containers</li>
+  <li>Geronimo 1.x ~ 3.x</li>
+  <li>Glassfish 2.x ~ 4.x</li>
+  <li>JBoss 3.x ~ 7.4.x</li>
+  <li>Jetty 4.x ~ 9.x</li>
+  <li>Jo! 1.x</li>
+  <li>JOnAS 4.x ~ 5.x</li>
+  <li>JRun 4.x</li>
+  <li>Orion/OC4J 9.x ~ 10.x</li>
+  <li>Resin 2.x ~ 4.x</li>
+  <li>Tomcat 4.x ~ 8.x</li>
+  <li>TomEE 1.x</li>
+  <li>WebLogic 8.x ~ 12.1.x</li>
+  <li>WebSphere 8.5.x</li>
+  <li>
+    <p>WildFly 8.x</p>
+  </li>
+  <li>Standard way = Cargo의 사용법 + container 별 설정
+앞서 언급한 다양한 WAS들은 결국 몇몇 property를 선언하는 환경 설정의 문제로 국한된다.
+본 글에서는 Maven 기반 웹 애플리케이션을 Tomcat7에 배포하는 설정을 간단하게 적어보고자 한다.</li>
+</ul>
+
+<ol>
+  <li>Tomcat 설정
+Tomcat에는 기본적으로 권한 및 룰이 등록되어 있지 않기 때문에 Cargo를 사용하여 웹 애플리케이션을 배포하려면
+그에 필요한 내용을 선언해야 한다.</li>
+</ol>
+
+<p>Tomcat의 설치 디렉토리를 $CATALINA_HOME이라 할 때, $CATALINA_HOME/conf/tomcat-users.xml을 편집하여,
+다음의 내용을 추가한다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;role rolename="manager-script" /&gt;
+&lt;user username="deploy" password="deploy" roles="manager-script" /&gt;
+</code></pre></div></div>
+
+<p>GUI 기반이 아닌, CLI 기반으로 제어하기 위해, tomcat에 manager-script 롤을 선언한다.
+배포에 사용할 계정 및 패스워드를 선언하고 (위의 예에서는 deploy/deploy), 이 계정에 앞서 선언한 manager-script 롤을
+부여한다.</p>
+
+<ol>
+  <li>Maven 설정
+Cargo 홈페이지상의 Downloads 탭으로부터 다운로드를 받을 수도 있으나,
+Maven 기반으로 설정할 경우는, 본문에 표기된 바와 같이</li>
+</ol>
+
+<p>If you want to use Cargo from Maven 2 or Maven 3, you don’t need to install anything at all as Maven will automatically download the required jars when you first use the plugin.</p>
+
+<p>저절로 복사가 된다고 하였으나, 저절로 복사가 되도록 설정을 해줘야 한다.
+http://repo1.maven.org/maven2/org/codehaus/cargo/cargo-maven2-plugin
+에 접속하여 확인하면,</p>
+
+<p>2014/7/28에 배포된 1.4.9가 이 글을 작성하는 시점 기준으로 가장 최신버전이다.
+본 글은, 예전에 1.2.4로 테스트 환경을 구축한 것을 바탕으로 작성하였기에, 아래
+설정에는 1.2.4로 기록하였다. (1.4.9로 적어도 동일하게 동작할 것이라 예상한다.)</p>
+
+<p>pom.xml에 cargo-maven2-plugin 설정을 하자.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;plugin&gt;
+    &lt;groupId&gt;org.codehaus.cargo&lt;/groupId&gt;
+	&lt;artifactId&gt;cargo-maven2-plugin&lt;/artifactId&gt;
+	&lt;version&gt;1.2.4&lt;/version&gt;
+	&lt;configuration&gt;
+		&lt;container&gt;
+			&lt;containerId&gt;tomcat7x&lt;/containerId&gt;
+			&lt;type&gt;remote&lt;/type&gt;
+		&lt;/container&gt;
+		&lt;configuration&gt;
+			&lt;type&gt;runtime&lt;/type&gt;
+			&lt;properties&gt;
+				&lt;cargo.remote.uri&gt;http://tomcat_ip:tomcat_port/manager/text&lt;/cargo.remote.uri&gt;
+				&lt;cargo.remote.username&gt;username&lt;/cargo.remote.username&gt;
+				&lt;cargo.remote.password&gt;password&lt;/cargo.remote.password&gt;
+			&lt;/properties&gt;
+		&lt;/configuration&gt;
+
+		&lt;deployer&gt;
+			&lt;type&gt;remote&lt;/type&gt;
+			&lt;deployables&gt;
+				&lt;deployable&gt;
+					&lt;groupId&gt;com.luran&lt;/groupId&gt;
+					&lt;artifactId&gt;jsweb&lt;/artifactId&gt;
+					&lt;type&gt;war&lt;/type&gt;
+					&lt;properties&gt;
+						&lt;context&gt;/jsweb&lt;/context&gt;
+					&lt;/properties&gt;
+				&lt;/deployable&gt;
+			&lt;/deployables&gt;
+		&lt;/deployer&gt;
+	&lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>cargo.remote.uri 에 Tomcat manager 주소를 http://ip:port/manager/text로 기록</li>
+  <li>cargo.remote.username에 배포를 위한 계정 기록</li>
+  <li>cargo.remote.password에 배포를 위한 계정의 비밀번호 기록</li>
+  <li>deployable이하 내용에는 어떤 war로 배포할 것인지 (maven 형식) 기록</li>
+  <li>properties~context에는, servlet context 명 기록 (본 예제에서는, http://ip:port/jsweb으로 배포함)</li>
+</ul>
+
+<ol>
+  <li>Maven을 통한, 웹 애플리케이션 관리
+    <ul>
+      <li>deploy
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:deploy
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p>또는</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:deployer-deploy
+</code></pre></div></div>
+
+<ul>
+  <li>undeploy
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:undeploy
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>또는</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:deployer-undeploy
+</code></pre></div></div>
+
+<ul>
+  <li>redeploy
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:redeploy
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>또는</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn cargo:deployer-redploy
+</code></pre></div></div>
+
+<ol>
+  <li>자동 배포 응용 (빌드 서버 또는 스크립트 상)</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean install package cargo:redploy
+</code></pre></div></div>
+
+<p>이와 같은 식으로 작성한다면, 빌드까지 모두 한 후 Cargo를 통해 Tomcat으로 웹 애플리케이션을
+자동 배포할 수 있다.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#cargo" class="page__taxonomy-item" rel="tag">cargo</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#deploy" class="page__taxonomy-item" rel="tag">deploy</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#java" class="page__taxonomy-item" rel="tag">java</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#maven" class="page__taxonomy-item" rel="tag">maven</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#tomcat" class="page__taxonomy-item" rel="tag">tomcat</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#development" class="page__taxonomy-item" rel="tag">development</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2015-02-22T23:38:27+09:00">February 22, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%BB%A4%EB%A7%A8%EB%93%9C%EB%9D%BC%EC%9D%B8%EC%97%90%EC%84%9C+Maven%2Fjava+%EC%9B%B9+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%A5%BC+Tomcat%EC%97%90++%EB%B0%B0%ED%8F%AC%ED%95%98%EB%A0%A4%EB%A9%B4%3F%20http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fdeploy-tomcat-application-by-commandline%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fdeploy-tomcat-application-by-commandline%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdevelopment%2Fdeploy-tomcat-application-by-commandline%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/system/ppas-oracle-db-link-ora-21561-oid-generation-failed/" class="pagination--pager" title="PPAS에서 Oracle로 DB Link 연결하다 겪은 에러 - ORA-21561 : OID generation failed
+">Previous</a>
+    
+    
+      <a href="/reading/iclouddrive-good-reader-continuous-reading/" class="pagination--pager" title="iCloudDrive + Good Reader를 통한 지속적인 읽기
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/install-jenv/" rel="permalink">jenv 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  2 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">여러 버전 java
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-local-airflow/" rel="permalink">Local Airflow 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">예전에는 실행하고자 하는 job들을 crontab으로만 구성하였으나, 이제는 rundeck, oozie, airflow 등 많은 툴들이 사용되고 있다. 
+이와 같은 툴들은 각 job들의 실행 순서를 정의하고, 언제 실행될지, 실행시간이 얼마나 걸리는지 등에 대한 정보도 제공하기 때...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-spark-cluster/" rel="permalink">Docker 기반 Local Spark Cluster 설치하기
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  3 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Baremetal 서버나 cloud, VM 등에 설치하기에 앞서, docker기반으로 spark cluster 환경을 빨리 쉽게 구축하고 사용할 수 있다. 어떻게 동작하는지 살펴보거나, 간단한 프로젝트를 하고자 한다면 나쁘지 않은 선택이 될 것이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/development/installing-zeppelin/" rel="permalink">Local Zeppelin 설치하기 (OSX)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta">
+          <br/>
+        <i class="far fa-clock" aria-hidden="true"></i>
+
+
+
+
+  1 minute read
+
+
+      </p>
+    
+    <p class="archive__item-excerpt" itemprop="description">brew가 실행가능하도록 설정되어 있다는 전제하에
+brew install apache-zeppelin
+
+위와 같이 간편하게 zeppelin을 설치한다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 everydayminder. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; I referred to the  <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/development/deploy-tomcat-application-by-commandline/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/development/deploy-tomcat-application-by-commandline"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://everydayminder.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

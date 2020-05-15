@@ -1,0 +1,35 @@
+I"$<p>Twisted Matrix 패키지를 다운로드 받아 설치하는데는 별다른 복잡한 과정이 필요하지 않다. 그냥 다운받아서 실행하면 끝.
+Blocking IO 방식의 통신 모듈만 썼었는데,
+이번 기회에 Non-blocking IO를 파이썬으로 시도하게 되었다.</p>
+
+<p>파이썬의 기본 모듈만 써서 비동기 통신을 구현할 수도 있으나,
+편의성을 제공하는 유명한 framework이 존재하여, 이를 써보게 되었다.</p>
+
+<p>나 말고, 다른 사람들은 이미 Twisted를 쓰고 있기 때문이기도 하다.
+공식 사이트의 reference에 나와 있는 예제를 통해, TCP 서버를 순식간에
+만들어 낼 수 있다. Factory 패턴과 Reactor 패턴을 써서, 하라는 대로만 하면
+순식간에 간단한 서버를 만들어 준다. 세션 유지를 위한 Alive Packet을 별도로
+작성할 필요도 없이 말이다.</p>
+
+<p>이 서버에 장기간 동안 연결을 붙여 놓고, 자리를 비웠지만 끊김없이
+TCP connection이 유지되었다.</p>
+
+<p>```python
+from twisted.internet.protocol import Protocol, Factory
+from twisted.internet import reactor</p>
+
+<p>class QOTD(Protocol):</p>
+
+<p>def connectionMade(self):
+	self.transport.write(“An apple a day keeps the doctor awayrn”)
+	self.transport.loseConnection()</p>
+
+<p>factory = Factory()
+factory.protocol = QOTD
+reactor.listenTCP(8077, factory)</p>
+
+<p>reactor.run()</p>
+
+<p>이렇게 작성하는 것이 끝이다.
+이후에는, 프로토콜과 애플리케이션을 분리하여 프로토콜을 완성하면 된다.</p>
+:ET

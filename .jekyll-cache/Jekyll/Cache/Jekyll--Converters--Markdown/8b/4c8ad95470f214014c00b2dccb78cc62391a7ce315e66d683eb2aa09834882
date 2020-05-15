@@ -1,0 +1,6 @@
+I"�<p><b>[lame 설치]</b></p>
+<ol>
+  <li>http://odiecolon.lastdot.org/el5/noarch/ 사이트로부터 최신 odiecolon-repositories를 다운 받는다. (wget)</li>
+  <li>다운받은 odiecolon-repositories rpm을 설치한다.</li>
+</ol>
+:ET

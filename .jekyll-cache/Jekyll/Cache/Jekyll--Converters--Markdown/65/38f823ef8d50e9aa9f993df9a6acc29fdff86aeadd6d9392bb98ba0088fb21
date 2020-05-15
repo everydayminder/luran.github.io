@@ -1,0 +1,29 @@
+I"�<p>jUnit4 이상을 사용하면서, hamcrest의 도움 없이는 온전한(가독성이 좋은) test case들을 작성하기 어렵다.
+그런데, 이 jar들을 매번 import하자니 어렵고, 겨우 import해 놓으면 ctrl + shift + o를 누르는 순간 증발하기 일쑤다.
+많은 개발자들도 이러한 점을 힘들어하여, 각 블로그에 여기저기 많이 남겨놓으셨다.
+나도 이참에 기록을 남긴다.</p>
+
+<ol>
+  <li>static import할 라이브러리 등록하기
+    <ul>
+      <li>Windows &gt; Preferences &gt; Java &gt; Editor &gt; Content Assist &gt; Favorites 메뉴로 간다.</li>
+      <li>New Type을 클릭하고 다음과 같은 라이브러리를 등록한다.</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.*</span>
+<span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">Matchers</span><span class="o">.*</span>
+<span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*</span>
+</code></pre></div></div>
+
+<ol>
+  <li>*로 대체하기 기능 설정
+    <ul>
+      <li>Windows &gt; Preferences &gt; Java &gt; Code Style &gt; Organize Imports 메뉴로 간다.</li>
+      <li>Number of static imports needed for .* (몇 번 이상 겹치면 *로 처리해줄까?) 의 숫자를 변경한다. (예 : 99 -&gt; 1)</li>
+    </ul>
+  </li>
+</ol>
+
+:ET

@@ -1,0 +1,7 @@
+I"�<ol>
+  <li>어떤 사용자 id가 등록되어 있는지 보려면,
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from dba_users;
+</code></pre></div>    </div>
+  </li>
+</ol>
+:ET

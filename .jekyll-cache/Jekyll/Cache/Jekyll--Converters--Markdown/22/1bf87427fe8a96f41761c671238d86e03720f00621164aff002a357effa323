@@ -1,0 +1,5 @@
+I"�<p>Eclipse Indigo를 설치하고, maven 기반 프로젝트를 해보려고 한다.
+Eclipse Indigo에서 m2eclipse 지원이 좋아졌다고 하여 그대로 Anyframe과 연동해보려 하였으나, 아직 버전이 호환되지 않는 것 같다.
+Indigo를 설치하고 m2e를 설치하고 나니, Anyframe IDE를 설치할 때 에러가 발생하였다.
+그래서, 그냥 Anyframe 사이트에 안내된 대로 m2eclipse를 설치하기로 한다.</p>
+:ET

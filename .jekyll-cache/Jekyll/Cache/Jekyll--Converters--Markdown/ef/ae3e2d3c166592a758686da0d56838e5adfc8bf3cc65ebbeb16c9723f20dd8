@@ -1,0 +1,4 @@
+I"j<p>SSH tunneling을 통한 port forwarding을 하고자, putty나 secure crt로 설정하고 썼다.
+혹은 집의 내부 서버에 DNSEver 같은 DDNS 서비스랑 연결하고, 내부에서 포트 포워딩을 하거나.
+그러다가, 손쉽게 local tunneling을 구축할 수 있는 서비스를 찾아보게 되었고, 간단하게 비교해 보았다.</p>
+:ET

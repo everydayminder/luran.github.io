@@ -1,0 +1,5 @@
+I"I<p>VirtualBox에 설치한 CentOS instance와 내 PC의 OS인 Windows간 폴더 공유를 위한 설정 도중, 발생하는 일에 대해
+메모를 남겨둔다.
+일단, VirtualBox상 CentOS이미지로부터 설정 &gt; 공유폴더 메뉴를 활성화 시키면,
+어떤 폴더를 공유할 것인지 설정할 수 있다.</p>
+:ET

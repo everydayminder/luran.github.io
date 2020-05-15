@@ -1,0 +1,4 @@
+I""<p>BitNami로 RedMine을 설치하면, Apache, MySQL, Subversion이 함께 설치된다.
+이전에 해당 프로그램들이 개별적으로 설치되어 있다면, RedMine을 직접 설치해야 하나,
+그렇지 않다면, 편하게 BitNami를 이용하여 설치해볼만도 하다.</p>
+:ET

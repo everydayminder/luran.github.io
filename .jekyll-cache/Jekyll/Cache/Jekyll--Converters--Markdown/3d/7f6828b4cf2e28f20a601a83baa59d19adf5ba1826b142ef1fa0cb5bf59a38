@@ -1,0 +1,15 @@
+I"�<ul class="toc__menu">
+  <li><a href="#원본-rpm-파일-확보">원본 rpm 파일 확보</a></li>
+  <li><a href="#createrepo-설치">createrepo 설치</a></li>
+  <li><a href="#createrepo-실행">createrepo 실행</a></li>
+  <li><a href="#local-yum-설정-파일-기반">local yum 설정 (파일 기반)</a></li>
+  <li><a href="#확인">확인</a></li>
+  <li><a href="#local-yum-동작-확인">local yum 동작 확인</a></li>
+  <li><a href="#apache-httpd-설치설정">Apache httpd 설치/설정</a></li>
+  <li><a href="#repo-설정-변경">repo 설정 변경</a></li>
+  <li><a href="#동작-확인">동작 확인</a></li>
+  <li><a href="#apache-list-확인">Apache list 확인</a></li>
+  <li><a href="#타-서버에서-접속-허용을-위한-방화벽-설정">타 서버에서 접속 허용을 위한 방화벽 설정</a></li>
+  <li><a href="#타-서버에서의-repository-등록">타 서버에서의 repository 등록</a></li>
+</ul>
+:ET
